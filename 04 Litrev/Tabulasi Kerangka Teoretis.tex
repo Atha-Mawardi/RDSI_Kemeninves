@@ -1,0 +1,455 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+
+\definecolor{hijau}{HTML}{1B7F4B}
+\definecolor{jingga}{HTML}{B36A00}
+\definecolor{merah}{HTML}{B3261E}
+\definecolor{abu}{HTML}{5A5A5A}
+\definecolor{navy}{HTML}{062E4C}
+
+\newcommand{\ok}{\textcolor{hijau}{\textbf{viable}}}
+\newcommand{\kav}{\textcolor{jingga}{caveated}}
+\newcommand{\gugur}{\textcolor{merah}{\textbf{ruled out}}}
+\newcommand{\opsional}{\textcolor{abu}{optional}}
+
+\titleformat{\section}{\Large\bfseries\color{navy}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.5em}{}
+
+\setlength{\LTcapwidth}{\textwidth}
+\renewcommand{\arraystretch}{1.25}
+
+\title{\vspace{-1.5cm}\textbf{Theoretical Frameworks: A Screening Table}\\[0.3em]
+\large Gross Fixed Capital Formation, Labour Productivity, and TFP}
+\author{Macroeconomic Policy Study on Investment Acceleration}
+\date{2 August 2026}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\vspace{-0.8em}
+
+\begin{center}
+\begin{minipage}{0.93\textwidth}
+\small
+Panel of 34 Indonesian provinces $\times$ 2017--2024 (272 observations). Capital is proxied by
+the gross fixed capital formation flow (PMTB); realised FDI and domestic investment approvals
+are out of scope by decision. Estimators restricted to static designs: pooled OLS, two-way
+fixed effects, 2SLS. Evidence base: 74 screened references, all verified against Crossref as
+of 2 August 2026.
+\end{minipage}
+\end{center}
+
+\vspace{0.4em}
+\hrule
+\vspace{1em}
+
+\section*{Executive Summary}
+\addcontentsline{toc}{section}{Executive Summary}
+
+\subsection*{Recommended specification}
+
+\begin{equation*}
+\log Y_{it} = a + b_1 \log \mathrm{PMTB}_{it} + b_2 \log L_{it}
++ X_{it}'\gamma + u_i + \lambda_t + e_{it}
+\end{equation*}
+
+Two-way fixed effects, no scale restriction imposed, Driscoll--Kraay standard errors reported
+alongside $t(33)$ critical values and a wild cluster bootstrap. Keep the conditioning set
+$X$ sparse; see Section 2.
+
+\subsection*{Minimum bias is a bracket, not a single number}
+
+The two largest biases pull in opposite directions, so no single estimator minimises both.
+Unobserved provincial heterogeneity biases the capital elasticity \emph{upward} and is removed
+by fixed effects; measurement error in capital biases it \emph{downward} and is
+\emph{amplified} by the same transformation (Griliches \& Hausman 1986). The proven response is
+not to pick a winner but to report the interval the two ends define:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{4.4cm}p{4.6cm}p{5.8cm}@{}}
+\toprule
+\textbf{Estimator} & \textbf{Role} & \textbf{Dominant remaining bias} \\
+\midrule
+Pooled OLS & informal ceiling & unobserved provincial heterogeneity \\
+Province fixed effects & intermediate & partial attenuation \\
+\textbf{Two-way fixed effects} & \textbf{base specification} & attenuation, at its strongest \\
+Long difference 2017 $\to$ 2024 & \textbf{upper end of the bracket} & least attenuated within-type estimate \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The long difference is the operative addition. True capital changes substantially over seven
+years while measurement error does not accumulate at the same rate, so the signal-to-noise ratio
+is at its highest and attenuation at its weakest --- the standard errors-in-variables remedy in
+panels, and static throughout. Report $b_1$ as the interval running from the two-way estimate to
+the long-difference estimate, and state which end each conclusion depends on.
+
+\subsection*{How the two questions are answered}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.5cm}p{11.6cm}@{}}
+\toprule
+\textbf{Question} & \textbf{What the framework delivers} \\
+\midrule
+Effect on labour productivity &
+$b_1$ is the output elasticity of capital. Its contribution to labour productivity growth is
+$b_1 \times g(K/L)$ --- capital deepening --- read from the growth decomposition, not from a
+separate regression \\
+Effect on TFP &
+TFP is what remains \emph{after} capital's contribution is removed: the residual
+$a + u_i + e_{it}$, with its time path given by the year effects $\lambda_t$. It cannot be
+regressed on PMTB \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Three findings that shape the design}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=0.5em]
+
+\item \textbf{TFP cannot be regressed on capital in a second stage.}
+The two-way within transformation sweeps out $u_i$ along with the constant, leaving $e_{it}$
+orthogonal to $\log \mathrm{PMTB}$ by the first-stage normal equations. The coefficient is
+exactly zero --- an identity, not a finding. The link from investment to TFP is therefore a
+\emph{decomposition} statement, not a regression result, and must be worded that way.
+
+\item \textbf{The per-worker form imposes an assumption the data reject.}
+Writing $\log(Y/L)$ on $\log(K/L)$ requires constant returns to scale; it does not merely
+simplify. The Wald test rejects that restriction in every specification, so the unrestricted
+form is the base and the per-worker form is reported as a diagnostic.
+
+\item \textbf{Capital is a flow, and no reference defends that choice.}
+The elasticity $b_1$ is biased downward, which means the TFP residual absorbs part of capital's
+unmeasured contribution and is therefore overstated rather than understated. Direction is known;
+magnitude is not, and the published firm-level bias figures cannot be borrowed.
+
+\end{enumerate}
+
+\subsection*{What is ruled out, and why}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{5.6cm}p{9.4cm}@{}}
+\toprule
+\textbf{Framework} & \textbf{Reason for exclusion} \\
+\midrule
+Perpetual inventory capital stock & initial-stock assumption dominates over an 8-year series \\
+Moving-average investment & no precedent found in the literature \\
+Level accounting via $K/Y$ & requires a capital stock; a flow does not form a meaningful ratio \\
+Second-stage regression on TFP & residual is orthogonal to its own regressor \\
+Investment-to-output ratio in levels & shared denominator with the dependent variable \\
+Bartik instruments & exclusion restriction and too few effective shocks \\
+Winsorising, COVID subperiods & no methodological precedent found \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.4em}
+\hrule
+\vspace{0.5em}
+
+\noindent\small\textcolor{abu}{Section 1 holds the full screening table; Section 2 gives the
+supporting reference for each term; Section 3 is a ready-to-paste methodological defence.}
+
+\clearpage
+
+% ==================== MAIN TABLE ====================
+\begin{landscape}
+\section{Screening table}
+
+\noindent\small
+The \textbf{Fit} column is judged against $N=34$, $T=8$, and capital measured as a flow.
+Values: \ok\ / \kav\ / \gugur\ / \opsional.
+
+\vspace{0.2em}
+
+{\footnotesize\renewcommand{\arraystretch}{0.98}
+\begin{longtable}{@{}p{0.7cm}p{4.3cm}p{5.6cm}p{4.4cm}p{4.6cm}p{1.9cm}@{}}
+\toprule
+\textbf{\#} & \textbf{Framework} & \textbf{Core claim} & \textbf{Key sources} &
+\textbf{Data requirement} & \textbf{Fit} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{\#} & \textbf{Framework} & \textbf{Core claim} & \textbf{Key sources} &
+\textbf{Data requirement} & \textbf{Fit} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{6}{r@{}}{\textit{continued overleaf}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\multicolumn{6}{@{}l}{\textbf{\textcolor{navy}{A. Measuring capital}}} \\[0.2em]
+A1 & GFCF flow as $K$ & capital elasticity biased downward; direction known, magnitude not &
+Collard-Wexler \& De Loecker 2016 (T2) & no additional data needed & \kav \\
+
+A2 & Perpetual inventory stock & the initial-stock assumption dominates a short series &
+Berlemann \& Wesselh\"oft 2014 (T2) & needs 30--40 years; 8 available & \gugur \\
+
+A3 & Moving-average investment & no precedent in the literature & --- &
+a 3--5 year window consumes $T$ & \gugur \\
+
+A4 & Investment-to-output ratio, levels & $I/Y$ is associated with $Y/L$ growth in non-OECD economies &
+Bond et al.\ 2010; Mankiw et al.\ 1992 & output appears on both sides; shared measurement error biases the slope & \gugur \\
+
+A5 & Investment-to-output ratio, growth form & the same claim with the level share on the right only &
+Bond et al.\ 2010; De Long \& Summers 1991 & 238 observations after differencing; bias reduced, not removed & \opsional \\
+
+A6 & Long difference 2017 $\to$ 2024 & measurement error is magnified in the within dimension; long differences attenuate least &
+Griliches \& Hausman 1986 & one observation per province, $N=34$; wide confidence interval, least attenuated point estimate & \ok \\
+\midrule
+
+\multicolumn{6}{@{}l}{\textbf{\textcolor{navy}{B. Reading the effect on labour productivity}}} \\[0.2em]
+B1 & $\log Y \sim \log K + \log L$, unrestricted & elasticities as estimated; scale not imposed &
+Islam 1995 & 272 observations & \ok \\
+
+B2 & $\log(Y/L) \sim \log(K/L)$ & the per-worker form \textbf{requires} constant returns; it does not merely simplify &
+Mankiw et al.\ 1992; Islam 1995 & Wald test rejects CRS in every variant & \kav \\
+
+B3 & Level accounting via $K/Y$ & write the decomposition in capital-output terms &
+Hall \& Jones 1999 & requires a capital stock & \gugur \\
+
+B4 & Capital deepening plus TFP decomposition & an accounting identity, not a regression; the two complement each other &
+Jorgenson \& Griliches 1967; Bosworth \& Collins 2008 & period averages only; the flow-to-stock step fails year by year & \ok \\
+
+B5 & Human capital interaction & the return to capital per worker weakens where human capital is already high &
+Gardiner et al.\ 2020 & human capital moves slowly; within variation over 8 years is thin & \opsional \\
+\midrule
+
+\multicolumn{6}{@{}l}{\textbf{\textcolor{navy}{C. Recovering TFP}}} \\[0.2em]
+C1 & Second stage: TFP $\sim$ PMTB & \textbf{coefficient is exactly zero} --- residual orthogonal to its regressor &
+algebra; Daraio et al.\ 2018 & holds when both stages share the transformation & \gugur \\
+
+C2 & Second stage on any first-stage input & the first stage suffers omitted-variable bias that the second cannot repair &
+Wang \& Schmidt 2002; Daraio et al.\ 2018 & applies to every regressor already in the production function & \gugur \\
+
+C3 & Solow residual from factor shares, then second stage & residual is not orthogonal, so the second stage has content &
+Hall 1988 & requires factor income shares, rejected earlier on evidence grounds & \gugur \\
+
+C4 & Generated regressand & second-stage OLS covariance is invalid; correction is a two-stage bootstrap &
+Pagan 1984; Murphy \& Topel 1985; Simar \& Wilson 2007 & cost without benefit once C1--C3 fail & --- \\
+
+C5 & TFP as the fixed-effect residual & the unit effect is a productivity level, not a nuisance term &
+Islam 1995; Di Liberto et al.\ 2008 & recovered as $a + u_i + e_{it}$; no extra data & \ok \\
+
+C6 & Year effects as the TFP time path & period intercepts capture productivity change common to all units &
+Muinelo-Gallo \& Roca-Sagal\'es 2011 & levels are arbitrary; only changes are meaningful & \ok \\
+\midrule
+
+\multicolumn{6}{@{}l}{\textbf{\textcolor{navy}{D. Identification}}} \\[0.2em]
+D1 & Bartik via initial shares & identification rests on the exogeneity of base-year sector shares &
+Goldsmith-Pinkham et al.\ 2020 & sector shares reflect endowments and agglomeration & \gugur \\
+
+D2 & Bartik via exogenous shifts & sectoral shocks must be quasi-random and numerous &
+Borusyak et al.\ 2022, 2025 & 23 sectors; exposure is concentrated & \gugur \\
+
+D3 & Shifts from world commodity prices & the shift is genuinely external to Indonesia &
+Allcott \& Keniston 2018; Bazzi \& Blattman 2014 & needs world price series $\times$ 2017 resource shares & \opsional \\
+
+D4 & Non-IV: province trends plus Oster bounds & the claim is downgraded to a bounded association, and the bound is computed &
+Besley \& Burgess 2004; Oster 2019 & trends consume 34 parameters and may absorb real effects & \kav \\
+\midrule
+
+\multicolumn{6}{@{}l}{\textbf{\textcolor{navy}{E. Limits of the claim}}} \\[0.2em]
+E1 & Static panel suffices; dynamic panel fails & Nickell bias is of order $1/T$ and does not vanish as $N$ grows &
+Nickell 1981; Judson \& Owen 1999; Roodman 2009 & lagged dependent variable needs $T \geq 20$--30; GMM instruments grow as $T^2$ & \ok \\
+
+E2 & Handle AR(1) in inference, not in the specification & autocorrelation damages standard errors, not point estimates &
+Bertrand et al.\ 2004; Driscoll \& Kraay 1998 & --- & \ok \\
+
+E3 & Driscoll--Kraay at $T=8$ & its justification is asymptotic in $T$ &
+Vogelsang 2012; Hoechle 2007 & at $T=8$, \textbf{$p$ is an upper bound on confidence} & \kav \\
+
+E4 & Distributed lags without a lagged dependent variable & read the effect from the sum of lag coefficients, not from any single one &
+Beck \& Katz 2011; De Boef \& Keele 2008 & 2 lags $\to$ 204 obs; 3 lags $\to$ 170 obs & \kav \\
+
+E5 & Say ``association'', not ``impact'' & fixed effects do not identify causal effects when past output feeds back into current input &
+Imai \& Kim 2019; Hern\'an 2018 & output$_{t-1} \to$ investment$_t$ cannot be denied & \ok \\
+
+E6 & Winsorising and COVID subperiods & proposed as robustness checks &
+--- & \textbf{no methodological precedent found} & \gugur \\
+
+\end{longtable}
+}
+\end{landscape}
+
+% ==================== SPECIFICATION ====================
+\section{The recommended specification}
+
+\begin{equation*}
+\log Y_{it} = a + b_1 \log \mathrm{PMTB}_{it} + b_2 \log L_{it}
++ X_{it}'\gamma + u_i + \lambda_t + e_{it}
+\end{equation*}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.3cm}p{5.8cm}p{6.6cm}@{}}
+\toprule
+\textbf{Term} & \textbf{Role} & \textbf{Supporting reference} \\
+\midrule
+$\log \mathrm{PMTB}$ & capital, no scale restriction imposed & Islam 1995; bias caveat: Collard-Wexler \& De Loecker 2016 \\
+$\log L$ & labour, elasticity estimated rather than imposed & Islam 1995 \\
+$X_{it}$ & conditioning set; see below & Holtz-Eakin 1994; Frankel \& Romer 1999 \\
+$u_i$ & provincial productivity level, not a nuisance & Islam 1995; Di Liberto et al.\ 2008 \\
+$\lambda_t$ & common productivity change over time & Muinelo-Gallo \& Roca-Sagal\'es 2011 \\
+No second stage & avoids both orthogonality and the generated regressand & Wang \& Schmidt 2002; Pagan 1984 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Reading the two effects}
+
+The effect on \textbf{labour productivity} is $b_1$, the output elasticity of capital. Its
+contribution to observed productivity growth is $b_1 \times g(K/L)$, the capital-deepening term
+of the decomposition $g(Y) = b_1 g(K) + b_2 g(L) + \text{residual}$. Report period averages
+only: the step from an investment flow to a capital stock requires a stable
+investment-to-stock ratio, and that assumption breaks badly in 2020--21.
+
+The effect on \textbf{TFP} is the residual of that same decomposition, together with the year
+effects $\lambda_t$ as its time path. It is arithmetic on the estimated elasticities, not a
+regression, and the wording must reflect that. Two warnings travel with it: the level of the
+year effects is arbitrary and only changes carry meaning; and the year effects absorb every
+aggregate shock, including the business cycle and terms of trade, not technology alone.
+
+\subsection*{Controls: keep the set sparse}
+
+A long control list looks careful and is usually the opposite here. The province effects already
+absorb every time-invariant characteristic, and the year effects absorb every national shock, so
+a control earns its place only if it varies within provinces over eight years \emph{and} is not
+itself produced by the investment being measured. Most candidates fail one of the two.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{4.6cm}p{4.0cm}p{6.2cm}@{}}
+\toprule
+\textbf{Candidate} & \textbf{Verdict} & \textbf{Reason} \\
+\midrule
+Human capital & include & varies within provinces; supported by Gardiner et al.\ 2020 \\
+Openness, $(X{+}M)/\text{GRDP}$ & include & varies year to year; report as association only
+(Frankel \& Romer 1999) \\
+Electricity access, road length & \textbf{report both ways} & a large coefficient is a warning
+sign, not a result: the effect vanished once regional fixed effects were imposed in
+Holtz-Eakin (1994) \\
+Sectoral employment shares & \textbf{exclude from the base} & likely a mediator; if $b_1$ drops
+sharply when it enters, that confirms it \\
+Internet, ports, airports & \textbf{exclude} & plausibly built \emph{by} the investment being
+measured, so they sit between regressor and outcome (Cinelli et al.\ 2024) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The base specification is therefore the sparse one: capital, labour, both sets of fixed effects,
+and at most two controls. Everything else belongs in a robustness column where the movement in
+$b_1$ is itself reported.
+
+% ==================== DEFENCE ====================
+\section{Methodological defence, ready to paste}
+
+\begin{quote}\small
+The panel comprises 34 provinces observed over eight years, and a series of that length closes
+off dynamic specifications: the bias of the within estimator in a model with a lagged dependent
+variable is of order $1/T$ and therefore does not vanish as the number of provinces grows
+(Nickell, 1981); it remains material even over thirty years (Judson and Owen, 1999). The
+generalised method of moments usually invoked in its place is more fragile still in this
+setting, because the instrument count grows quadratically in the length of the series while the
+number of units is only 34, and instrument proliferation weakens the very Hansen test meant to
+police validity (Roodman, 2009). First-order autocorrelation in the residuals is consequently
+addressed on the inference side rather than by respecifying the model, since in regional panels
+autocorrelation damages standard errors rather than point estimates (Bertrand et al., 2004);
+Driscoll--Kraay standard errors absorb serial correlation and cross-provincial dependence
+together (Driscoll and Kraay, 1998; Hoechle, 2007). That justification is asymptotic in the time
+dimension, so at eight time points the reported $p$-values are upper bounds on confidence rather
+than calibrated quantities (Vogelsang, 2012). Two-way fixed effects also fail the conditions for
+causal identification when the previous year's output influences the current year's investment
+(Imai and Kim, 2019), and every elasticity is therefore reported as a conditional association.
+\end{quote}
+
+% ==================== ROBUSTNESS ====================
+\section{Robustness checks}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=0.25em]
+\item Wild cluster bootstrap over provincial clusters (Cameron \& Miller 2015; Roodman et al.\ 2019).
+\item Critical values from $t(33)$ rather than the standard normal (Vogelsang 2012).
+\item Distributed lags of 2--3 years without a lagged dependent variable, reported as the sum of
+coefficients (Beck \& Katz 2011; De Boef \& Keele 2008).
+\item Leave-one-out provincial jackknife --- provincial economies differ greatly in size
+(MacKinnon et al.\ 2023).
+\item Three families of standard errors side by side, with the differences reported as they fall
+(Hoechle 2007).
+\item Province-specific linear trends, with the shift in $b_1$ reported as a finding rather than
+hidden; then Oster bounds on the remaining selection (Besley \& Burgess 2004; Oster 2019).
+\item The estimator ladder --- pooled, province fixed effects, two-way, long difference --- read
+as an attenuation diagnostic rather than as four competing results (Griliches \& Hausman 1986).
+\end{enumerate}
+
+% ==================== LIMITATIONS ====================
+\section{Limitations that must be published}
+
+\begin{enumerate}[leftmargin=1.4em,itemsep=0.4em]
+\item \textbf{No reference defends using a GFCF flow as $K$ in a production function.}
+Searched through Crossref, OpenAlex, and web search across six independent strands; nothing was
+found. Olomola \& Osinubi (2018) do use GFCF as $K$ for Indonesia but never discuss the resulting
+bias --- that is an omission, not a justification. If the report needs to state the conditions
+under which the substitution is acceptable, that is our own reasoning and must be labelled as
+such.
+
+\item \textbf{The direction of the bias matters more than its size.} A downward-biased capital
+elasticity means the residual absorbs part of capital's unmeasured contribution, so measured TFP
+is overstated rather than understated. The published factor-of-two figure cannot be borrowed: it
+measures a mismeasured stock in firm-level data, not a flow standing in for a stock in a
+provincial panel.
+
+\item \textbf{The direction of causality is contested in leading journals.} Blomstr\"om et al.\
+(1996) find that growth precedes capital formation; Bond et al.\ (2010) find the opposite for
+non-OECD economies. The tension is displayed, not resolved unilaterally.
+
+\item \textbf{The decomposition holds on average, never year by year.} Treating GFCF growth as
+capital-stock growth requires a stable investment-to-stock ratio, and 2020--21 violates it
+outright.
+
+\item \textbf{COVID subperiod splits have no methodological support.} Section 6.3 already uses
+them. The options are to search further, or to report them as exploratory without inferential
+claims.
+
+\item \textbf{All 74 summaries are based on abstracts or metadata only.} No page-level quotations
+exist yet. If the report needs direct quotation, the full texts must be opened first.
+\end{enumerate}
+
+% ==================== SCOPE ====================
+\section{Scope note}
+
+Realised FDI and domestic investment approvals are excluded from this framework by decision, so
+the screening strands covering foreign presence --- horizontal and vertical spillovers,
+absorptive capacity conditioned on foreign share, and crowding in versus crowding out --- do not
+enter the specification. The seventeen references behind them remain in the library and can be
+reactivated if the scope is revisited. Two results from that work still bind the present design
+and are retained above: approvals data overlap PMTB by definition, which is why they cannot serve
+as an instrument for it (D1--D2); and the coverage ratio of approvals to PMTB belongs in
+Section 6.3 as a diagnostic rather than in a productivity equation.
+
+\vfill
+\noindent\rule{\textwidth}{0.4pt}\\
+{\footnotesize\textcolor{abu}{Full reference summaries: \texttt{\textasciitilde/.claude/literature/papers/}
+(75 files).}}
+
+\end{document}
