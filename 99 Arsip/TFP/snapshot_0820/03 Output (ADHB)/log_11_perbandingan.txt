@@ -1,0 +1,52 @@
+=============== Perbandingan tiga basis harga ===============
+
+-- 1. Parameter model terpilih (two-way FE, tak-terestriksi) --
+                label          terikat            modal     b1     b2    rts
+     Nominal (terbit)    9_ADHK (riil)   pmtb (nominal) 0.3997 0.1913 0.5910
+                 Riil    9_ADHK (riil)    4_ADHK (riil) 0.4019 0.1472 0.5491
+ ADHB (nominal penuh) 9_ADHB (nominal) 4_ADHB (nominal) 0.4584 0.0152 0.4737
+
+-- 2. Dekomposisi nasional 2018-2024, skenario F --
+                label   gY   gK   gL kontrib_K kontrib_L sisa
+     Nominal (terbit) 3.83 6.12 2.08      2.45      0.40 0.98
+                 Riil 3.83 3.26 2.08      1.31      0.31 2.21
+ ADHB (nominal penuh) 6.74 6.19 2.08      2.84      0.03 3.87
+
+   Pangsa terhadap pertumbuhan (persen):
+                label pangsa_K pangsa_L pangsa_sisa
+     Nominal (terbit)     64.0     10.4        25.7
+                 Riil     34.2      8.0        57.8
+ ADHB (nominal penuh)     42.1      0.5        57.4
+
+-- 3. Selisih antar basis --
+                 besaran nominal   riil   adhb riil_minus_nominal
+ Pertumbuhan output (gY)   3.827  3.827  6.737              0.000
+  Pertumbuhan modal (gK)   6.124  3.261  6.190             -2.863
+  Elastisitas modal (b1)   0.400  0.402  0.458              0.002
+ Kontribusi modal (poin)   2.448  1.310  2.838             -1.137
+             Sisa (poin)   0.983  2.211  3.867              1.229
+    Pangsa sisa (persen)  25.671 57.776 57.406             32.105
+ adhb_minus_riil
+           2.909
+           2.930
+           0.057
+           1.527
+           1.656
+          -0.370
+
+-- 4. Laju deflator implisit (nominal dikurangi riil, %/thn) --
+   seri nominal_pct riil_pct deflator_pct
+ Output        6.74     3.83         2.91
+  Modal        6.19     3.26         2.93
+
+-- 5. Sisa per pulau (poin persen) --
+        Pulau nominal riil adhb
+   Bali-Nusra    0.01 1.23 3.12
+         Jawa    1.24 2.42 3.79
+   Kalimantan   -0.11 1.35 2.92
+ Maluku-Papua    0.50 1.85 4.32
+     Sulawesi    1.78 3.24 4.97
+     Sumatera    0.72 1.89 4.19
+
+=============== SELESAI ===============
+Keluaran: 03 Output (ADHB)/Perbandingan Tiga Basis.xlsx

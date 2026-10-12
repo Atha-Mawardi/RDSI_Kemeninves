@@ -1,0 +1,311 @@
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘plm’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, lag, lead
+
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: carData
+
+Attaching package: ‘car’
+
+The following object is masked from ‘package:dplyr’:
+
+    recode
+
+The following object is masked from ‘package:purrr’:
+
+    some
+
+Basis harga modal: adhb | keluaran: 03 Output (ADHB)
+
+=============== 1. Data ===============
+Nilai <= 0 (harus semua nol): K_modal=0 | labours_total=0 | 9_ADHK=0 | 9_ADHB=0 
+Observasi: 306 | provinsi: 34 | tahun: 2017-2025 
+Observasi terpakai (non-NA pada K dan L): 272 
+Pulau: Bali-Nusra(3) Jawa(6) Kalimantan(5) Maluku-Papua(4) Sulawesi(6) Sumatera(10) 
+
+-- Pangsa pendapatan tenaga kerja nasional (terukur dari data) --
+ Year komp_tri pdrb_tri pangsa
+ 2017 2078.356 13741.41  0.151
+ 2018 2182.667 14981.19  0.146
+ 2019 2395.189 16039.72  0.149
+ 2020 2094.780 15764.27  0.133
+ 2021 2670.993 16951.81  0.158
+ 2022 3299.458 19144.83  0.172
+ 2023 3643.409 20531.71  0.177
+ 2024 3952.498 22020.55  0.179
+Sebaran antar provinsi-tahun: min 0.062 | Q1 0.128 | median 0.183 | Q3 0.225 | maks 0.359
+Pembanding: alfa=1/3 menyiratkan pangsa tenaga kerja 0.667
+Bobot Divisia nasional (tertimbang PDRB, 2018-2024): 0.159
+
+=============== 2. Kandidat model ===============
+ADHB_RE    b1=0.8335 b2=0.2467 b1+b2=1.0802 N=272
+ADHB_FE    b1=0.7410 b2=0.7357 b1+b2=1.4767 N=272
+ADHK_POOL  b1=0.8554 b2=0.1596 b1+b2=1.0150 N=272
+ADHK_RE    b1=0.4553 b2=0.4341 b1+b2=0.8895 N=272
+ADHK_FE    b1=0.4516 b2=0.3190 b1+b2=0.7706 N=272
+ADHK_FE2W  b1=0.3958 b2=0.1636 b1+b2=0.5594 N=272
+ADHB_POOL  b1=0.9091 b2=0.0991 b1+b2=1.0082 N=272
+ADHB_FE2W  b1=0.4584 b2=0.0152 b1+b2=0.4737 N=272
+
+=============== 3. Diagnostik ===============
+ADHK  BP-LM p=<0,001 | Mundlak p=<0,001 | Wald-het p=<0,001 | AR(1) p=<0,001 | CD(FE) p=0.004
+ADHB  BP-LM p=<0,001 | Mundlak p=<0,001 | Wald-het p=<0,001 | AR(1) p=<0,001 | CD(FE) p=<0,001
+CD setelah efek tahun (ADHB two-way FE) p=0.330
+CD z-stat: ADHB_RE=31.39  ADHK_RE=0.79  ADHB_FE=13.59  ADHK_FE=2.86  | ADHB_FE2W=0.97
+
+=============== 4. Kaskade seleksi ===============
+S0: DIKESAMPINGKAN: terikat ADHB (output nominal) - residual memuat inflasi harga, jadi bukan TFP
+S1: BP-LM p=<0,001 -> ada efek individu
+S2: Wald-het p=<0,001 & AR1 p=<0,001 -> Hausman tidak sah; Mundlak p=<0,001 -> FE
+S3: CD satu-arah p=<0,001 -> tambah efek tahun; CD two-way p=0.330
+S4: lihat uji RTS di bawah
+S5: lihat uji RESET di bawah
+S6: lihat perbandingan SE di bawah
+
+-- S4. Uji Wald H0: b1+b2 = 1 (CRS) --
+  ADHB_FE    b1+b2=1.4767  chisq=23.512  p=<0,001
+  ADHB_RE    b1+b2=1.0802  chisq=6.952  p=0.008
+  ADHB_FE2W  b1+b2=0.4737  chisq=18.395  p=<0,001
+  ADHK_FE    b1+b2=0.7706  chisq=8.120  p=0.004
+
+-- S4b. Tangga atenuasi: b1+b2 menurut transformasi yang dipakai --
+    spesifikasi              variasi_dibuang     b1     b2    rts
+     Pooled OLS                    tidak ada 0.9091 0.0991 1.0082
+ Random effects      sebagian antar-provinsi 0.8335 0.2467 1.0802
+  Fixed effects       seluruh antar-provinsi 0.7410 0.7357 1.4767
+     Two-way FE antar-provinsi + antar-tahun 0.4584 0.0152 0.4737
+
+-- S5. RESET (H0: tidak ada nonlinearitas terabaikan) --
+  ADHB_FE p=0.162 | ADHB_RE p=0.103
+
+-- S6. SE cluster provinsi vs Driscoll-Kraay (ADHB two-way FE) --
+  log_pmtb     b=0.4584  SE cluster=0.0574 (p=<0,001)  SE DK=0.0382 (p=<0,001)
+  log_lab_tot  b=0.0152  SE cluster=0.1208 (p=0.900)  SE DK=0.0601 (p=0.800)
+
+=============== 5. Model terpilih ===============
+Terpilih: ADHB, two-way fixed effects (provinsi + tahun), SE Driscoll-Kraay
+
+              Estimate Std. Error    t value     Pr(>|t|)
+log_pmtb    0.45842111 0.03822424 11.9929432 4.881049e-26
+log_lab_tot 0.01522991 0.06007380  0.2535201 8.000938e-01
+
+Elastisitas UTAMA (tak-terestriksi): b1=0.4584 (SE DK 0.0382) b2=0.0152 (SE DK 0.0601) b1+b2=0.4737
+Model CRS (per-pekerja, sekunder): b1=0.5162 (SE DK 0.0456), b2 = 1-b1 = 0.4838
+
+=============== 6. Efek tahun (produktivitas agregat) ===============
+-- Efek tahun, model UTAMA tak-terestriksi (dipakai sebagai indeks produktivitas) --
+ Year   koef     se     lo     hi indeks_100
+ 2017 0.0000 0.0000 0.0000 0.0000   100.0000
+ 2018 0.0462 0.0050 0.0364 0.0560   104.7266
+ 2019 0.0671 0.0095 0.0485 0.0858   106.9413
+ 2020 0.0685 0.0092 0.0504 0.0866   107.0910
+ 2021 0.1175 0.0133 0.0915 0.1435   112.4692
+ 2022 0.2104 0.0177 0.1757 0.2451   123.4170
+ 2023 0.2511 0.0219 0.2081 0.2940   128.5405
+ 2024 0.2902 0.0260 0.2392 0.3412   133.6713
+
+Tren TFP UTAMA (tak-terestriksi, spesifikasi bertren, SE Driscoll-Kraay):
+  +0.0383 poin log/thn = +3.83%/thn (SE 0.0023, p=<0,001)
+  Pembanding, lm() atas koefisien efek tahun: +4.21%/thn (p=<0,001)
+
+Tren TFP SEKUNDER (CRS, spesifikasi bertren): +0.0276 poin log/thn = +2.76%/thn (SE 0.0016, p=<0,001)
+Tren efek tahun (CRS, lm): +0.0281 poin log/thn = +2.81%/thn
+Selisih keduanya adalah suku skala yang ikut terserap bila CRS tidak dipaksakan.
+
+-- Efek tahun per pulau (model UTAMA tak-terestriksi terpisah) --
+Efek tahun per pulau yang berbeda dari nol: 34 dari 42
+        Pulau n_prov Year   koef     se indeks_100 signifikan
+   Bali-Nusra      3 2021 0.0045 0.0231   100.4482      FALSE
+   Bali-Nusra      3 2024 0.1163 0.0550   112.3361       TRUE
+         Jawa      6 2021 0.2047 0.0104   122.7194       TRUE
+         Jawa      6 2024 0.4633 0.0230   158.9280       TRUE
+   Kalimantan      5 2021 0.3849 0.0498   146.9448       TRUE
+   Kalimantan      5 2024 0.8236 0.1124   227.8797       TRUE
+ Maluku-Papua      4 2021 0.0787 0.0252   108.1890       TRUE
+ Maluku-Papua      4 2024 0.3575 0.0450   142.9703       TRUE
+     Sulawesi      6 2021 0.1261 0.0214   113.4393       TRUE
+     Sulawesi      6 2024 0.2831 0.0373   132.7184       TRUE
+     Sumatera     10 2021 0.2061 0.0211   122.8853       TRUE
+     Sumatera     10 2024 0.4686 0.0432   159.7780       TRUE
+
+=============== 7. Robustness ===============
+(a) Berbobot pangsa output: b1=0.4178 b2=-0.0559 (vs tanpa bobot 0.4584 / 0.0152)
+(b) PMTB lag-1: b1=0.4461 (SE 0.0223, p=<0,001) b2=-0.0055  N=238
+(c) Bentuk growth: b1=0.2542 b2=0.2703  N=238
+
+=============== 8. TFP provinsi ===============
+Provinsi dengan tren TFP signifikan (p<0,05): 32 dari 34
+Catatan: SE tren per provinsi dari OLS 8 titik atas residual yang
+terautokorelasi positif, sehingga SE terlalu kecil dan angka di atas
+adalah BATAS ATAS jumlah provinsi yang trennya benar-benar signifikan.
+
+Komponen varian model terpilih: sd(u_i)=0.6187  sd(e_it)=0.0432  rho=0.9952
+Rentang pergerakan efek tahun 2017-2024 = 0.2902 poin log
+sd residual dalam-provinsi lebih kecil dari rentang deret nasional (0.0432 vs 0.2902)
+
+-- TFP provinsi (log, model UTAMA tak-terestriksi two-way FE), deviasi dari rata-rata --
+ Code_Prov            Pre_Prov logtfp_rata logtfp_rata_crs dev_nasional
+        35          Jawa Timur      19.532           9.689        1.272
+        32          Jawa Barat      19.526           9.662        1.266
+        31         DKI Jakarta      19.525          10.329        1.265
+        33         Jawa Tengah      19.182           9.433        0.922
+        12       Sumatra Utara      18.938           9.655        0.678
+        14                Riau      18.894           9.993        0.634
+        64    Kalimantan Timur      18.867          10.246        0.607
+        36              Banten      18.770           9.597        0.510
+        16    Sumatera Selatan      18.596           9.581        0.336
+        73    Sulawesi Selatan      18.587           9.572        0.327
+        18             Lampung      18.463           9.457        0.203
+        15               Jambi      18.417           9.879        0.157
+        13       Sumatra Barat      18.311           9.567        0.051
+        63  Kalimantan Selatan      18.309           9.697        0.049
+        51                Bali      18.276           9.560        0.016
+        94               Papua      18.226           9.608       -0.034
+        61    Kalimantan Barat      18.210           9.479       -0.051
+        21            Kep.Riau      18.189           9.848       -0.071
+        72     Sulawesi Tengah      18.122           9.622       -0.138
+        11                Aceh      18.052           9.364       -0.208
+        34       DI yogyakarta      17.966           9.357       -0.294
+        62   Kalimantan Tengah      17.937           9.507       -0.323
+        71      Sulawesi Utara      17.916           9.585       -0.344
+        91         Papua Barat      17.912          10.038       -0.348
+        52 Nusa Tenggara Barat      17.889           9.166       -0.371
+        65    Kalimantan Utara      17.876          10.123       -0.384
+        74   Sulawesi Tenggara      17.873           9.474       -0.387
+        19 Kep.Bangka Belitung      17.773           9.696       -0.488
+        53 Nusa Tenggara Timur      17.645           8.910       -0.615
+        17            Bengkulu      17.537           9.281       -0.723
+        76      Sulawesi Barat      17.457           9.435       -0.803
+        81              Maluku      17.400           9.315       -0.860
+        75           Gorontalo      17.386           9.447       -0.874
+        82        Maluku Utara      17.282           9.316       -0.978
+ dev_nasional_crs
+            0.086
+            0.060
+            0.727
+           -0.169
+            0.052
+            0.391
+            0.643
+           -0.005
+           -0.021
+           -0.030
+           -0.146
+            0.276
+           -0.035
+            0.094
+           -0.043
+            0.005
+           -0.124
+            0.245
+            0.019
+           -0.239
+           -0.246
+           -0.096
+           -0.018
+            0.435
+           -0.436
+            0.520
+           -0.128
+            0.093
+           -0.692
+           -0.321
+           -0.168
+           -0.288
+           -0.156
+           -0.287
+
+-- Tren TFP per provinsi (poin log per tahun x100, dari regresi 8 titik) --
+ Code_Prov            Pre_Prov tren_pp_thn    se     p tren_pp_thn_crs
+        72     Sulawesi Tengah       7.360 0.669 0.000           5.618
+        65    Kalimantan Utara       7.187 0.892 0.000           5.875
+        16    Sumatera Selatan       5.987 0.499 0.000           5.052
+        63  Kalimantan Selatan       5.776 0.962 0.001           5.182
+        62   Kalimantan Tengah       5.669 0.557 0.000           4.905
+        82        Maluku Utara       5.483 2.286 0.053           2.372
+        74   Sulawesi Tenggara       5.112 0.430 0.000           3.635
+        94               Papua       4.946 1.399 0.012           2.352
+        11                Aceh       4.862 0.633 0.000           3.750
+        17            Bengkulu       4.586 0.279 0.000           3.430
+        12       Sumatra Utara       4.365 0.299 0.000           3.023
+        71      Sulawesi Utara       4.329 0.319 0.000           2.936
+        19 Kep.Bangka Belitung       4.268 0.576 0.000           3.482
+        76      Sulawesi Barat       4.235 0.120 0.000           2.512
+        61    Kalimantan Barat       4.222 0.265 0.000           2.561
+        31         DKI Jakarta       4.182 0.152 0.000           3.510
+        81              Maluku       4.020 0.557 0.000           1.940
+        14                Riau       4.018 0.811 0.003           3.195
+        15               Jambi       4.015 0.763 0.002           3.217
+        73    Sulawesi Selatan       3.888 0.376 0.000           1.990
+        75           Gorontalo       3.859 0.211 0.000           2.519
+        35          Jawa Timur       3.707 0.261 0.000           2.755
+        33         Jawa Tengah       3.601 0.271 0.000           2.276
+        32          Jawa Barat       3.466 0.211 0.000           2.223
+        18             Lampung       3.434 0.427 0.000           2.055
+        53 Nusa Tenggara Timur       3.397 0.215 0.000           1.643
+        13       Sumatra Barat       3.391 0.363 0.000           1.796
+        34       DI yogyakarta       3.354 0.231 0.000           2.823
+        52 Nusa Tenggara Barat       3.295 0.555 0.001           1.025
+        91         Papua Barat       3.205 0.799 0.007           0.738
+        21            Kep.Riau       3.113 0.351 0.000           1.663
+        51                Bali       2.449 0.790 0.021           1.903
+        36              Banten       2.437 0.646 0.009           1.542
+        64    Kalimantan Timur       1.862 1.373 0.224           0.199
+ signifikan
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+      FALSE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+       TRUE
+      FALSE
+
+=============== SELESAI ===============
+Keluaran: /Users/eqi/Library/CloudStorage/OneDrive-Personal/KeRjAaaAAAaaAaAAA/Project 2026 (JOGJA)/2026-BKPM-analisis kebijakan makro akselerasi investasi/BKPM-local/TFP calc/TFP analysis (07182026)/03 Output (ADHB) 

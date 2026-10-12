@@ -1,0 +1,136 @@
+----------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP\Determinan TFP Provinsi BKPM (log).log
+  log type:  text
+ opened on:   5 Sep 2026, 17:11:23
+
+. 
+. ** analysis switches (change here, rerun everything)
+. global depvar    logtfp_it      // dependent variable; alternative: logtfp_it_crs
+
+. global pca_mode  pooled         // pooled : standardise over the whole panel (keeps time variation)
+
+.                                 // byyear : standardise within each year first ("z dalam tahun",
+.                                 //          the convention of Institusi_Prov / Konektivitas_Prov)
+. global idx_scale z              // z   : PC1 scores with mean 0 sd 1 (coef = effect of +1 sd)
+
+.                                 // 100 : min-max rescaled 0-100 (coef = effect of +1 point)
+. global ind_proxy C_TenagaKerja  // used ONLY if Industry_Prov (Jumlah PT) is absent from the sheet
+
+. global use_logs  1              // 1: log skewed count/level indicators before PCA, 0: raw
+
+. global mixed_rule pca           // pca : always use PC1 (as requested) even if some inputs load
+
+.                                 //       against the anchor (a warning is printed)
+.                                 // eq  : for a pillar with mixed-polarity PC1, use the equal-weight
+.                                 //       additive index idx_*_eq instead (polarity enforced)
+. global fmt cformat(%9.3f) pformat(%5.3f) sformat(%8.3f)
+
+. 
+. ** user-written packages (installed once; capture keeps the file running offline)
+. foreach pkg in xtscc xtabond2 xtserial xtcsd xttest3 xtoverid xtlsdvc estout {
+  2.         local cmd `pkg'
+  3.         if "`pkg'" == "estout" local cmd esttab
+  4.         capture which `cmd'
+  5.         if _rc {
+  6.                 display as text "installing `pkg' from SSC ..."
+  7.                 capture ssc install `pkg', replace
+  8.         }
+  9. }
+installing xtserial from SSC ...
+
+. capture which xtscc
+
+. global have_xtscc = (_rc == 0)
+
+. capture which xtabond2
+
+. global have_xtabond2 = (_rc == 0)
+
+. capture which xtoverid
+
+. global have_xtoverid = (_rc == 0)
+
+. capture which esttab
+
+. global have_esttab = (_rc == 0)
+
+. capture which xtlsdvc
+
+. global have_xtlsdvc = (_rc == 0)
+
+. 
+. *** 1. Import and labels --------------------------------------------------------
+. import excel "$data", sheet("Analisis Luaran 2") firstrow clear
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/Determinan TFP Provinsi BKPM.dta could not be loaded
+r(603);
+
+end of do-file
+
+r(603);
+
+. do "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/Determinan TFP Provinsi BKPM.do"
+
+. *** Determinants of provincial TFP, Indonesia 34 provinces x 2017-2025 (balanced)
+. *** PCA pillar indices + static and dynamic panel models with post-estimation tests
+. *
+. * Data     : "Dataset Agregasi Provinsi Penyetaraan Satuan Miliar Float.xlsx",
+. *            sheet "Analisis Luaran 2" (labels from "Keterangan Data Luaran 2")
+. * Dependent: logtfp_it (log TFP level per province-year; robustness: logtfp_it_crs)
+. * Pillars  : (1) Human resource : Educ_Prov Campus_Prov IPM_Prov_Nm Gini_Prov
+. *            (2) Institution    : PDBDeflator rasio_pad serapan_belanja Crime2_Prov IDI_Prov2
+. *            (3) Connectivity   : jalan_mantap_pct Airpot_Total Cargo_Total
+. *            (4) Industry       : Upah_Agr_Prov Industry_Prov
+. * Controls : IKLH_Prov Hijau_Prov Biru_Prov (environmental quality)
+. *
+. * Sections : 0 setup | 1 import + labels | 2 panel structure | 3 variable
+. *            construction | 4 descriptives | 5 PCA indices | 6 pre-estimation
+. *            diagnostics | 7 static panel models | 8 dynamic panel models |
+. *            9 robustness | 10 summary tables + decision guide | 11 export
+. *
+. * Model survey (why each estimator is here; see the companion markdown note):
+. *  POLS   pooled OLS, cluster-robust SE      : benchmark; ignores province effects
+. *  FE     one-way fixed effects (within)    : consistent if province effects
+. *                                             correlate with the regressors
+. *  FE2W   two-way FE (province + year)      : also removes common shocks
+. *                                             (COVID-19 2020-21, national policy)
+. *  RE     random effects (Swamy-Arora GLS)  : efficient only if province effects
+. *                                             are uncorrelated with the regressors
+. *  CRE    Mundlak correlated random effects : RE + group means; the joint test on
+. *                                             the means is a cluster-robust Hausman
+. *  XTREGAR FE/RE with AR(1) disturbances    : reports Bhargava DW and Baltagi-Wu LBI
+. *  FGLS   xtgls, panel heteroskedastic AR(1): N=34 > T=9 so cross-panel correlation
+. *                                             cannot be estimated (panels(corr) infeasible)
+. *  PCSE   Beck-Katz PCSE on LSDV            : heteroskedastic + AR(1), with dummies
+. *  DK     Driscoll-Kraay (xtscc, fe)        : SE robust to cross-sectional dependence
+. *  FE-LDV FE with lagged TFP                : Nickell bias of order 1/T (T=9 -> sizeable)
+. *  AH     Anderson-Hsiao IV in differences  : consistent but inefficient (level
+. *                                             instrument y(t-2); first-stage F shown)
+. *  AB     Arellano-Bond difference GMM      : weak instruments when TFP is persistent
+. *  SYS    Blundell-Bond system GMM          : adds level equation; N=34 so keep the
+. *                                             instrument count below N (collapse)
+. *  LSDVC  bias-corrected LSDV (Kiviet/Bruno) : designed for small N; Monte Carlo
+. *                                             evidence favours it over GMM when N~34
+. *  OLS/FE bounds: the lagged-TFP coefficient of a valid GMM should lie between the
+. *                 FE (downward biased) and pooled OLS (upward biased) estimates
+. *
+. * Post-estimation tests supplied per model:
+. *  POLS  : VIF, Breusch-Pagan/Cook-Weisberg, RESET, Wooldridge serial corr, BP-LM
+. *  FE    : F test for u_i = 0, Hausman (classic + robust), modified Wald (xttest3),
+. *          Wooldridge (xtserial), Pesaran/Frees/Friedman CD (xtcsd), year effects,
+. *          residual normality; panel unit roots (HT, LLC, Breitung, IPS, Fisher) and
+. *          cointegration (Kao, Pedroni, Westerlund) before estimation
+. *  RE    : Breusch-Pagan LM (xttest0), Hausman, Sargan-Hansen overid (xtoverid),
+. *          Mundlak joint test, theta
+. *  FGLS  : LR test for groupwise heteroskedasticity
+. *  GMM   : Arellano-Bond AR(1)/AR(2), Sargan, Hansen, difference-in-Hansen,
+. *          instrument count vs N, OLS/FE bounds check, long-run multipliers
+. 
+. * version 17
+. clear all
+
+. set more off
+
+. set seed 12345
+
+. capture log close

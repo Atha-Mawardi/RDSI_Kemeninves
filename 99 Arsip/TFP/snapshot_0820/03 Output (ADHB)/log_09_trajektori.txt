@@ -1,0 +1,4 @@
+Basis adhb: tiga gambar trajektori sengaja TIDAK dibuat.
+Alasan: sasaran 8 persen Masterplan adalah pertumbuhan riil, sedangkan
+laju basis pada basis ini nominal. Membandingkannya tidak setara.
+Angka simulasinya tetap tersedia di Simulasi Trajektori 2026-2029.xlsx.
