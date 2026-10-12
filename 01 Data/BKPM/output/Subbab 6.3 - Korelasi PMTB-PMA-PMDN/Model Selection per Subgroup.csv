@@ -1,0 +1,43 @@
+"subgroup","bentuk","n","model_AIC","model_BIC","within_R2","AIC","BIC","d_AIC_vs_linear","loo_min","loo_max","stabilitas"
+"Nasional - Semua","log",306,"spline_df3","spline_df3",0.301,-552.9,-381.7,-62.2,NA,NA,"nasional (34 prov)"
+"Nasional - Semua","growth",272,"kuadratik","linear",0.04,-568.2,-531.3,-0.8,NA,NA,"nasional (34 prov)"
+"Nasional - Pre","log",102,"spline_df3","spline_df3",0.222,-300,-195,-17.4,NA,NA,"nasional (34 prov)"
+"Nasional - Pre","growth",68,"linear","linear",0.027,-122.9,-114,0,NA,NA,"nasional (34 prov)"
+"Nasional - Post","log",136,"linear","linear",0.068,-444.5,-330.9,0,NA,NA,"nasional (34 prov)"
+"Nasional - Post","growth",136,"linear","linear",0.03,-302.8,-285.3,0,NA,NA,"nasional (34 prov)"
+"Sumatera - Semua","log",90,"linear","linear",0.02,-352.9,-302.9,0,0.006,0.044,"cukup stabil"
+"Sumatera - Semua","growth",80,"linear","linear",0.021,-343.9,-320.1,0,0.005,0.035,"cukup stabil"
+"Sumatera - Pre","log",30,"linear","linear",0,-134.9,-115.3,0,0,0.08,"cukup stabil"
+"Sumatera - Pre","growth",20,"asimetris","linear",0.126,-86.7,-82.5,-0.3,0.068,0.194,"cukup stabil"
+"Sumatera - Post","log",40,"resiprokal","resiprokal",0.195,-180,-153,-1.9,0.023,0.344,"tidak stabil"
+"Sumatera - Post","growth",40,"linear","linear",0.034,-172.1,-161.9,0,0.009,0.085,"cukup stabil"
+"Jawa - Semua","log",54,"piecewise","piecewise",0.282,-186.2,-150.4,-9.8,0.224,0.402,"cukup stabil"
+"Jawa - Semua","growth",48,"kuadratik","kuadratik",0.203,-196.8,-176.2,-3.6,0.18,0.283,"cukup stabil"
+"Jawa - Pre","log",18,"spline_df4","piecewise",0.624,-79.3,-68.4,-3.5,NA,NA,NA
+"Jawa - Pre","growth",12,"spline_df4","spline_df4",0.849,-58.3,-54.9,-13.9,NA,NA,NA
+"Jawa - Post","log",24,"resiprokal","kuadratik",0.439,-119.5,-105.3,-11.4,0.064,0.597,"tidak stabil"
+"Jawa - Post","growth",24,"asimetris","asimetris",0.418,-120.7,-112.5,-7.3,0.197,0.567,"tidak stabil"
+"Bali-Nusra - Semua","log",27,"linear","linear",0.217,-98.4,-81.6,0,0,0.713,"tidak stabil"
+"Bali-Nusra - Semua","growth",24,"spline_df4","spline_df4",0.421,-94.5,-79.1,-6.8,NA,NA,NA
+"Bali-Nusra - Pre","log",NA,"tak cukup data","tak cukup data",NA,NA,NA,NA,NA,NA,NA
+"Bali-Nusra - Pre","growth",NA,"tak cukup data","tak cukup data",NA,NA,NA,NA,NA,NA,NA
+"Bali-Nusra - Post","log",12,"linear","linear",0.56,-58.6,-54.7,0,NA,NA,NA
+"Bali-Nusra - Post","growth",12,"spline_df3","linear",0.335,-45.8,-42.5,-0.4,NA,NA,NA
+"Kalimantan - Semua","log",45,"spline_df3","spline_df3",0.773,-202.8,-172.1,-62.6,0.433,0.857,"tidak stabil"
+"Kalimantan - Semua","growth",40,"linear","linear",0.014,-161.9,-145,0,0.001,0.044,"cukup stabil"
+"Kalimantan - Pre","log",15,"piecewise","piecewise",0.786,-92.9,-85.1,-4.2,NA,NA,NA
+"Kalimantan - Pre","growth",NA,"tak cukup data","tak cukup data",NA,NA,NA,NA,NA,NA,NA
+"Kalimantan - Post","log",20,"piecewise","piecewise",0.798,-102.9,-90.9,-26.3,0.721,0.929,"cukup stabil"
+"Kalimantan - Post","growth",20,"linear","linear",0,-74,-68,0,0,0.058,"cukup stabil"
+"Sulawesi - Semua","log",54,"spline_df4","spline_df3",0.845,-151.1,-114.6,-75.1,0.132,0.88,"tidak stabil"
+"Sulawesi - Semua","growth",48,"kuadratik","linear",0.064,-86.6,-67.6,-0.3,0.05,0.165,"cukup stabil"
+"Sulawesi - Pre","log",18,"kubik","kubik",0.713,-81.9,-71.2,-18.3,0.345,0.865,"tidak stabil"
+"Sulawesi - Pre","growth",12,"linear","linear",0.02,-33.5,-31.6,0,0.022,0.074,"cukup stabil"
+"Sulawesi - Post","log",24,"piecewise","piecewise",0.266,-130.1,-114.8,-2.8,0.156,0.386,"cukup stabil"
+"Sulawesi - Post","growth",24,"kubik","kubik",0.447,-80.2,-70.7,-8.6,0.366,0.773,"tidak stabil"
+"Maluku-Papua - Semua","log",36,"kubik","kubik",0.84,-40.9,-15.6,-49.2,0.102,0.932,"tidak stabil"
+"Maluku-Papua - Semua","growth",32,"kuadratik","linear",0.137,-1.8,13.2,-0.3,0.119,0.266,"cukup stabil"
+"Maluku-Papua - Pre","log",12,"linear","linear",0.317,-11.7,-7.9,0,NA,NA,NA
+"Maluku-Papua - Pre","growth",NA,"tak cukup data","tak cukup data",NA,NA,NA,NA,NA,NA,NA
+"Maluku-Papua - Post","log",16,"piecewise","piecewise",0.59,-32.2,-23.7,-7,NA,NA,NA
+"Maluku-Papua - Post","growth",16,"linear","linear",0.048,2.9,7.5,0,0.004,0.195,"cukup stabil"

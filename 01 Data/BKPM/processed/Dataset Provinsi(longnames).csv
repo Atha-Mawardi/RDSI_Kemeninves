@@ -1,0 +1,32 @@
+klasifikasi,kodename
+sektor,Agrikultur
+sektor,Pertambangan
+sektor,Manufaktur
+sektor,Listrik dan gas
+sektor,Air dan limbah
+sektor,Konstruksi
+sektor,Perdagangan dan reparasi
+sektor,Transportasi dan pergudangan
+sektor,Akomodasi dan mamin
+sektor,Infokom
+sektor,Keuangan dan asuransi
+sektor,Real estat
+sektor,Jasa perusahaan
+sektor,Pemerintahan dan Jamsos
+sektor,Pendidikan
+sektor,Kesehatan dan Kesos
+sektor,Jasa lainnya
+investment,PMA
+investment,PMDN
+investment,PMTB
+megasector,Primer
+megasector,Sekunder
+megasector,Tersier
+megasector,Kuarterner
+alternative,Sektor Agrikultur
+alternative,Sektor Pertambangan
+alternative,Sektor Manufaktur
+alternative,Sektor Tersier
+alternative,Sektor Jasa
+total,total_pdrb
+total,pma_pmdn

@@ -1,0 +1,21 @@
+kodename,sect_name,sect_klas_megasektor,sect_klas_alt
+A_ADHB,Agrikultur,Primer,Sektor Agrikultur
+B_ADHB,Pertambangan,Primer,Sektor Pertambangan
+C_ADHB,Manufaktur,Sekunder,Sektor Manufaktur
+D_ADHB,Listrik dan gas,Tersier,Sektor Tersier
+E_ADHB,Air dan limbah,Tersier,Sektor Tersier
+F_ADHB,Konstruksi,Sekunder,Sektor Tersier
+G_ADHB,Perdagangan dan reparasi,Tersier,Sektor Jasa
+H_ADHB,Transportasi dan pergudangan,Tersier,Sektor Jasa
+I_ADHB,Akomodasi dan mamin,Tersier,Sektor Jasa
+J_ADHB,Infokom,Kuarterner,Sektor Jasa
+K_ADHB,Keuangan dan asuransi,Kuarterner,Sektor Jasa
+L_ADHB,Real estat,Kuarterner,Sektor Jasa
+MN_ADHB,Jasa perusahaan,Kuarterner,Sektor Jasa
+O_ADHB,Pemerintahan dan Jamsos,Kuarterner,Sektor Jasa
+P_ADHB,Pendidikan,Kuarterner,Sektor Jasa
+Q_ADHB,Kesehatan dan Kesos,Kuarterner,Sektor Jasa
+RSTU_ADHB,Jasa lainnya,Kuarterner,Sektor Jasa
+PMA_1,PMA,,
+PMDN_1,PMDN,,
+4_ADHB,PMTB,,
