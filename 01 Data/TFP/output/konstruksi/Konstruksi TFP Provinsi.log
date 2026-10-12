@@ -1,0 +1,382 @@
+--------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output
+> /konstruksi/Konstruksi TFP Provinsi.log
+  log type:  text
+ opened on:  19 Sep 2026, 11:59:38
+
+. display as text "proj = $proj"
+proj = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves
+
+. display as text "data = $data"
+data = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/AI-Pak_Yudis
+> /Dataset Agregasi Provinsi Penyetaraan Satuan Miliar Float (keamanan).xlsx
+
+. 
+. *** Import 
+. import excel "$data", sheet("Sheet1") firstrow clear
+(171 vars, 306 obs)
+
+. * Label variabel tetap nama Excel. Residual logtfp di sheet pake paste lama; dibuang.
+. foreach v of varlist _all {
+  2.         local lab : variable label `v'
+  3.         if "`lab'" == "9_ADHK" rename `v' pdrb_adhk
+  4.         if "`lab'" == "4_ADHK" rename `v' pmtb_adhk
+  5. }
+
+. capture drop logtfp_it logtfp_it_crs log_ADHK_Tot log_pmtb log_lab_tot
+
+. 
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. keep if inrange(Year, 2017, 2024)
+(34 observations deleted)
+
+. 
+. egen double labours_total = rowtotal(*_TenagaKerja)
+
+. drop if missing(pdrb_adhk) | missing(pmtb_adhk) | labours_total <= 0
+(0 observations deleted)
+
+. 
+. isid Code_Prov Year
+
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. xtdescribe
+
+Code_Prov:  11, 12, ..., 94                                  n =         34
+    Year:  2017, 2018, ..., 2024                             T =          8
+           Delta(Year) = 1 unit
+           Span(Year)  = 8 periods
+           (Code_Prov*Year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         8       8       8         8         8       8       8
+
+     Freq.  Percent    Cum. |  Pattern
+ ---------------------------+----------
+       34    100.00  100.00 |  11111111
+ ---------------------------+----------
+       34    100.00         |  XXXXXXXX
+
+. 
+. *** Logs 
+. gen double log_Y = ln(pdrb_adhk)
+
+. gen double log_K = ln(pmtb_adhk)
+
+. gen double log_L = ln(labours_total)
+
+. label variable pdrb_adhk "PDRB ADHK (kolom 9_ADHK)"
+
+. label variable pmtb_adhk "PMTB ADHK (kolom 4_ADHK)"
+
+. label variable log_Y "ln PDRB ADHK"
+
+. label variable log_K "ln PMTB ADHK"
+
+. label variable log_L "ln tenaga kerja 17 sektor"
+
+. label variable labours_total "tenaga kerja total (jiwa)"
+
+. 
+. *** Fungsi produksi 
+. * Pembanding singkat --> model yang dipakai: FE2W
+. regress log_Y log_K log_L, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        272
+                                                F(2, 33)          =     470.16
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9618
+                                                Root MSE          =     .22286
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+       log_Y | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       log_K |   .8697422   .0544339    15.98   0.000     .7589955    .9804889
+       log_L |    .138696   .0664571     2.09   0.045     .0034881     .273904
+       _cons |   .5587887   .6096014     0.92   0.366    -.6814547    1.799032
+------------------------------------------------------------------------------
+
+. estimates store POLS
+
+. 
+. xtreg log_Y log_K log_L, fe vce(cluster Code_Prov)
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.8306                                         min =          8
+     Between = 0.9090                                         avg =        8.0
+     Overall = 0.9082                                         max =          8
+
+                                                F(2,33)           =     207.86
+corr(u_i, Xb) = -0.4654                         Prob > F          =     0.0000
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+       log_Y | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       log_K |   .4927042   .0809055     6.09   0.000     .3281007    .6573076
+       log_L |   .7377084    .115245     6.40   0.000     .5032407    .9721761
+       _cons |  -4.045367   1.088189    -3.72   0.001    -6.259304    -1.83143
+-------------+----------------------------------------------------------------
+     sigma_u |  .39078011
+     sigma_e |  .04554101
+         rho |  .98660071   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. estimates store FE
+
+. 
+. xtreg log_Y log_K log_L, re vce(cluster Code_Prov)
+
+Random-effects GLS regression                   Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.8221                                         min =          8
+     Between = 0.9299                                         avg =        8.0
+     Overall = 0.9290                                         max =          8
+
+                                                Wald chi2(2)      =    1258.29
+corr(u_i, X) = 0 (assumed)                      Prob > chi2       =     0.0000
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+       log_Y | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       log_K |    .543855   .0851945     6.38   0.000     .3768769     .710833
+       log_L |   .5509136   .0978832     5.63   0.000     .3590661    .7427612
+       _cons |  -1.887939   .6414762    -2.94   0.003    -3.145209   -.6306687
+-------------+----------------------------------------------------------------
+     sigma_u |  .22267438
+     sigma_e |  .04554101
+         rho |  .95985154   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. estimates store RE
+
+. 
+. xtreg log_Y log_K log_L i.Year, fe vce(cluster Code_Prov)
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.8985                                         min =          8
+     Between = 0.9544                                         avg =        8.0
+     Overall = 0.9494                                         max =          8
+
+                                                F(9,33)           =     293.42
+corr(u_i, Xb) = 0.8859                          Prob > F          =     0.0000
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+       log_Y | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       log_K |   .3874222    .044409     8.72   0.000     .2970715     .477773
+       log_L |   .1928021   .0926228     2.08   0.045     .0043597    .3812446
+             |
+        Year |
+       2018  |   .0281829    .003873     7.28   0.000     .0203032    .0360627
+       2019  |    .043677   .0108211     4.04   0.000     .0216614    .0656927
+       2020  |   .0416633   .0125865     3.31   0.002     .0160558    .0672708
+       2021  |      .0597   .0116725     5.11   0.000     .0359521    .0834479
+       2022  |   .0941466    .013619     6.91   0.000     .0664386    .1218545
+       2023  |   .1276634   .0129118     9.89   0.000     .1013942    .1539326
+       2024  |   .1576275   .0143053    11.02   0.000     .1285232    .1867319
+             |
+       _cons |   4.944096   1.222831     4.04   0.000     2.456227    7.431965
+-------------+----------------------------------------------------------------
+     sigma_u |  .55354925
+     sigma_e |  .03578508
+         rho |  .99583821   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. estimates store FE2W
+
+. test log_K + log_L = 1
+
+ ( 1)  log_K + log_L = 1
+
+       F(  1,    33) =   24.51
+            Prob > F =    0.0000
+
+. display as text "FE2W  b1 = " %6.4f _b[log_K] "  b2 = " %6.4f _b[log_L] ///
+>         "  b1+b2 = " %6.4f (_b[log_K] + _b[log_L])
+FE2W  b1 = 0.3874  b2 = 0.1928  b1+b2 = 0.5802
+
+. 
+. scalar b1 = _b[log_K]
+
+. scalar b2 = _b[log_L]
+
+. 
+. gen double logtfp_it = log_Y - b1*log_K - b2*log_L
+
+. label variable logtfp_it "ln residual PMTB riil (DRS, two-way FE)"
+
+. 
+. *** CRS (peringkat antarprovinsi)
+. gen double log_y_l = log_Y - log_L
+
+. gen double log_k_l = log_K - log_L
+
+. xtreg log_y_l log_k_l i.Year, fe vce(cluster Code_Prov)
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.7386                                         min =          8
+     Between = 0.8440                                         avg =        8.0
+     Overall = 0.8300                                         max =          8
+
+                                                F(8,33)           =      81.94
+corr(u_i, Xb) = 0.7414                          Prob > F          =     0.0000
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+     log_y_l | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     log_k_l |   .4340731   .0617459     7.03   0.000     .3084501    .5596962
+             |
+        Year |
+       2018  |   .0135146   .0048661     2.78   0.009     .0036144    .0234148
+       2019  |   .0193207   .0084556     2.28   0.029     .0021177    .0365237
+       2020  |   .0165263   .0104814     1.58   0.124    -.0047983    .0378509
+       2021  |   .0239629     .00945     2.54   0.016     .0047367    .0431891
+       2022  |   .0475479   .0096692     4.92   0.000     .0278757    .0672201
+       2023  |   .0682327   .0125008     5.46   0.000     .0427996    .0936658
+       2024  |    .084925    .014526     5.85   0.000     .0553716    .1144785
+             |
+       _cons |  -.9475081   .2265584    -4.18   0.000    -1.408445   -.4865716
+-------------+----------------------------------------------------------------
+     sigma_u |  .33531355
+     sigma_e |  .03887686
+         rho |   .9867358   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. scalar b1_crs = _b[log_k_l]
+
+. gen double logtfp_it_crs = log_y_l - b1_crs*log_k_l
+
+. label variable logtfp_it_crs "ln residual per pekerja (CRS)"
+
+. display as text "CRS   b1 = " %6.4f b1_crs "  b2 = " %6.4f (1 - b1_crs)
+CRS   b1 = 0.4341  b2 = 0.5659
+
+. 
+. egen double z_logtfp = std(logtfp_it)
+
+. egen double z_logtfp_crs = std(logtfp_it_crs)
+
+. label variable z_logtfp "z-score logtfp_it (seluruh sampel)"
+
+. label variable z_logtfp_crs "z-score logtfp_it_crs (seluruh sampel)"
+
+. 
+. *** Cek
+. summarize log_Y log_K log_L logtfp_it logtfp_it_crs z_logtfp, separator(0)
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       log_Y |        272    12.02284    1.135565   10.05488   14.58652
+       log_K |        272    10.86473    1.138716    8.87482   13.60073
+       log_L |        272    14.52486    1.009644    12.6464   16.94411
+   logtfp_it |        272    5.013179    .5496108   3.933584   6.347955
+logtfp_it_~s |        272   -.9132543     .334043  -1.706714  -.0330045
+    z_logtfp |        272    2.83e-16           1  -1.964289   2.428584
+
+. correlate logtfp_it logtfp_it_crs log_Y
+(obs=272)
+
+             | logtfp~t logtfp~s    log_Y
+-------------+---------------------------
+   logtfp_it |   1.0000
+logtfp_it_~s |   0.6382   1.0000
+       log_Y |   0.9699   0.4509   1.0000
+
+
+. xtsum logtfp_it logtfp_it_crs
+
+Variable         |      Mean   Std. dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+logtfp~t overall |  5.013179   .5496108   3.933584   6.347955 |     N =     272
+         between |             .5535493   4.124761   6.249189 |     n =      34
+         within  |             .0597501   4.793296   5.285883 |     T =       8
+                 |                                            |
+logtfp~s overall | -.9132543    .334043  -1.706714  -.0330045 |     N =     272
+         between |             .3353136  -1.686309   -.111659 |     n =      34
+         within  |             .0453185  -1.098164  -.7192668 |     T =       8
+
+. table Year, statistic(mean logtfp_it) statistic(sd logtfp_it) nformat(%9.3f)
+
+-------------------------------------
+        |   Mean   Standard deviation
+--------+----------------------------
+Year    |                            
+  2017  |  4.944                0.555
+  2018  |  4.972                0.551
+  2019  |  4.988                0.561
+  2020  |  4.986                0.563
+  2021  |  5.004                0.558
+  2022  |  5.038                0.558
+  2023  |  5.072                0.547
+  2024  |  5.102                0.543
+  Total |  5.013                0.550
+-------------------------------------
+
+. 
+. *** Save
+. keep Code_Prov Pre_Prov Year pdrb_adhk pmtb_adhk labours_total ///
+>         log_Y log_K log_L logtfp_it logtfp_it_crs z_logtfp z_logtfp_crs
+
+. order Code_Prov Pre_Prov Year
+
+. compress
+  variable labours_total was double now long
+  (1,088 bytes saved)
+
+. save "${outdir}/TFP Provinsi 2017-2024.dta", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01
+    Data/TFP/output/konstruksi/TFP Provinsi 2017-2024.dta saved
+
+. export excel using "${outdir}/TFP Provinsi 2017-2024.xlsx", sheet("tfp") firstrow(variable
+> s) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/konstru
+> ksi/TFP Provinsi 2017-2024.xlsx saved
+
+. 
+. display as text _n "b1 (FE2W) = " %8.6f b1 "  b2 = " %8.6f b2
+
+b1 (FE2W) = 0.387422  b2 = 0.192802
+
+. display as text "b1_crs    = " %8.6f b1_crs
+b1_crs    = 0.434073
+
+. display as text "saved: $outdir"
+saved: /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/konst
+> ruksi
+
+. log close
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output
+> /konstruksi/Konstruksi TFP Provinsi.log
+  log type:  text
+ closed on:  19 Sep 2026, 11:59:39
+--------------------------------------------------------------------------------------------

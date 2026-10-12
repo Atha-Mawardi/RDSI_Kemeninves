@@ -1,0 +1,167 @@
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Basis harga modal: adhb | keluaran: 03 Output (ADHB)
+
+=============== 1. Seri nasional (agregasi provinsi) ===============
+ Year    Y   K        L n_prov
+ 2017 13.7 4.4 116359.2     34
+ 2018 15.0 4.8 118995.7     34
+ 2019 16.0 5.2 121396.8     34
+ 2020 15.8 5.0 120424.9     34
+ 2021 17.0 5.3 122962.6     34
+ 2022 19.1 5.8 126114.5     34
+ 2023 20.5 6.3 130570.3     34
+ 2024 22.0 6.8 134561.2     34
+
+Pertumbuhan nasional (log-difference, %/thn):
+ Year   g_Y   g_K   g_L
+ 2017    NA    NA    NA
+ 2018  8.64  9.67  2.24
+ 2019  6.83  6.89  2.00
+ 2020 -1.73 -3.72 -0.80
+ 2021  7.26  6.73  2.09
+ 2022 12.17  8.90  2.53
+ 2023  6.99  8.17  3.47
+ 2024  7.00  6.69  3.01
+
+-- Stok modal PIM nasional: pertumbuhan stok vs pertumbuhan arus --
+g(PMTB) arus = 6.19%/thn
+             label g_K_pim
+ delta=5%, g0=4.0%    4.81
+ delta=5%, g0=6.2%    6.46
+ delta=8%, g0=4.0%    5.03
+ delta=8%, g0=6.2%    6.53
+Nilai tengah dipakai sebagai skenario PIM: 5.74%/thn
+
+=============== 2. Skenario elastisitas ===============
+          skenario
+    A. Level (CRS)
+   B. Growth (CRS)
+ C. Pangsa terukur
+  D. Alfa baku 1/3
+      E. PIM (CRS)
+      F. Tanpa CRS
+                                                                        dasar
+               elastisitas terestimasi bentuk level, dipaksa CRS (pembanding)
+        elastisitas terestimasi bentuk growth, dinormalisasi CRS (pembanding)
+ growth accounting ala Rusiawan, bobot pangsa pendapatan terukur (pembanding)
+              asumsi awal kerangka 7.3.2 laporan, tanpa estimasi (pembanding)
+            elastisitas A, modal diukur stok PIM bukan arus PMTB (pembanding)
+                  elastisitas two-way FE apa adanya, b1+b2=0,47 (BASIS/UTAMA)
+     b1     b2
+ 0.5162 0.4838
+ 0.4846 0.5154
+ 0.8409 0.1591
+ 0.3333 0.6667
+ 0.5162 0.4838
+ 0.4584 0.0152
+
+=============== 3. Dekomposisi ===============
+Cek identitas |K + L + sisa - gY| maks = 0e+00 
+
+-- 2018-2024 (penuh) --
+   pertumbuhan: PDRB harga berlaku 6.74% | PMTB 6.19% | tenaga kerja 2.08%
+          skenario   b1 kontrib_K kontrib_L sisa pangsa_K pangsa_L pangsa_sisa
+    A. Level (CRS) 0.52      3.20      1.00 2.54    47.44    14.91       37.65
+   B. Growth (CRS) 0.48      3.00      1.07 2.67    44.53    15.89       39.59
+ C. Pangsa terukur 0.84      5.21      0.33 1.20    77.27     4.90       17.83
+  D. Alfa baku 1/3 0.33      2.06      1.38 3.29    30.63    20.55       48.82
+      E. PIM (CRS) 0.52      2.97      1.00 2.77    44.02    14.91       41.07
+      F. Tanpa CRS 0.46      2.84      0.03 3.87    42.12     0.47       57.41
+
+=============== 4. Rentang dan jarak ke sasaran ===============
+           periode   gY sisa_min sisa_maks K_min K_maks
+ 2018-2024 (penuh) 6.74      1.2      3.87  2.06   5.21
+
+-- Amplop: sisa sebagai fungsi b1 (di bawah CRS) --
+sisa = 4.66 - 4.11 x b1   (gY=6.74, gL=2.08, gK-gL=4.11)
+  batas atas mutlak (b1=0): 4.66 poin = 69.2% pertumbuhan
+  sisa = 0 pada b1 = 1.133
+  sisa melampaui 25% pertumbuhan hanya bila b1 < 0.723
+
+  Ambang 25% bergantung g(K) yang dipakai:
+             label g_K_pim ambang
+         arus PMTB   6.190  0.723
+ delta=8%, g0=6.2%   6.533  0.668
+ delta=5%, g0=6.2%   6.459  0.679
+ delta=8%, g0=4.0%   5.030  1.008
+ delta=5%, g0=4.0%   4.814  1.087
+  -> rentang ambang 0.668 s.d. 1.087
+
+  Estimasi b1 yang tersedia:
+                          sumber    b1                  crs
+              two-way FE (utama) 0.458                tidak
+                 CRS per-pekerja 0.516                   ya
+                  panel berbobot 0.418                tidak
+            bentuk growth mentah 0.254 tidak (jumlah 0,416)
+ bentuk growth dinormalisasi CRS 0.485                   ya
+
+=============== 5. Jarak ke sasaran Gerakan 8-4-2-2 ===============
+Sasaran (Bappenas, Perpres 12/2025): 8% = 4 poin modal + 2 poin TFP + 2 poin tenaga kerja.
+Realisasi dihitung dengan skenario F (elastisitas terestimasi non-CRS, b1~0,400).
+     komponen sasaran realisasi jarak
+        Modal       4      2.84  1.16
+ Tenaga kerja       2      0.03  1.97
+   TFP (sisa)       2      3.87 -1.87
+       Output       8      6.74  1.26
+
+Catatan: sasaran 2 poin TFP diturunkan Bappenas dengan stok modal PIM dan
+pangsa pendapatan (alfa=1/3), sedangkan realisasi di sini memakai elastisitas
+terestimasi non-CRS, sehingga perbandingan ini indikatif, bukan setara penuh.
+
+=============== 6. Pembanding eksternal (bukan validasi) ===============
+                          sumber   periode   tfp ukuran_modal
+        APO (Masterplan Tabel 1) 2016-2022 -0.35         stok
+              van der Eng (2009) 1971-2007 -0.20     stok PIM
+            Rusiawan dkk. (2015) 1976-2011 -0.62     stok PIM
+ Kajian ini (efek tahun non-CRS) 2017-2024  4.21    arus PMTB
+     Kajian ini (efek tahun CRS) 2017-2024  2.81    arus PMTB
+                                bobot
+                    pangsa pendapatan
+                    pangsa pendapatan
+                       pangsa Divisia
+      elastisitas terestimasi (UTAMA)
+ elastisitas terestimasi (pembanding)
+
+Hanya APO yang periodenya beririsan dengan sampel kami; van der Eng dan
+Rusiawan berakhir sebelum sampel dimulai. Kemiripan angka tidak boleh dibaca
+sebagai validasi. Basis UTAMA non-CRS memberi +4.21%/thn, yang lebih tinggi dari seluruh pembanding; varian CRS
+(pembanding) +2.81%/thn kebetulan mendekati mereka karena sama-sama memaksakan skala 1.
+
+=============== 7. Dekomposisi per pulau ===============
+Provinsi per pulau: Bali-Nusra(3) Jawa(6) Kalimantan(5) Maluku-Papua(4) Sulawesi(6) Sumatera(10) | total 34 
+Cek identitas per pulau, maks = 8.881784e-16 
+
+-- A. Level (CRS) --
+        Pulau   gY   gK   gL kontrib_K kontrib_L sisa pangsa_sisa
+     Sulawesi 8.91 8.48 2.81      4.38      1.36 3.17       35.54
+     Sumatera 6.99 6.04 1.94      3.12      0.94 2.93       41.91
+         Jawa 6.40 5.63 1.84      2.91      0.89 2.60       40.70
+ Maluku-Papua 8.24 8.39 4.53      4.33      2.19 1.71       20.77
+   Bali-Nusra 5.26 4.59 2.68      2.37      1.30 1.60       30.34
+   Kalimantan 6.75 8.30 2.08      4.29      1.01 1.46       21.66
+
+-- F. Tanpa CRS --
+        Pulau   gY   gK   gL kontrib_K kontrib_L sisa pangsa_sisa
+     Sulawesi 8.91 8.48 2.81      3.89      0.04 4.97       55.86
+ Maluku-Papua 8.24 8.39 4.53      3.85      0.07 4.32       52.44
+     Sumatera 6.99 6.04 1.94      2.77      0.03 4.19       59.95
+         Jawa 6.40 5.63 1.84      2.58      0.03 3.79       59.24
+   Bali-Nusra 5.26 4.59 2.68      2.10      0.04 3.12       59.25
+   Kalimantan 6.75 8.30 2.08      3.81      0.03 2.92       43.19
+
+Pembanding Masterplan Tabel 6 (TFP rata-rata 2013-22, metode & periode berbeda):
+  Sumatra +0,27 | Jawa -1,54 | Nusa Tenggara -7,16 | Kalimantan -3,63
+  Sulawesi +1,71 | Maluku +4,29 | Papua +0,16 | Total -1,66
+  Catatan: seri output tahunan Tabel 6 untuk 2020-2022 rusak (nilai absolut
+  identik bertanda selang-seling), jadi hanya rata-rata periodenya yang dipakai.
+
+=============== SELESAI ===============

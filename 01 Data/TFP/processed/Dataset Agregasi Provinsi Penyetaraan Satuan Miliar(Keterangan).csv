@@ -1,0 +1,157 @@
+,,,
+Code_Prov,Kode Provinsi sebelum Pemekaran,,
+Year,Tahun,,
+Pre_Prov,Nama Provinsi sebelum Pemekaran,,
+,,,
+Variabel,Keterangan,Penyetaraan Satuan,Metode Agregasi Papua
+Grwth1_Prov,Pertumbuhan Ekonomi (%) dalam PDRB Nominal (ADHB)*,Persen,Menggunakan Data Induk Provinsi
+Grwth2_Prov,Pertumbuhan Ekonomi (%) dalam PDRB ADHK* (2010 = 100),Persen,Menggunakan Data Induk Provinsi
+TPT_Prov,Tingkat Pengangguran Terbuka (%) pada Agustus,Persen,Menggunakan Data Induk Provinsi
+P0_Prov,Persentase Kemiskinan (%),Persen,Rata-rata
+Gk_Prov,Garis Kemiskinan (Rp),Rp,Rata-rata
+Ikk_Prov,Indeks Kedalaman Kemiskinan (P1),Indeks,Menggunakan Data Induk Provinsi
+Ikkk_Prov,Indeks Keparahan Kemiskinan (P2),Indeks,Menggunakan Data Induk Provinsi
+IPM_Prov,Indeks Pembangunan Manusia,Indeks,Menggunakan Data Induk Provinsi
+IPM_Prov_Nm,Indeks Pembangunan Manusia (Metode Baru),Indeks,Menggunakan Data Induk Provinsi
+Eeduc_Prov,Rata-Rata Lama Sekolah (Tahun),Tahun,Rata-rata
+Heduc_Prov,Harapan Lama Sekolah (Tahun) (Metode Baru),Tahun,Rata-rata
+Exp_Prov,Pengeluaran per Kapita (Ribu Rupiah/Orang/Tahun),Ribu Rp,Rata-rata
+Inc_Prov,Pendapatan per Kapita (Ribu Rupiah/Orang/Tahun),Ribu Rp,Rata-rata
+PMA_1,Penanaman Modal Asing Menurut Provinsi (Juta Rupiah),Milliar Rp,Dijumlahkan
+PMDN_1,Penanaman Modal Dalam Negeri Menurut Provinsi (Juta Rupiah),Milliar Rp,Dijumlahkan
+Gini_Prov,Indeks Gini (Perkotaan+Pedesaan) pada Semester 1 (Maret),Indeks,Menggunakan Data Induk Provinsi
+govspend,PDRB Pengeluaran Pemerintah (dihitung berdasar (ADHB)),Milliar Rp,Dijumlahkan
+pmtb,PDRB Pembentukan Modal Tetap Bruto (dihitung berdasar (ADHB)),Milliar Rp,Dijumlahkan
+A_ADHB,"PDRB Pertanian, Kehutanan, dan Perikanan*",Milliar Rp,Dijumlahkan
+B_ADHB,PDRB Pertambangan dan Penggalian*,Milliar Rp,Dijumlahkan
+C_ADHB,PDRB Industri Pengolahan*,Milliar Rp,Dijumlahkan
+D_ADHB,PDRB Pengadaan Listrik dan Gas*,Milliar Rp,Dijumlahkan
+E_ADHB,"PDRB Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang*",Milliar Rp,Dijumlahkan
+F_ADHB,PDRB Konstruksi*,Milliar Rp,Dijumlahkan
+G_ADHB,PDRB Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor*,Milliar Rp,Dijumlahkan
+H_ADHB,PDRB Transportasi dan Pergudangan*,Milliar Rp,Dijumlahkan
+I_ADHB,PDRB Penyediaan Akomodasi dan Makan Minum*,Milliar Rp,Dijumlahkan
+J_ADHB,PDRB Informasi dan Komunikasi*,Milliar Rp,Dijumlahkan
+K_ADHB,PDRB Jasa Keuangan dan Asuransi*,Milliar Rp,Dijumlahkan
+L_ADHB,PDRB Real Estat*,Milliar Rp,Dijumlahkan
+MN_ADHB,PDRB Jasa Perusahaan*,Milliar Rp,Dijumlahkan
+O_ADHB,"PDRB Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib*",Milliar Rp,Dijumlahkan
+P_ADHB,PDRB Jasa Pendidikan*,Milliar Rp,Dijumlahkan
+Q_ADHB,PDRB Jasa Kesehatan dan Kegiatan Sosial*,Milliar Rp,Dijumlahkan
+RSTU_ADHB,PDRB Jasa Lainnya*,Milliar Rp,Dijumlahkan
+,,,
+A_ADHK,"PDRB Pertanian, Kehutanan, dan Perikanan* (2010)",Milliar Rp,Dijumlahkan
+B_ADHK,PDRB Pertambangan dan Penggalian* (2010),Milliar Rp,Dijumlahkan
+C_ADHK,PDRB Industri Pengolahan* (2010),Milliar Rp,Dijumlahkan
+D_ADHK,PDRB Pengadaan Listrik dan Gas* (2010),Milliar Rp,Dijumlahkan
+E_ADHK,"PDRB Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang* (2010)",Milliar Rp,Dijumlahkan
+F_ADHK,PDRB Konstruksi* (2010),Milliar Rp,Dijumlahkan
+G_ADHK,PDRB Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor* (2010),Milliar Rp,Dijumlahkan
+H_ADHK,PDRB Transportasi dan Pergudangan* (2010),Milliar Rp,Dijumlahkan
+I_ADHK,PDRB Penyediaan Akomodasi dan Makan Minum* (2010),Milliar Rp,Dijumlahkan
+J_ADHK,PDRB Informasi dan Komunikasi* (2010),Milliar Rp,Dijumlahkan
+K_ADHK,PDRB Jasa Keuangan dan Asuransi* (2010),Milliar Rp,Dijumlahkan
+L_ADHK,PDRB Real Estate* (2010),Milliar Rp,Dijumlahkan
+MN_ADHK,PDRB Jasa Perusahaan* (2010),Milliar Rp,Dijumlahkan
+O_ADHK,"PDRB Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib* (2010)",Milliar Rp,Dijumlahkan
+P_ADHK,PDRB Jasa Pendidikan* (2010),Milliar Rp,Dijumlahkan
+Q_ADHK,PDRB Jasa Kesehatan dan Kegiatan Sosial* (2010),Milliar Rp,Dijumlahkan
+RSTU_ADHK,PDRB Jasa Lainnya* (2010),Milliar Rp,Dijumlahkan
+,,,
+1_ADHB,PDRB Konsumsi Rumah Tangga ,Milliar Rp,Dijumlahkan
+2_ADHB,PDRB Konsumsi Lembaga Pendukung Rumah Tangga,Milliar Rp,Dijumlahkan
+3_ADHB,PDRB Pengeluaran Pemerintah,Milliar Rp,Dijumlahkan
+4_ADHB,PDRB Pembentukan Modal Tetap Bruto,Milliar Rp,Dijumlahkan
+5_ADHB,PDRB Perubahan Inventory/Persediaan,Milliar Rp,Dijumlahkan
+6_ADHB,PDRB Eksport Netto ,Milliar Rp,Dijumlahkan
+7_ADHB,PDRB Ekspor Barang dan Jasa Luar Negeri,Milliar Rp,Dijumlahkan
+8_ADHB,PDRB Impor Barang dan Jasa Luar Negeri,Milliar Rp,Dijumlahkan
+9_ADHB,PDRB Total,Milliar Rp,Dijumlahkan
+,,,
+1_ADHK,PDRB Konsumsi Rumah Tangga (2010),Milliar Rp,Dijumlahkan
+2_ADHK,PDRB Konsumsi Lembaga Pendukung Rumah Tangga (2010),Milliar Rp,Dijumlahkan
+3_ADHK,PDRB Pengeluaran Pemerintah (2010),Milliar Rp,Dijumlahkan
+4_ADHK,PDRB Pembentukan Modal Tetap Bruto (2010),Milliar Rp,Dijumlahkan
+5_ADHK,PDRB Perubahan Inventory/Persediaan (2010),Milliar Rp,Dijumlahkan
+6_ADHK,PDRB Ekspor Netto (2010),Milliar Rp,Dijumlahkan
+7_ADHK,PDRB Ekspor Barang dan Jasa Luar Negeri (2010),Milliar Rp,Dijumlahkan
+8_ADHK,PDRB Impor Barang dan Jasa Luar Negeri (2010),Milliar Rp,Dijumlahkan
+9_ADHB,PDRB Total (2010),Milliar Rp,Dijumlahkan
+UMP_Prov ,Tingkat Upah Minimum Per-Provinsi/Bulan (Rp),Rp,Menggunakan Data Induk Provinsi
+,,,
+A_PMA,"Pertanian, Kehutanan, dan Perikanan",Milliar Rp,Dijumlahkan
+B_PMA,Pertambangan dan Penggalian,Milliar Rp,Dijumlahkan
+C_PMA, Industri Pengolahan,Milliar Rp,Dijumlahkan
+D_PMA,Pengadaan Listrik dan Gas,Milliar Rp,Dijumlahkan
+E_PMA,"Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang",Milliar Rp,Dijumlahkan
+F_PMA,Konstruksi,Milliar Rp,Dijumlahkan
+G_PMA,Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor,Milliar Rp,Dijumlahkan
+H_PMA,Transportasi dan Pergudangan,Milliar Rp,Dijumlahkan
+I_PMA,Penyediaan Akomodasi dan Makan Minum,Milliar Rp,Dijumlahkan
+J_PMA,Informasi dan Komunikasi,Milliar Rp,Dijumlahkan
+K_PMA,Jasa Keuangan dan Asuransi,Milliar Rp,Dijumlahkan
+L_PMA,Real Estat,Milliar Rp,Dijumlahkan
+MN_PMA,Jasa Perusahaan,Milliar Rp,Dijumlahkan
+O_PMA,"Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",Milliar Rp,Dijumlahkan
+P_PMA,Jasa Pendidikan,Milliar Rp,Dijumlahkan
+Q_PMA,Jasa Kesehatan dan Kegiatan Sosial,Milliar Rp,Dijumlahkan
+RSTU_PMA,Jasa Lainnya,Milliar Rp,Dijumlahkan
+,,,
+A_PMDN,"Pertanian, Kehutanan, dan Perikanan",Milliar Rp,Dijumlahkan
+B_PMDN,Pertambangan dan Penggalian,Milliar Rp,Dijumlahkan
+C_PMDN, Industri Pengolahan,Milliar Rp,Dijumlahkan
+D_PMDN,Pengadaan Listrik dan Gas,Milliar Rp,Dijumlahkan
+E_PMDN,"Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang",Milliar Rp,Dijumlahkan
+F_PMDN,Konstruksi,Milliar Rp,Dijumlahkan
+G_PMDN,Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor,Milliar Rp,Dijumlahkan
+H_PMDN,Transportasi dan Pergudangan,Milliar Rp,Dijumlahkan
+I_PMDN,Penyediaan Akomodasi dan Makan Minum,Milliar Rp,Dijumlahkan
+J_PMDN,Informasi dan Komunikasi,Milliar Rp,Dijumlahkan
+K_PMDN,Jasa Keuangan dan Asuransi,Milliar Rp,Dijumlahkan
+L_PMDN,Real Estat,Milliar Rp,Dijumlahkan
+MN_PMDN,Jasa Perusahaan,Milliar Rp,Dijumlahkan
+O_PMDN,"Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",Milliar Rp,Dijumlahkan
+P_PMDN,Jasa Pendidikan,Milliar Rp,Dijumlahkan
+Q_PMDN,Jasa Kesehatan dan Kegiatan Sosial,Milliar Rp,Dijumlahkan
+RSTU_PMDN,Jasa Lainnya,Milliar Rp,Dijumlahkan
+,,,
+A_TenagaKerja,"Pertanian, Kehutanan, dan Perikanan",Jiwa,Dijumlahkan
+B_TenagaKerja,Pertambangan dan Penggalian,Jiwa,Dijumlahkan
+C_TenagaKerja, Industri Pengolahan,Jiwa,Dijumlahkan
+D_TenagaKerja,Pengadaan Listrik dan Gas,Jiwa,Dijumlahkan
+E_TenagaKerja,"Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang",Jiwa,Dijumlahkan
+F_TenagaKerja,Konstruksi,Jiwa,Dijumlahkan
+G_TenagaKerja,Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor,Jiwa,Dijumlahkan
+H_TenagaKerja,Transportasi dan Pergudangan,Jiwa,Dijumlahkan
+I_TenagaKerja,Penyediaan Akomodasi dan Makan Minum,Jiwa,Dijumlahkan
+J_TenagaKerja,Informasi dan Komunikasi,Jiwa,Dijumlahkan
+K_TenagaKerja,Jasa Keuangan dan Asuransi,Jiwa,Dijumlahkan
+L_TenagaKerja,Real Estat,Jiwa,Dijumlahkan
+MN_TenagaKerja,Jasa Perusahaan,Jiwa,Dijumlahkan
+O_TenagaKerja,"Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",Jiwa,Dijumlahkan
+P_TenagaKerja,Jasa Pendidikan,Jiwa,Dijumlahkan
+Q_TenagaKerja,Jasa Kesehatan dan Kegiatan Sosial,Jiwa,Dijumlahkan
+RSTU_TenagaKerja,Jasa Lainnya,Jiwa,Dijumlahkan
+,,,
+A_RataUpah,"Pertanian, Kehutanan, dan Perikanan",Rp,Rata-rata
+B_RataUpah,Pertambangan dan Penggalian,Rp,Rata-rata
+C_RataUpah, Industri Pengolahan,Rp,Rata-rata
+D_RataUpah,Pengadaan Listrik dan Gas,Rp,Rata-rata
+E_RataUpah,"Pengadaan Air, Pengelolaan Sampah, Limbah dan Daur Ulang",Rp,Rata-rata
+F_RataUpah,Konstruksi,Rp,Rata-rata
+G_RataUpah,Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor,Rp,Rata-rata
+H_RataUpah,Transportasi dan Pergudangan,Rp,Rata-rata
+I_RataUpah,Penyediaan Akomodasi dan Makan Minum,Rp,Rata-rata
+J_RataUpah,Informasi dan Komunikasi,Rp,Rata-rata
+K_RataUpah,Jasa Keuangan dan Asuransi,Rp,Rata-rata
+L_RataUpah,Real Estat,Rp,Rata-rata
+MN_RataUpah,Jasa Perusahaan,Rp,Rata-rata
+O_RataUpah,"Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",Rp,Rata-rata
+P_RataUpah,Jasa Pendidikan,Rp,Rata-rata
+Q_RataUpah,Jasa Kesehatan dan Kegiatan Sosial,Rp,Rata-rata
+RSTU_RataUpah,Jasa Lainnya,Rp,Rata-rata
+,,,
+ICORPMA,Nilai ICOR Penanaman Modal Asing,Koefisien ,Dihitung kembali setelah Agregasi
+ICORPMDN,Nilai ICOR Penanaman Modal Dalam Negeri,Koefisien ,Dihitung kembali setelah Agregasi
+ICORPMAPMDN,Nilai ICOR Penanaman Modal Asing dan Dalam Negeri,Koefisien ,Dihitung kembali setelah Agregasi
+ICORPMTB,Nilai ICOR Pembentukan Modal Tetap Bruto ,Koefisien ,Dihitung kembali setelah Agregasi

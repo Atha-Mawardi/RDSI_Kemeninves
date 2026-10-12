@@ -1,0 +1,1695 @@
+code_prov,year,variabel,metode,keterangan
+31,2017,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2018,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2019,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2020,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2021,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2022,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2023,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2024,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+31,2025,panjang_jalan_km,substitusi_BPS_jalan_DKI,kemantapan jalan nasional PU = 0/absen; diisi ~1.210 km (jalan negara+provinsi DKI)
+97,2023,pma_miliar,nol_tidak_tercatat,BKPM tidak mencatat PMA; diisi 0
+97,2024,pma_miliar,nol_tidak_tercatat,BKPM tidak mencatat PMA; diisi 0
+97,2025,pma_miliar,nol_tidak_tercatat,BKPM tidak mencatat PMA; diisi 0
+92,2023,pdrb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 91 × porsi pdrb_miliar 2024
+91,2023,pdrb_miliar,rekonstruksi_pemekaran,angka gabungan 97680.9 dipecah agar tidak dobel; sisa induk 72427.2
+92,2023,pmtb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 91 × porsi pmtb_miliar 2024
+91,2023,pmtb_miliar,rekonstruksi_pemekaran,angka gabungan 15733.2 dipecah agar tidak dobel; sisa induk 5982.4
+95,2023,pdrb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pdrb_miliar 2024
+96,2023,pdrb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pdrb_miliar 2024
+97,2023,pdrb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pdrb_miliar 2024
+94,2023,pdrb_miliar,rekonstruksi_pemekaran,angka gabungan 287900.7 dipecah agar tidak dobel; sisa induk 32190.1
+95,2023,pmtb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pmtb_miliar 2024
+96,2023,pmtb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pmtb_miliar 2024
+97,2023,pmtb_miliar,bagi_porsi_2024,angka gabungan 2023 induk 94 × porsi pmtb_miliar 2024
+94,2023,pmtb_miliar,rekonstruksi_pemekaran,angka gabungan 89205.2 dipecah agar tidak dobel; sisa induk 6733.1
+92,2023,ump,salin_induk,UMP belum terbit; salin 91
+95,2023,ump,salin_induk,UMP belum terbit; salin 94
+96,2023,ump,salin_induk,UMP belum terbit; salin 94
+97,2023,ump,salin_induk,UMP belum terbit; salin 94
+11,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+12,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+13,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+14,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+15,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+16,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+17,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+18,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+19,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+21,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+31,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+32,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+33,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+34,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+35,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+36,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+51,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+52,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+53,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+61,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+62,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+63,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+64,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+65,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+71,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+72,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+73,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+74,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+75,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+76,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+81,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+82,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+91,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+94,2025,upah_agregat,proyeksi_rasio_UMP,upah_2024 × (UMP_2025/UMP_2024); Sakernas 2025 belum terbit
+92,2023,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+92,2024,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+92,2025,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+95,2023,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+95,2024,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+95,2025,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+96,2023,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+96,2024,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+96,2025,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+97,2023,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+97,2024,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+97,2025,upah_agregat,salin_induk_Sakernas,Sakernas 38 provinsi belum ada; upah agregat induk
+11,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+11,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+11,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+11,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+11,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+11,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+11,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+11,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+11,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+11,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+11,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+11,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+11,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+11,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+11,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+11,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+11,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+11,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+11,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+11,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+11,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+11,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+11,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+11,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+11,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+11,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+11,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+12,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+12,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+12,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+12,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+12,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+12,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+12,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+12,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+12,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+12,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+12,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+12,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+12,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+12,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+12,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+12,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+12,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+12,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+12,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+12,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+12,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+12,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+13,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+13,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+13,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+13,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+13,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+13,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+13,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+13,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+13,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+13,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+13,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+13,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+13,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+13,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+13,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+13,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+13,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+13,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+13,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+13,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+13,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+13,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+14,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+14,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+14,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+14,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+14,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+14,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+14,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+14,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+14,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+14,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+14,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+14,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+14,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+14,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+14,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+14,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+14,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+14,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+14,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+14,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+14,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+14,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+15,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+15,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+15,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+15,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+15,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+15,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+15,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+15,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+15,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+15,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+15,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+15,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+15,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+15,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+15,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+15,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+15,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+15,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+15,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+15,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+15,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+15,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+16,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+16,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+16,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+16,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+16,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+16,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+16,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+16,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+16,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+16,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+16,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+16,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+16,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+16,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+16,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+16,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+16,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+16,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+16,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+16,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+16,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+16,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+17,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+17,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+17,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+17,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+17,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+17,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+17,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+17,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+17,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+17,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+17,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+17,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+17,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+17,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+17,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+17,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+17,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+17,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+17,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+17,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+17,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+17,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+18,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+18,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+18,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+18,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+18,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+18,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+18,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+18,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+18,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+18,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+18,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+18,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+18,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+18,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+18,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+18,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+18,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+18,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+18,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+18,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+18,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+18,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+19,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+19,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+19,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+19,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+19,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+19,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+19,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+19,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+19,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+19,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+19,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+19,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+19,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+19,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+19,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+19,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+19,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+19,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+19,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+19,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+19,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+19,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+21,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+21,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+21,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+21,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+21,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+21,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+21,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+21,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+21,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+21,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+21,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+21,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+21,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+21,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+21,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+21,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+21,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+21,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+21,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+21,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+21,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+21,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+31,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+31,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+31,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+31,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+31,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+31,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+31,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+31,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+31,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+31,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+31,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+31,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+31,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+31,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+31,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+31,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+31,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+31,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+31,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+32,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+32,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+32,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+32,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+32,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+32,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+32,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+32,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+32,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+32,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+32,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+32,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+32,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+32,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+33,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+33,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+33,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+33,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+33,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+33,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+33,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+33,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+33,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+33,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+33,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+33,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+33,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+33,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+34,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+34,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+34,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+34,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+34,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+34,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+34,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+34,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+34,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+34,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+34,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+34,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+34,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+34,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+35,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+35,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+35,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+35,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+35,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+35,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+35,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+35,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+35,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+35,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+35,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+35,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+35,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+35,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2017,ikg,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+36,2018,ikg,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+36,2019,ikg,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+36,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2017,idi,backcast_rasio_nasional,level 2018 × (nas_2017/nas_2022)
+36,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+36,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+36,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+36,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+36,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+36,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+36,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+36,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+36,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+36,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+36,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+51,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+51,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+51,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+51,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+51,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+51,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+51,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+51,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+51,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+51,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+51,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+51,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+51,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+51,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+51,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+51,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+51,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+51,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+51,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+51,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+51,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+51,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+52,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+52,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+52,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+52,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+52,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+52,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+52,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+52,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+52,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+52,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+52,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+52,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+52,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+52,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+52,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+52,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+52,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+52,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+52,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+52,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+52,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+52,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+53,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+53,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+53,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+53,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+53,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+53,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+53,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+53,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+53,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+53,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+53,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+53,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+53,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+53,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+53,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+53,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+53,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+53,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+53,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+53,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+53,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+53,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+61,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+61,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+61,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+61,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+61,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+61,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+61,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+61,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+61,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+61,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+61,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+61,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+61,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+61,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+61,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+61,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+61,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+61,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+61,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+61,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+61,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+61,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+62,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+62,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+62,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+62,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+62,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+62,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+62,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+62,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+62,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+62,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+62,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+62,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+62,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+62,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+62,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+62,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+62,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+62,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+62,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+62,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+62,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+62,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+63,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+63,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+63,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+63,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+63,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+63,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+63,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+63,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+63,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+63,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+63,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+63,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+63,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+63,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+63,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+63,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+63,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+63,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+63,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+63,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+63,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+63,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+64,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+64,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+64,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+64,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+64,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+64,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+64,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+64,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+64,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+64,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+64,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+64,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+64,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+64,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+64,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+64,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+64,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+64,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+64,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+64,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+64,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+64,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+65,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+65,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+65,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+65,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+65,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+65,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+65,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+65,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+65,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+65,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+65,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+65,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+65,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+65,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+65,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+65,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+65,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+65,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+65,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+65,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+65,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+65,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+71,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+71,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+71,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+71,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+71,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+71,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+71,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+71,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+71,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+71,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+71,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+71,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+71,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+71,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+71,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+71,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+71,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+71,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+71,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+71,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+71,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+71,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+72,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+72,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+72,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+72,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+72,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+72,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+72,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+72,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+72,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+72,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+72,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+72,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+72,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+72,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+72,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+72,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+72,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+72,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+72,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+72,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+72,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+72,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+73,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+73,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+73,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+73,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+73,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+73,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+73,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+73,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+73,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+73,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+73,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+73,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+73,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+73,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+73,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+73,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+73,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+73,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+73,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+73,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+73,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+73,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+74,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+74,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+74,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+74,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+74,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+74,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+74,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+74,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+74,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+74,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+74,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+74,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+74,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+74,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+74,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+74,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+74,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+74,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+74,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+74,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+74,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+74,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+75,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+75,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+75,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+75,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+75,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+75,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+75,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2017,idi,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2022)
+75,2018,idi,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2022)
+75,2019,idi,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2022)
+75,2020,idi,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2022)
+75,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+75,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+75,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+75,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+75,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+75,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+75,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+75,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+75,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+75,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+75,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+76,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+76,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+76,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+76,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+76,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+76,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+76,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+76,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+76,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+76,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+76,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+76,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+76,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+76,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+76,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+76,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+76,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+76,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+76,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+76,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+76,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+76,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+81,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+81,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+81,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+81,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+81,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+81,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+81,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+81,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+81,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+81,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+81,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+81,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+81,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+81,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+81,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+81,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+81,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+81,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+81,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+81,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+81,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+81,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+82,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+82,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+82,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+82,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+82,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+82,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+82,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+82,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+82,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+82,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+82,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+82,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+82,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+82,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+82,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+82,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+82,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+82,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+82,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+82,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+82,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+82,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+91,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+91,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+91,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+91,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+91,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+91,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+91,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+91,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+91,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+91,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+91,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+91,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+91,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+91,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+91,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+91,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+91,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+91,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+91,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+91,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+91,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+91,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+92,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+92,2025,ikg,LOCF,disalin dari 2024
+92,2025,iklh,LOCF,disalin dari 2024
+92,2025,indeks_biru_ika,LOCF,disalin dari 2024
+92,2025,indeks_hijau_iktl,LOCF,disalin dari 2024
+94,2017,ikg,backcast_rasio_nasional,level 2024 × (nas_2017/nas_2024)
+94,2018,ikg,backcast_rasio_nasional,level 2024 × (nas_2018/nas_2024)
+94,2019,ikg,backcast_rasio_nasional,level 2024 × (nas_2019/nas_2024)
+94,2020,ikg,backcast_rasio_nasional,level 2024 × (nas_2020/nas_2024)
+94,2021,ikg,backcast_rasio_nasional,level 2024 × (nas_2021/nas_2024)
+94,2022,ikg,backcast_rasio_nasional,level 2024 × (nas_2022/nas_2024)
+94,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+94,2025,ikg,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+94,2017,idi,backcast_rasio_nasional,level 2022 × (nas_2017/nas_2022)
+94,2018,idi,backcast_rasio_nasional,level 2022 × (nas_2018/nas_2022)
+94,2019,idi,backcast_rasio_nasional,level 2022 × (nas_2019/nas_2022)
+94,2020,idi,backcast_rasio_nasional,level 2022 × (nas_2020/nas_2022)
+94,2021,idi,backcast_rasio_nasional,level 2022 × (nas_2021/nas_2022)
+94,2025,idi,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+94,2017,iklh,backcast_rasio_nasional,level 2020 × (nas_2017/nas_2024)
+94,2018,iklh,backcast_rasio_nasional,level 2020 × (nas_2018/nas_2024)
+94,2019,iklh,backcast_rasio_nasional,level 2020 × (nas_2019/nas_2024)
+94,2025,iklh,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+94,2017,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2017/nas_2024)
+94,2018,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2018/nas_2024)
+94,2019,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2019/nas_2024)
+94,2020,indeks_biru_ika,backcast_rasio_nasional,level 2021 × (nas_2020/nas_2024)
+94,2025,indeks_biru_ika,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+94,2017,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+94,2018,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+94,2019,indeks_hijau_iktl,LOCF_mundur,disalin dari 2020
+94,2025,indeks_hijau_iktl,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+95,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+95,2025,ikg,LOCF,disalin dari 2024
+95,2025,iklh,LOCF,disalin dari 2024
+95,2025,indeks_biru_ika,LOCF,disalin dari 2024
+95,2025,indeks_hijau_iktl,LOCF,disalin dari 2024
+96,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+96,2025,ikg,LOCF,disalin dari 2024
+96,2025,iklh,LOCF,disalin dari 2024
+96,2025,indeks_biru_ika,LOCF,disalin dari 2024
+96,2025,indeks_hijau_iktl,LOCF,disalin dari 2024
+97,2023,ikg,backcast_rasio_nasional,level 2024 × (nas_2023/nas_2024)
+97,2025,ikg,LOCF,disalin dari 2024
+97,2025,iklh,LOCF,disalin dari 2024
+97,2025,indeks_biru_ika,LOCF,disalin dari 2024
+97,2025,indeks_hijau_iktl,LOCF,disalin dari 2024
+92,2023,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+92,2024,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+92,2025,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+95,2023,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+95,2024,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+95,2025,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+96,2023,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+96,2024,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+96,2025,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+97,2023,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+97,2024,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+97,2025,idi,salin_induk,IDI belum dipublikasikan untuk provinsi pemekaran
+11,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+11,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+12,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+13,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+14,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+15,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+16,2024,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+16,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+16,2024,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+16,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+17,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+17,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+18,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+19,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+21,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+32,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+33,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+34,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+35,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+36,2021,panjang_jalan_km,interpolasi_linear,antara 2020 dan 2023
+36,2022,panjang_jalan_km,interpolasi_linear,antara 2020 dan 2023
+36,2024,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+36,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+36,2021,jalan_mantap_pct,interpolasi_linear,antara 2020 dan 2023
+36,2022,jalan_mantap_pct,interpolasi_linear,antara 2020 dan 2023
+36,2024,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+36,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2022-2023 dibatasi ±20%
+51,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+51,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+52,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+53,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+61,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+62,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+63,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+64,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+65,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+71,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+72,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+73,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+74,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+75,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+76,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+81,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+82,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+91,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+92,2025,panjang_jalan_km,LOCF,disalin dari 2024
+92,2025,jalan_mantap_pct,LOCF,disalin dari 2024
+94,2025,panjang_jalan_km,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+94,2025,jalan_mantap_pct,proyeksi_yoy_terakhir,pertumbuhan 2023-2024 dibatasi ±20%
+95,2025,panjang_jalan_km,LOCF,disalin dari 2024
+95,2025,jalan_mantap_pct,LOCF,disalin dari 2024
+96,2025,panjang_jalan_km,LOCF,disalin dari 2024
+96,2025,jalan_mantap_pct,LOCF,disalin dari 2024
+97,2025,panjang_jalan_km,LOCF,disalin dari 2024
+97,2025,jalan_mantap_pct,LOCF,disalin dari 2024
+31,2017,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2018,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2019,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2020,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2021,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2022,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2023,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2024,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+31,2025,jalan_mantap_pct,rata_Jawa,PU tidak mencatat kemantapan DKI; diisi rata-rata Jawa
+11,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+13,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+15,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+17,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+19,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+21,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+34,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+36,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+51,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+52,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+53,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+61,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+62,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+63,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+64,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+65,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+71,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+72,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+74,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+75,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+76,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+81,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+82,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+91,2023,tindak_pidana,alokasi_sisa_PDRB,"sisa nasional 2023 setelah 10 provinsi BPS, proporsional PDRB"
+11,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+11,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+12,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+13,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+14,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+15,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+16,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+17,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+18,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+19,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+21,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+31,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+32,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+33,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+34,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+35,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+36,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+51,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+52,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+53,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+61,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+62,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+63,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+64,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+65,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+71,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+72,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+73,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+74,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+75,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+76,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+81,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2024,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+82,2025,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+91,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+91,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+91,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+92,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+92,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+92,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 91 × skala nasional × porsi PDRB
+94,2017,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2018,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2019,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2020,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2021,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2022,tindak_pidana,skala_nasional,porsi 2023 × (kasus_nas_t / kasus_nas_2023)
+94,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+94,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+94,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+95,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+95,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+95,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+96,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+96,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+96,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+97,2023,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+97,2024,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+97,2025,tindak_pidana,bagi_wilayah_pemekaran,stok 2023 wilayah 94 × skala nasional × porsi PDRB
+11,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2017,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2018,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2019,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2020,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2021,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2022,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+92,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+95,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+96,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+97,2023,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+92,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+95,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+96,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+97,2024,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+11,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+12,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+13,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+14,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+15,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+16,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+17,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+18,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+19,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+21,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+31,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+32,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+33,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+34,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+35,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+36,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+51,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+52,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+53,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+61,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+62,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+63,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+64,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+65,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+71,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+72,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+73,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+74,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+75,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+76,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+81,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+82,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+91,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+92,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+94,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+95,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+96,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)
+97,2025,pax_udara,alokasi_H_ADHB,total nasional × porsi PDRB transportasi (H_ADHB)

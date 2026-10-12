@@ -1,0 +1,263 @@
+----------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/processed\Determinan TFP Provinsi BKPM (log).log
+  log type:  text
+ opened on:   5 Sep 2026, 17:13:46
+
+. 
+. ** analysis switches (change here, rerun everything)
+. global depvar    logtfp_it      // dependent variable; alternative: logtfp_it_crs
+
+. global pca_mode  pooled         // pooled : standardise over the whole panel (keeps time variation)
+
+.                                 // byyear : standardise within each year first ("z dalam tahun",
+.                                 //          the convention of Institusi_Prov / Konektivitas_Prov)
+. global idx_scale z              // z   : PC1 scores with mean 0 sd 1 (coef = effect of +1 sd)
+
+.                                 // 100 : min-max rescaled 0-100 (coef = effect of +1 point)
+. global ind_proxy C_TenagaKerja  // used ONLY if Industry_Prov (Jumlah PT) is absent from the sheet
+
+. global use_logs  1              // 1: log skewed count/level indicators before PCA, 0: raw
+
+. global mixed_rule pca           // pca : always use PC1 (as requested) even if some inputs load
+
+.                                 //       against the anchor (a warning is printed)
+.                                 // eq  : for a pillar with mixed-polarity PC1, use the equal-weight
+.                                 //       additive index idx_*_eq instead (polarity enforced)
+. global fmt cformat(%9.3f) pformat(%5.3f) sformat(%8.3f)
+
+. 
+. ** user-written packages (installed once; capture keeps the file running offline)
+. foreach pkg in xtscc xtabond2 xtserial xtcsd xttest3 xtoverid xtlsdvc estout {
+  2.         local cmd `pkg'
+  3.         if "`pkg'" == "estout" local cmd esttab
+  4.         capture which `cmd'
+  5.         if _rc {
+  6.                 display as text "installing `pkg' from SSC ..."
+  7.                 capture ssc install `pkg', replace
+  8.         }
+  9. }
+installing xtserial from SSC ...
+
+. capture which xtscc
+
+. global have_xtscc = (_rc == 0)
+
+. capture which xtabond2
+
+. global have_xtabond2 = (_rc == 0)
+
+. capture which xtoverid
+
+. global have_xtoverid = (_rc == 0)
+
+. capture which esttab
+
+. global have_esttab = (_rc == 0)
+
+. capture which xtlsdvc
+
+. global have_xtlsdvc = (_rc == 0)
+
+. 
+. *** 1. Import and labels --------------------------------------------------------
+. import excel "$data", sheet("Analisis Luaran 2") firstrow clear
+(105 vars, 307 obs)
+
+. display as text "imported: " c(k) " variables, " c(N) " observations"
+imported: 105 variables, 307 observations
+
+. 
+. ** variable labels from sheet "Keterangan Data Luaran 2" (trimmed to 80 chars)
+. label variable Code_Prov        "Kode Provinsi"
+
+. label variable Year             "Tahun"
+
+. label variable Prov             "Nama Provinsi"
+
+. label variable Airpot_Total     "Total jumlah bandara menurut provinsi (jumlah)"
+
+. label variable Airpot_Logis     "Jumlah bandara berstatus logistik (jumlah)"
+
+. label variable Airpot_Commer    "Jumlah bandara berstatus komersial (jumlah)"
+
+. label variable Campus_Prov      "Total jumlah kampus menurut provinsi (jumlah)"
+
+. label variable Vocational_Prov  "Jumlah kampus yang memiliki sekolah vokasi (jumlah)"
+
+. label variable PMA_1            "Penanaman Modal Asing menurut provinsi (Rp miliar)"
+
+. label variable PMDN_1           "Penanaman Modal Dalam Negeri menurut provinsi (Rp miliar)"
+
+. label variable pmtb             "PDRB Pembentukan Modal Tetap Bruto, ADHB (Rp miliar)"
+
+. label variable pmtb_1           "PDRB Pembentukan Modal Tetap Bruto, ADHK 2010 (Rp miliar)"
+
+. label variable APK_Primer       "Angka Partisipasi Kasar SD (%)"
+
+. label variable APK_Sekunder1    "Angka Partisipasi Kasar SMP (%)"
+
+. label variable APK_Sekunder2    "Angka Partisipasi Kasar SMA (%)"
+
+. label variable APK_Tersier      "Angka Partisipasi Kasar Perguruan Tinggi (%)"
+
+. label variable Heduc_Prov       "Harapan Lama Sekolah, metode baru (tahun)"
+
+. label variable Educ_Prov        "Rata-rata Lama Sekolah (tahun)"
+
+. label variable IDI_Prov2        "Indeks Demokrasi Indonesia, proxy penjumlahan metode baru 2021 (0-100)"
+
+. label variable IDI_Prov         "Indeks Demokrasi Indonesia (2017-20 metode lama, 2021-25 metode baru)"
+
+. label variable IKG_Prov         "Indeks Ketimpangan Gender (0-1, lebih tinggi = lebih timpang)"
+
+. label variable Grwth1_Prov      "Pertumbuhan ekonomi PDRB nominal ADHB (%)"
+
+. label variable Grwth2_Prov      "Pertumbuhan ekonomi PDRB riil ADHK 2010 (%)"
+
+. label variable IPM_Prov         "Indeks Pembangunan Manusia"
+
+. label variable IPM_Prov_Nm      "Indeks Pembangunan Manusia, metode baru"
+
+. label variable TPT_Prov         "Tingkat Pengangguran Terbuka, Agustus (%)"
+
+. label variable Ikk_Prov         "Indeks Kedalaman Kemiskinan (P1)"
+
+. label variable Ikkk_Porv        "Indeks Keparahan Kemiskinan (P2)"
+
+. label variable Gk_Prov          "Garis Kemiskinan (Rp)"
+
+. label variable P0_Prov          "Persentase penduduk miskin (%)"
+
+. label variable Gini_Prov        "Indeks Gini, kota+desa, semester 1 (Maret)"
+
+. label variable AHH_Prov         "Angka Harapan Hidup, laki-laki dan perempuan (tahun)"
+
+. label variable Road_Prov        "Total panjang jalan negara+provinsi+kab/kota (km)"
+
+. label variable Road_Prov_National "Panjang jalan nasional (km)"
+
+. label variable RoadC_Prov_National "Persentase kemantapan jalan nasional (%)"
+
+. label variable Crime_Prov       "Jumlah tindak pidana menurut Polda (kasus)"
+
+. label variable Crime2_Prov      "Tindak pidana per 100 ribu penduduk (rasio)"
+
+. label variable ABC1_Prov        "Angka buta huruf usia 15+ (%)"
+
+. label variable ABC2_Prov        "Angka buta huruf usia 15-44 (%)"
+
+. label variable ABC3_Prov        "Angka buta huruf usia 45+ (%)"
+
+. label variable TK_Prov          "Total pekerja 17 lapangan usaha (jiwa)"
+
+. label variable Upah_Agr_Prov    "Upah bersih/bulan, rata-rata tertimbang 17 sektor; 2025 proyeksi UMP (Rp)"
+
+. label variable PAD_Prov2        "PAD realisasi DJPK, agregat pemda se-provinsi (Rp)"
+
+. label variable Pendapatan_APBD_Prov "Pendapatan daerah realisasi DJPK (Rp miliar)"
+
+. label variable Belanja_APBD_Prov "Belanja daerah realisasi DJPK (Rp miliar)"
+
+. label variable RasioPAD_Prov    "Rasio PAD / pendapatan daerah"
+
+. label variable Serapan_Prov     "Serapan belanja: realisasi/anggaran belanja DJPK (%)"
+
+. label variable log_lab_tot      "log total tenaga kerja"
+
+. label variable logtfp_it        "log TFP per provinsi-tahun (dari fungsi produksi panel)"
+
+. label variable logtfp_it_crs    "log TFP per provinsi-tahun, constant returns to scale"
+
+. label variable g_Y              "Pertumbuhan output (%)"
+
+. label variable g_K              "Pertumbuhan modal (%)"
+
+. label variable g_L              "Pertumbuhan tenaga kerja (%)"
+
+. label variable kontrib_modal    "Kontribusi modal pada pertumbuhan (pp)"
+
+. label variable kontrib_tk       "Kontribusi tenaga kerja pada pertumbuhan (pp)"
+
+. label variable kontrib_tfp      "Kontribusi TFP pada pertumbuhan (pp)"
+
+. label variable PDBDeflator      "PDB deflator menurut provinsi (poin)"
+
+. label variable PAX_Udara        "Penumpang udara domestik, alokasi nasional (orang)"
+
+. label variable PAX_KA           "Penumpang kereta api, 0 jika tanpa jaringan (orang)"
+
+. label variable PAX_Kapal        "Penumpang laut domestik, alokasi (orang)"
+
+. label variable PAX_Bus          "Penumpang bus, alokasi (orang)"
+
+. label variable Cargo_Udara_Prov "Kargo udara, alokasi (juta ton)"
+
+. label variable Cargo_Kapal_Prov "Kargo laut, alokasi (juta ton)"
+
+. label variable Cargo_KA_Prov    "Kargo kereta api, alokasi (juta ton)"
+
+. label variable Cargo_Total      "Total kargo kapal+udara+KA (juta ton)"
+
+. label variable Konektivitas_Prov "PC1 PCA konektivitas, z dalam tahun (0-100)"
+
+. label variable IKLH_Prov        "Indeks Kualitas Lingkungan Hidup (0-100)"
+
+. label variable Hijau_Prov       "Indeks Kualitas Tutupan Lahan / hijau (0-100); 2017-20 = nilai 2020"
+
+. label variable Biru_Prov        "Indeks Kualitas Air / biru (0-100)"
+
+. label variable Institusi_Prov   "PC1 PCA kapasitas institusi, z dalam tahun (0-100)"
+
+. label variable PAD_Prov         "Pendapatan Asli Daerah menurut provinsi (Rp)"
+
+. ** 17-sector wage and employment labels
+. local sec_A    "Pertanian, Kehutanan, Perikanan"
+
+. local sec_B    "Pertambangan dan Penggalian"
+
+. local sec_C    "Industri Pengolahan"
+
+. local sec_D    "Pengadaan Listrik dan Gas"
+
+. local sec_E    "Pengadaan Air, Sampah, Limbah, Daur Ulang"
+
+. local sec_F    "Konstruksi"
+
+. local sec_G    "Perdagangan Besar-Eceran, Reparasi Mobil-Motor"
+
+. local sec_H    "Transportasi dan Pergudangan"
+
+. local sec_I    "Akomodasi dan Makan Minum"
+
+. local sec_J    "Informasi dan Komunikasi"
+
+. local sec_K    "Jasa Keuangan dan Asuransi"
+
+. local sec_L    "Real Estat"
+
+. local sec_MN   "Jasa Perusahaan"
+
+. local sec_O    "Adm. Pemerintahan, Pertahanan, Jamsos Wajib"
+
+. local sec_P    "Jasa Pendidikan"
+
+. local sec_Q    "Jasa Kesehatan dan Kegiatan Sosial"
+
+. local sec_RSTU "Jasa Lainnya"
+
+. foreach s in A B C D E F G H I J K L MN O P Q RSTU {
+  2.         label variable `s'_RataUpah    "Upah rata-rata `sec_`s'' (Rp/bulan)"
+  3.         label variable `s'_TenagaKerja "Tenaga kerja `sec_`s'' (jiwa)"
+  4. }
+
+. 
+. *** 2. Panel structure ----------------------------------------------------------
+. isid Code_Prov Year                      // one row per province-year
+variables Code_Prov and Year should never be missing
+r(459);
+
+end of do-file
+
+r(459);
+

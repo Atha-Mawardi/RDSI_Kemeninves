@@ -1,0 +1,29 @@
+1. Bentuk: 164 -> 170 kolom, 306 baris, urutan kolom lama utuh.
+2. Kunci baris: Code_Prov, Year, dan Pre_Prov identik dengan cadangan.
+3. 161 kolom lain tidak bergerak, termasuk log_ADHK_Tot dan log_lab_tot.
+3b. Baris 2025: nol palsu di tiga kolom jadi kosong; log PDRB tetap terisi.
+4. log_pmtb       selisih maks terhadap data_tfp basis riil = 0.00e+00
+4. logtfp_it      selisih maks terhadap data_tfp basis riil = 0.00e+00
+4. logtfp_it_crs  selisih maks terhadap data_tfp basis riil = 0.00e+00
+4b. Ketiganya memang bergerak dari versi nominal, gerak maks 7.66.
+5. Enam kolom baru: 238 baris cocok dengan sheet panel, selisih maks < 1e-12.
+6. Identitas modal + tenaga kerja + TFP = g_Y berlaku di dalam workbook.
+7. 68 baris 2017 dan 2025 kosong di enam kolom baru, bukan nol.
+
+=============== Contoh baris, dibaca dari workbook ===============
+    Pre_Prov Year log_pmtb logtfp_it     g_Y kontrib_modal kontrib_tk
+        Aceh 2018  17.5234   23.2848  4.5023        1.3508     0.4375
+        Aceh 2019  17.5886   23.2985  4.0526        2.6183     0.0684
+        Aceh 2020  17.6232   23.2747 -0.3707        1.3904     0.6225
+ DKI Jakarta 2018  20.4191   24.6238  5.9265        1.8359     0.5835
+ DKI Jakarta 2019  20.4319   24.6719  5.6593        0.5139     0.3328
+ DKI Jakarta 2020  20.3596   24.6844 -2.4226       -2.9061    -0.7618
+ kontrib_tfp
+      2.7140
+      1.3659
+     -2.3836
+      3.5071
+      4.8125
+      1.2453
+
+=============== SEMUA UJI LOLOS ===============

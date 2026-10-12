@@ -1,0 +1,1416 @@
+--------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Provinsi BKPM.l
+> og
+  log type:  text
+ opened on:  16 Sep 2026, 19:11:25
+
+. 
+. ** analysis switches (change here, rerun everything)
+. global depvar    logtfp_it      // dependent variable; alternative: logtfp_it_crs
+
+. global pca_mode  pooled         // pooled : standardise over the whole panel (keeps time variation)
+
+.                                 // byyear : standardise within each year first ("z dalam tahun",
+.                                 //          the convention of Institusi_Prov / Konektivitas_Prov)
+. global idx_scale z              // z   : PC1 scores with mean 0 sd 1 (coef = effect of +1 sd)
+
+.                                 // 100 : min-max rescaled 0-100 (coef = effect of +1 point)
+. global ind_proxy C_TenagaKerja  // used ONLY if Industry_Prov (Jumlah PT) is absent from the sheet
+
+. global use_logs  1              // 1: log skewed count/level indicators before PCA, 0: raw
+
+. global mixed_rule pca           // pca : always use PC1 (as requested) even if some inputs load
+
+.                                 //       against the anchor (a warning is printed)
+.                                 // eq  : for a pillar with mixed-polarity PC1, use the equal-weight
+.                                 //       additive index idx_*_eq instead (polarity enforced)
+. global fmt cformat(%9.3f) pformat(%5.3f) sformat(%8.3f)
+
+. 
+. ** user-written packages (installed once; capture keeps the file running offline)
+. foreach pkg in xtscc xtabond2 xtserial xtcsd xttest3 xtoverid xtlsdvc estout {
+  2.         local cmd `pkg'
+  3.         if "`pkg'" == "estout" local cmd esttab
+  4.         capture which `cmd'
+  5.         if _rc {
+  6.                 display as text "installing `pkg' from SSC ..."
+  7.                 capture ssc install `pkg', replace
+  8.         }
+  9. }
+installing xtserial from SSC ...
+
+. capture which xtscc
+
+. global have_xtscc = (_rc == 0)
+
+. capture which xtabond2
+
+. global have_xtabond2 = (_rc == 0)
+
+. capture which xtoverid
+
+. global have_xtoverid = (_rc == 0)
+
+. capture which esttab
+
+. global have_esttab = (_rc == 0)
+
+. capture which xtlsdvc
+
+. global have_xtlsdvc = (_rc == 0)
+
+. 
+. *** 1. Import and labels --------------------------------------------------------
+. import excel "$data", sheet("Analisis Luaran 2") firstrow clear
+(111 vars, 306 obs)
+
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. display as text "imported: " c(k) " variables, " c(N) " observations (empty Code_Prov/Year rows dropped)"
+imported: 111 variables, 306 observations (empty Code_Prov/Year rows dropped)
+
+. 
+. ** variable labels from sheet "Keterangan Data Luaran 2" (trimmed to 80 chars)
+. label variable Code_Prov        "Kode Provinsi"
+
+. label variable Year             "Tahun"
+
+. label variable Prov             "Nama Provinsi"
+
+. label variable Airpot_Total     "Total jumlah bandara menurut provinsi (jumlah)"
+
+. label variable Airpot_Logis     "Jumlah bandara berstatus logistik (jumlah)"
+
+. label variable Airpot_Commer    "Jumlah bandara berstatus komersial (jumlah)"
+
+. label variable Campus_Prov      "Total jumlah kampus menurut provinsi (jumlah)"
+
+. label variable Vocational_Prov  "Jumlah kampus yang memiliki sekolah vokasi (jumlah)"
+
+. label variable PMA_1            "Penanaman Modal Asing menurut provinsi (Rp miliar)"
+
+. label variable PMDN_1           "Penanaman Modal Dalam Negeri menurut provinsi (Rp miliar)"
+
+. label variable pmtb             "PDRB Pembentukan Modal Tetap Bruto, ADHB (Rp miliar)"
+
+. label variable pmtb_1           "PDRB Pembentukan Modal Tetap Bruto, ADHK 2010 (Rp miliar)"
+
+. label variable APK_Primer       "Angka Partisipasi Kasar SD (%)"
+
+. label variable APK_Sekunder1    "Angka Partisipasi Kasar SMP (%)"
+
+. label variable APK_Sekunder2    "Angka Partisipasi Kasar SMA (%)"
+
+. label variable APK_Tersier      "Angka Partisipasi Kasar Perguruan Tinggi (%)"
+
+. label variable Heduc_Prov       "Harapan Lama Sekolah, metode baru (tahun)"
+
+. label variable Educ_Prov        "Rata-rata Lama Sekolah (tahun)"
+
+. label variable IDI_Prov2        "Indeks Demokrasi Indonesia, proxy penjumlahan metode baru 2021 (0-100)"
+
+. label variable IDI_Prov         "Indeks Demokrasi Indonesia (2017-20 metode lama, 2021-25 metode baru)"
+
+. label variable IKG_Prov         "Indeks Ketimpangan Gender (0-1, lebih tinggi = lebih timpang)"
+
+. label variable Grwth1_Prov      "Pertumbuhan ekonomi PDRB nominal ADHB (%)"
+
+. label variable Grwth2_Prov      "Pertumbuhan ekonomi PDRB riil ADHK 2010 (%)"
+
+. label variable IPM_Prov         "Indeks Pembangunan Manusia"
+
+. label variable IPM_Prov_Nm      "Indeks Pembangunan Manusia, metode baru"
+
+. label variable TPT_Prov         "Tingkat Pengangguran Terbuka, Agustus (%)"
+
+. label variable Ikk_Prov         "Indeks Kedalaman Kemiskinan (P1)"
+
+. label variable Ikkk_Porv        "Indeks Keparahan Kemiskinan (P2)"
+
+. label variable Gk_Prov          "Garis Kemiskinan (Rp)"
+
+. label variable P0_Prov          "Persentase penduduk miskin (%)"
+
+. label variable Gini_Prov        "Indeks Gini, kota+desa, semester 1 (Maret)"
+
+. label variable AHH_Prov         "Angka Harapan Hidup, laki-laki dan perempuan (tahun)"
+
+. label variable Road_Prov        "Total panjang jalan negara+provinsi+kab/kota (km)"
+
+. label variable Road_Prov_National "Panjang jalan nasional (km)"
+
+. label variable RoadC_Prov_National "Persentase kemantapan jalan nasional (%)"
+
+. label variable Crime_Prov       "Jumlah tindak pidana menurut Polda (kasus)"
+
+. label variable Crime2_Prov      "Tindak pidana per 100 ribu penduduk (rasio)"
+
+. label variable ABC1_Prov        "Angka buta huruf usia 15+ (%)"
+
+. label variable ABC2_Prov        "Angka buta huruf usia 15-44 (%)"
+
+. label variable ABC3_Prov        "Angka buta huruf usia 45+ (%)"
+
+. label variable TK_Prov          "Total pekerja 17 lapangan usaha (jiwa)"
+
+. label variable Upah_Agr_Prov    "Upah bersih/bulan, rata-rata tertimbang 17 sektor; 2025 proyeksi UMP (Rp)"
+
+. label variable PAD_Prov2        "PAD realisasi DJPK, agregat pemda se-provinsi (Rp)"
+
+. label variable Pendapatan_APBD_Prov "Pendapatan daerah realisasi DJPK (Rp miliar)"
+
+. label variable Belanja_APBD_Prov "Belanja daerah realisasi DJPK (Rp miliar)"
+
+. label variable RasioPAD_Prov    "Rasio PAD / pendapatan daerah"
+
+. label variable Serapan_Prov     "Serapan belanja: realisasi/anggaran belanja DJPK (%)"
+
+. label variable log_lab_tot      "log total tenaga kerja"
+
+. label variable logtfp_it        "log TFP per provinsi-tahun (dari fungsi produksi panel)"
+
+. label variable logtfp_it_crs    "log TFP per provinsi-tahun, constant returns to scale"
+
+. label variable g_Y              "Pertumbuhan output (%)"
+
+. label variable g_K              "Pertumbuhan modal (%)"
+
+. label variable g_L              "Pertumbuhan tenaga kerja (%)"
+
+. label variable kontrib_modal    "Kontribusi modal pada pertumbuhan (pp)"
+
+. label variable kontrib_tk       "Kontribusi tenaga kerja pada pertumbuhan (pp)"
+
+. label variable kontrib_tfp      "Kontribusi TFP pada pertumbuhan (pp)"
+
+. label variable PDBDeflator      "PDB deflator menurut provinsi (poin)"
+
+. label variable PAX_Udara        "Penumpang udara domestik, alokasi nasional (orang)"
+
+. label variable PAX_KA           "Penumpang kereta api, 0 jika tanpa jaringan (orang)"
+
+. label variable PAX_Kapal        "Penumpang laut domestik, alokasi (orang)"
+
+. label variable PAX_Bus          "Penumpang bus, alokasi (orang)"
+
+. label variable Cargo_Udara_Prov "Kargo udara, alokasi (juta ton)"
+
+. label variable Cargo_Kapal_Prov "Kargo laut, alokasi (juta ton)"
+
+. label variable Cargo_KA_Prov    "Kargo kereta api, alokasi (juta ton)"
+
+. label variable Cargo_Total      "Total kargo kapal+udara+KA (juta ton)"
+
+. label variable Konektivitas_Prov "PC1 PCA konektivitas, z dalam tahun (0-100)"
+
+. label variable IKLH_Prov        "Indeks Kualitas Lingkungan Hidup (0-100)"
+
+. label variable Hijau_Prov       "Indeks Kualitas Tutupan Lahan / hijau (0-100); 2017-20 = nilai 2020"
+
+. label variable Biru_Prov        "Indeks Kualitas Air / biru (0-100)"
+
+. label variable Institusi_Prov   "PC1 PCA kapasitas institusi, z dalam tahun (0-100)"
+
+. label variable PAD_Prov         "Pendapatan Asli Daerah menurut provinsi (Rp)"
+
+. ** 17-sector wage and employment labels
+. local sec_A    "Pertanian, Kehutanan, Perikanan"
+
+. local sec_B    "Pertambangan dan Penggalian"
+
+. local sec_C    "Industri Pengolahan"
+
+. local sec_D    "Pengadaan Listrik dan Gas"
+
+. local sec_E    "Pengadaan Air, Sampah, Limbah, Daur Ulang"
+
+. local sec_F    "Konstruksi"
+
+. local sec_G    "Perdagangan Besar-Eceran, Reparasi Mobil-Motor"
+
+. local sec_H    "Transportasi dan Pergudangan"
+
+. local sec_I    "Akomodasi dan Makan Minum"
+
+. local sec_J    "Informasi dan Komunikasi"
+
+. local sec_K    "Jasa Keuangan dan Asuransi"
+
+. local sec_L    "Real Estat"
+
+. local sec_MN   "Jasa Perusahaan"
+
+. local sec_O    "Adm. Pemerintahan, Pertahanan, Jamsos Wajib"
+
+. local sec_P    "Jasa Pendidikan"
+
+. local sec_Q    "Jasa Kesehatan dan Kegiatan Sosial"
+
+. local sec_RSTU "Jasa Lainnya"
+
+. foreach s in A B C D E F G H I J K L MN O P Q RSTU {
+  2.         label variable `s'_RataUpah    "Upah rata-rata `sec_`s'' (Rp/bulan)"
+  3.         label variable `s'_TenagaKerja "Tenaga kerja `sec_`s'' (jiwa)"
+  4. }
+
+. 
+. *** 2. Panel structure ----------------------------------------------------------
+. isid Code_Prov Year                      // one row per province-year
+
+. ** province names as value labels of the numeric id
+. qui levelsof Code_Prov, local(codes)
+
+. foreach c of local codes {
+  2.         qui levelsof Prov if Code_Prov == `c', local(nm)
+  3.         label define prov_lbl `c' `nm', add
+  4. }
+
+. label values Code_Prov prov_lbl
+
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2025
+         Delta: 1 unit
+
+. xtdescribe
+
+Code_Prov:  11, 12, ..., 94                                  n =         34
+    Year:  2017, 2018, ..., 2025                             T =          9
+           Delta(Year) = 1 unit
+           Span(Year)  = 9 periods
+           (Code_Prov*Year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         9       9       9         9         9       9       9
+
+     Freq.  Percent    Cum. |  Pattern
+ ---------------------------+-----------
+       34    100.00  100.00 |  111111111
+ ---------------------------+-----------
+       34    100.00         |  XXXXXXXXX
+
+. ** year dummies (explicit dummies so that xtoverid / xtabond2 / xtserial accept them)
+. forvalues y = 2018/2025 {
+  2.         gen byte yr`y' = (Year == `y')
+  3.         label variable yr`y' "Year = `y'"
+  4. }
+
+. global yrd yr2018 yr2019 yr2020 yr2021 yr2022 yr2023 yr2024 yr2025
+
+. ** models that lose 2017 (lagged TFP, AR(1) transformation) use 2018 as the reference
+. ** year; passing all eight dummies would make Stata drop a different one in each model
+. global yrd_dyn yr2019 yr2020 yr2021 yr2022 yr2023 yr2024 yr2025
+
+. 
+. ** data sanity: out-of-range entries in the sheet are reported, not silently kept
+. **   (in the 2025-08 sheet ABC1_Prov = 2135 for Papua Barat 2024; Hijau_Prov is
+. **    back-filled with the 2020 value for 2017-2019 in every province)
+. foreach v in APK_Primer APK_Sekunder1 APK_Sekunder2 APK_Tersier TPT_Prov P0_Prov ///
+>         ABC1_Prov ABC2_Prov ABC3_Prov IKLH_Prov Hijau_Prov Biru_Prov IDI_Prov2 IDI_Prov {
+  2.         qui count if `v' < 0 | `v' > 120
+  3.         if r(N) > 0 {
+  4.                 display as error "warning: `v' has " r(N) " value(s) outside 0-120:"
+  5.                 list Code_Prov Prov Year `v' if `v' < 0 | `v' > 120, noobs abbreviate(12)
+  6.         }
+  7. }
+warning: ABC1_Prov has 1 value(s) outside 0-120:
+
+  +----------------------------------------------+
+  |   Code_Prov          Prov   Year   ABC1_Prov |
+  |----------------------------------------------|
+  | Papua Barat   Papua Barat   2024        2135 |
+  +----------------------------------------------+
+warning: ABC2_Prov has 2 value(s) outside 0-120:
+
+  +--------------------------------------------------------+
+  |        Code_Prov               Prov   Year   ABC2_Prov |
+  |--------------------------------------------------------|
+  |           Banten             Banten   2025           . |
+  | Kalimantan Timur   Kalimantan Timur   2025           . |
+  +--------------------------------------------------------+
+
+. qui count if Gini_Prov < 0 | Gini_Prov > 1
+
+. if r(N) > 0 display as error "warning: Gini_Prov outside 0-1 in " r(N) " row(s)"
+
+. 
+. *** 3. Variable construction ----------------------------------------------------
+. ** 3a. the legend names the institution / connectivity inputs rasio_pad,
+. **     serapan_belanja and jalan_mantap_pct; the data sheet stores the same series as
+. **     RasioPAD_Prov, Serapan_Prov and RoadC_Prov_National. Use the legend names.
+. capture confirm variable rasio_pad
+
+. if _rc rename RasioPAD_Prov rasio_pad
+
+. capture confirm variable serapan_belanja
+
+. if _rc rename Serapan_Prov serapan_belanja
+
+. capture confirm variable jalan_mantap_pct
+
+. if _rc rename RoadC_Prov_National jalan_mantap_pct
+
+. label variable rasio_pad        "Rasio PAD / pendapatan daerah"
+
+. label variable serapan_belanja  "Serapan belanja: realisasi/anggaran belanja DJPK (%)"
+
+. label variable jalan_mantap_pct "Persentase jalan nasional mantap (%)"
+
+. 
+. ** 3b. education gap: mean years of schooling minus expected years of schooling
+. gen double Educ_Heduc = Educ_Prov - Heduc_Prov
+
+. label variable Educ_Heduc "Educ_Prov - Heduc_Prov: RLS dikurangi HLS (tahun, negatif = gap)"
+
+. 
+. ** 3c. industry pillar input: Industry_Prov (Jumlah PT) is described in the legend
+. **     but the sheet "Analisis Luaran 2" has no such column. If it is added later the
+. **     block below picks it up automatically; until then a proxy is used and flagged.
+. capture confirm variable Industry_Prov
+
+. if _rc == 0 {
+.         gen double ind_firms = Industry_Prov
+.         label variable ind_firms "Jumlah PT (Perseroan Terbatas) menurut provinsi"
+.         global ind_is_proxy 0
+. }
+
+. else {
+.         display as error _n "NOTE: Industry_Prov (Jumlah PT) is not in sheet 'Analisis Luaran 2'." ///
+>                 _n "      Industry pillar uses the PROXY ${ind_proxy} instead." ///
+>                 _n "      Add the column to the sheet (or change global ind_proxy) and rerun." _n
+
+NOTE: Industry_Prov (Jumlah PT) is not in sheet 'Analisis Luaran 2'.
+      Industry pillar uses the PROXY C_TenagaKerja instead.
+      Add the column to the sheet (or change global ind_proxy) and rerun.
+
+.         gen double ind_firms = ${ind_proxy}
+.         label variable ind_firms "PROXY for Industry_Prov (Jumlah PT): ${ind_proxy}"
+.         global ind_is_proxy 1
+.         * with this proxy the two industry inputs are nearly uncorrelated (Bartlett p ~ 0.18,
+.         * alpha ~ 0.14 in the 2025-08 run), so idx_ind is weak until the real column exists
+. }
+
+. 
+. ** 3d. PCA inputs. Skewed counts/levels are logged (switch use_logs); indicators whose
+. **     higher value is 'worse' are reverse-coded (negated) so that, within a pillar,
+. **     every input points the same way and PC1 reads as 'higher = better'.
+. if $use_logs {
+.         gen double ln_campus   = ln(Campus_Prov)
+.         gen double ln_airport  = ln(Airpot_Total)
+.         gen double ln_cargo    = ln(Cargo_Total)
+.         gen double ln_wage     = ln(Upah_Agr_Prov)
+.         gen double ln_firms    = ln(ind_firms)
+.         gen double ln_crime    = ln(Crime2_Prov)
+. }
+
+. else {
+.         gen double ln_campus   = Campus_Prov
+.         gen double ln_airport  = Airpot_Total
+.         gen double ln_cargo    = Cargo_Total
+.         gen double ln_wage     = Upah_Agr_Prov
+.         gen double ln_firms    = ind_firms
+.         gen double ln_crime    = Crime2_Prov
+. }
+
+. gen double neg_gini     = -Gini_Prov
+
+. gen double neg_crime    = -ln_crime
+
+. gen double neg_deflator = -PDBDeflator
+
+. label variable ln_campus    "ln jumlah kampus"
+
+. label variable ln_airport   "ln jumlah bandara"
+
+. label variable ln_cargo     "ln total kargo"
+
+. label variable ln_wage      "ln upah rata-rata tertimbang"
+
+. label variable ln_firms     "ln Industry_Prov / proxy"
+
+. label variable ln_crime     "ln tindak pidana per 100 ribu penduduk"
+
+. label variable neg_gini     "minus Gini (higher = more equal)"
+
+. label variable neg_crime    "minus ln crime rate (higher = safer)"
+
+. label variable neg_deflator "minus PDB deflator (higher = lower price level)"
+
+. 
+. ** pillar definitions: inputs and the anchor used to orient the sign of PC1
+. global hr_vars     Educ_Prov ln_campus IPM_Prov_Nm neg_gini
+
+. global hr_anchor   IPM_Prov_Nm
+
+. global inst_vars   neg_deflator rasio_pad serapan_belanja neg_crime IDI_Prov2
+
+. global inst_anchor rasio_pad
+
+. global conn_vars   jalan_mantap_pct ln_airport ln_cargo
+
+. global conn_anchor jalan_mantap_pct
+
+. global ind_vars    ln_wage ln_firms
+
+. global ind_anchor  ln_wage
+
+. 
+. *** 4. Descriptive statistics ---------------------------------------------------
+. summarize $depvar logtfp_it_crs $hr_vars $inst_vars $conn_vars $ind_vars ///
+>         IKLH_Prov Hijau_Prov Biru_Prov Educ_Heduc, separator(0)
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   logtfp_it |        306    16.36637     .546546   15.23153   17.63704
+logtfp_it_~s |        306    8.868229    .2876586   8.130424   9.647166
+   Educ_Prov |        306    8.725188     .958725       6.27      11.59
+   ln_campus |        306    4.398681     .961299   2.302585   6.408529
+ IPM_Prov_Nm |        306     71.9749     4.03485      59.09      85.05
+    neg_gini |        306   -.3473105    .0424763      -.449      -.222
+neg_deflator |        306    -155.924    17.05394    -212.43  -121.5626
+   rasio_pad |        306     .214156    .1303166   .0384449   .7336581
+serapan_be~a |        306     93.1665    6.331451      64.78     110.27
+   neg_crime |        306   -4.866511    .6678563  -6.708428  -3.380727
+   IDI_Prov2 |        306    74.79897    7.077573    48.0675   94.96379
+jalan_mant~t |        306    70.71964    16.82031      12.15      98.88
+  ln_airport |        306    1.534123    .6349622          0   2.639057
+    ln_cargo |        306    2.216961    1.205293  -.6687218   4.789503
+     ln_wage |        306    14.41036     .368486   13.40854   15.61079
+    ln_firms |        306    12.14185    1.313703   9.744023   15.32661
+   IKLH_Prov |        306    70.18645     6.99369   47.50403      84.22
+  Hijau_Prov |        306    62.12594    19.78185      24.86        100
+   Biru_Prov |        306    53.10175    5.376916      39.31    71.6261
+  Educ_Heduc |        306   -4.466225    .8591883      -6.56      -1.77
+
+. xtsum $depvar $hr_vars $inst_vars $conn_vars $ind_vars IKLH_Prov Hijau_Prov Biru_Prov
+
+Variable         |      Mean   Std. dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+logtfp~t overall |  16.36637    .546546   15.23153   17.63704 |     N =     306
+         between |             .5413919   15.51573   17.48455 |     n =      34
+         within  |             .1153057   16.04875   16.80218 |     T =       9
+                 |                                            |
+Educ_P~v overall |  8.725188    .958725       6.27      11.59 |     N =     306
+         between |             .9240549   6.829167   11.25222 |     n =      34
+         within  |              .296096   8.099632   9.455188 |     T =       9
+                 |                                            |
+ln_cam~s overall |  4.398681    .961299   2.302585   6.408529 |     N =     306
+         between |             .9691902   2.485991   6.361933 |     n =      34
+         within  |             .0969761   3.933711   4.599853 |     T =       9
+                 |                                            |
+IPM_Pr~m overall |   71.9749    4.03485      59.09      85.05 |     N =     306
+         between |             3.609397       65.4   81.71222 |     n =      34
+         within  |             1.895779   65.18601   80.78601 |     T =       9
+                 |                                            |
+neg_gini overall | -.3473105   .0424763      -.449      -.222 |     N =     306
+         between |             .0407603  -.4355556  -.2552222 |     n =      34
+         within  |             .0136532   -.384866  -.3083105 |     T =       9
+                 |                                            |
+neg_de~r overall |  -155.924   17.05394    -212.43  -121.5626 |     N =     306
+         between |             8.845366  -180.1676  -139.8116 |     n =      34
+         within  |             14.65089  -192.0733  -117.2041 |     T =       9
+                 |                                            |
+rasio_~d overall |   .214156   .1303166   .0384449   .7336581 |     N =     306
+         between |              .129484   .0505122   .6820789 |     n =      34
+         within  |             .0256141   .0929078   .3371011 |     T =       9
+                 |                                            |
+serapa~a overall |   93.1665   6.331451      64.78     110.27 |     N =     306
+         between |             3.471332   80.50667   98.25333 |     n =      34
+         within  |             5.324772   74.38725   109.0898 |     T =       9
+                 |                                            |
+neg_cr~e overall | -4.866511   .6678563  -6.708428  -3.380727 |     N =     306
+         between |              .585199  -6.248816  -3.791209 |     n =      34
+         within  |             .3354947  -5.438269  -4.311856 |     T =       9
+                 |                                            |
+IDI_Pr~2 overall |  74.79897   7.077573    48.0675   94.96379 |     N =     306
+         between |             5.348075   60.73185   84.64042 |     n =      34
+         within  |             4.715968    60.0482   90.00235 |     T =       9
+                 |                                            |
+jalan_~t overall |  70.71964   16.82031      12.15      98.88 |     N =     306
+         between |             15.02175   27.41483   93.29114 |     n =      34
+         within  |             7.949141   48.44112   119.0848 |     T =       9
+                 |                                            |
+ln_air~t overall |  1.534123   .6349622          0   2.639057 |     N =     306
+         between |             .6384086          0   2.639057 |     n =      34
+         within  |             .0793835   .9179923   2.073238 |     T =       9
+                 |                                            |
+ln_cargo overall |  2.216961   1.205293  -.6687218   4.789503 |     N =     306
+         between |             1.216874  -.6086684   4.686265 |     n =      34
+         within  |             .1038659   1.804457   2.602109 |     T =       9
+                 |                                            |
+ln_wage  overall |  14.41036    .368486   13.40854   15.61079 |     N =     306
+         between |             .2862345   13.76555   15.23267 |     n =      34
+         within  |             .2366446   13.97692   14.84008 |     T =       9
+                 |                                            |
+ln_firms overall |  12.14185   1.313703   9.744023   15.32661 |     N =     306
+         between |             1.321139   10.11749   15.27473 |     n =      34
+         within  |             .1618265   11.22693   12.96725 |     T =       9
+                 |                                            |
+IKLH_P~v overall |  70.18645    6.99369   47.50403      84.22 |     N =     306
+         between |             5.277341   52.73682   78.65422 |     n =      34
+         within  |             4.668177   61.90792   81.09789 |     T =       9
+                 |                                            |
+Hijau_~v overall |  62.12594   19.78185      24.86        100 |     N =     306
+         between |             19.93299   26.13709        100 |     n =      34
+         within  |             2.102181   51.89113   75.93443 |     T =       9
+                 |                                            |
+Biru_P~v overall |  53.10175   5.376916      39.31    71.6261 |     N =     306
+         between |             4.331464   42.02069   58.45513 |     n =      34
+         within  |              3.26217   47.03914   69.33033 |     T =       9
+
+. table Year, statistic(mean $depvar) statistic(sd $depvar) statistic(min $depvar) statistic(max $depvar) nformat(%9.3f)
+
+----------------------------------------------------------------------
+        |    Mean   Standard deviation   Minimum value   Maximum value
+--------+-------------------------------------------------------------
+Tahun   |                                                             
+  2017  |  16.227                0.550          15.409          17.341
+  2018  |  16.268                0.545          15.508          17.382
+  2019  |  16.284                0.558          15.309          17.424
+  2020  |  16.286                0.553          15.232          17.449
+  2021  |  16.330                0.548          15.379          17.484
+  2022  |  16.418                0.554          15.407          17.525
+  2023  |  16.455                0.532          15.682          17.565
+  2024  |  16.490                0.530          15.721          17.600
+  2025  |  16.540                0.519          15.759          17.637
+  Total |  16.366                0.547          15.232          17.637
+----------------------------------------------------------------------
+
+. correlate $hr_vars $inst_vars $conn_vars $ind_vars IKLH_Prov Hijau_Prov Biru_Prov
+(obs=306)
+
+             | Educ_P~v ln_cam~s IPM_Pr~m neg_gini neg_de~r rasio_~d serapa~a neg_cr~e IDI_Pr~2 jalan_~t ln_air~t ln_cargo  ln_wage
+-------------+---------------------------------------------------------------------------------------------------------------------
+   Educ_Prov |   1.0000
+   ln_campus |   0.1319   1.0000
+ IPM_Prov_Nm |   0.7782   0.3445   1.0000
+    neg_gini |   0.0896  -0.3725  -0.1079   1.0000
+neg_deflator |  -0.2905   0.1578  -0.3033  -0.3912   1.0000
+   rasio_pad |   0.4569   0.5600   0.6960  -0.3405  -0.0829   1.0000
+serapan_be~a |  -0.3400  -0.0515  -0.2846  -0.0287   0.1413  -0.2327   1.0000
+   neg_crime |  -0.4874   0.0044  -0.4713  -0.1556   0.4540  -0.2998   0.1373   1.0000
+   IDI_Prov2 |   0.4370   0.3229   0.6461  -0.0079  -0.4297   0.5459  -0.0535  -0.3000   1.0000
+jalan_mant~t |   0.0795   0.5838   0.3435  -0.1217   0.0953   0.5076  -0.0129   0.1063   0.3853   1.0000
+  ln_airport |   0.0613   0.2252  -0.1721   0.2597  -0.0457  -0.2933   0.0225  -0.0634  -0.1359  -0.0758   1.0000
+    ln_cargo |   0.2065   0.8231   0.4580  -0.2436   0.0516   0.6920  -0.0649  -0.2056   0.3903   0.5732   0.1465   1.0000
+     ln_wage |   0.6064   0.0580   0.6671   0.0890  -0.5353   0.5371  -0.1401  -0.6686   0.4956   0.1615  -0.0527   0.3009   1.0000
+    ln_firms |   0.0952   0.8761   0.3636  -0.3082   0.1053   0.6428  -0.0408   0.1242   0.3965   0.6482   0.1083   0.7875   0.0770
+   IKLH_Prov |  -0.0472  -0.4665  -0.1770   0.3774  -0.4759  -0.5499  -0.0288  -0.1533  -0.0255  -0.3691   0.2382  -0.5159   0.1083
+  Hijau_Prov |  -0.1508  -0.5851  -0.4535   0.1756  -0.0281  -0.6743   0.0948  -0.0780  -0.4524  -0.6854   0.3407  -0.5673  -0.0825
+   Biru_Prov |  -0.0974  -0.2811  -0.2276   0.4510  -0.3625  -0.3524  -0.0317  -0.2027   0.0163  -0.1732   0.2312  -0.2954   0.0412
+
+             | ln_firms IKLH_P~v Hijau_~v Biru_P~v
+-------------+------------------------------------
+    ln_firms |   1.0000
+   IKLH_Prov |  -0.5053   1.0000
+  Hijau_Prov |  -0.6844   0.6583   1.0000
+   Biru_Prov |  -0.2848   0.6733   0.3149   1.0000
+
+
+. capture noisily {
+.         xtline $depvar, overlay legend(off) title("log TFP per province, 2017-2025") ///
+>                 ytitle("$depvar") name(tfp_lines, replace)
+.         graph export "$outdir/Determinan TFP - TFP lines.png", replace width(1600)
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP - TFP lines.png saved
+    as PNG format
+. }
+
+. 
+. *** 5. Pillar indices by PCA ----------------------------------------------------
+. * For each pillar: standardise inputs (pooled or within-year), Bartlett sphericity,
+. * KMO, Cronbach alpha, PCA, eigenvalues, loadings, scree plot, PC1 score oriented by
+. * the anchor variable, then z-score (idx_*) and 0-100 (idx_*_100) versions.
+. capture erase "$out"
+
+. putexcel set "$out", sheet("README") replace
+Note: File will be replaced when the first putexcel command is issued.
+
+. putexcel A1 = "Determinan TFP Provinsi BKPM - results workbook"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. putexcel A2 = "Sheets PCA_*: eigenvalues, loadings, KMO, Bartlett, alpha per pillar"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. putexcel A3 = "Sheet Indices: Code_Prov Prov Year and the four pillar indices"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. putexcel A4 = "Sheet Diagnostics: post-estimation test statistics of the panel models"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. putexcel A5 = "pca_mode = $pca_mode, idx_scale = $idx_scale, depvar = $depvar, Industry proxy = $ind_is_proxy"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. 
+. capture program drop build_index
+
+. program define build_index
+  1.         * syntax: build_index name, vars(varlist) anchor(varname) title(string)
+.         syntax name(name=idx), vars(varlist) anchor(varname) [title(string)]
+  2.         display as text _n "{hline 78}" _n "PCA pillar: `idx'  (`title')" _n "inputs: `vars'" _n "{hline 78}"
+  3.         * 5a. standardised inputs z_*
+.         local zvars
+  4.         foreach v of varlist `vars' {
+  5.                 capture drop z_`v'
+  6.                 if "$pca_mode" == "byyear" {
+  7.                         tempvar m s
+  8.                         bysort Year: egen double `m' = mean(`v')
+  9.                         bysort Year: egen double `s' = sd(`v')
+ 10.                         gen double z_`v' = (`v' - `m') / `s'
+ 11.                 }
+ 12.                 else {
+ 13.                         egen double z_`v' = std(`v')
+ 14.                 }
+ 15.                 local zvars `zvars' z_`v'
+ 16.         }
+ 17.         local p : word count `zvars'
+ 18.         * 5b. Bartlett test of sphericity: H0 correlation matrix = identity
+.         qui correlate `zvars'
+ 19.         matrix R = r(C)
+ 20.         local n = r(N)
+ 21.         local chi2 = -(`n' - 1 - (2*`p' + 5)/6) * ln(det(R))
+ 22.         local df   = `p'*(`p' - 1)/2
+ 23.         local pb   = chi2tail(`df', `chi2')
+ 24.         display as text "Bartlett sphericity: chi2(`df') = " as result %9.2f `chi2' as text "  p = " as result %6.4f `pb'
+ 25.         if `pb' > 0.05 display as error "warning: Bartlett does not reject sphericity for `idx': the inputs are nearly " ///
+>                 "uncorrelated, so PC1 is not a meaningful common factor (check the inputs / proxy)"
+ 26.         * 5c. Cronbach alpha (standardised items)
+.         qui alpha `zvars', std
+ 27.         local calpha = r(alpha)
+ 28.         display as text "Cronbach alpha (std items): " as result %6.3f `calpha'
+ 29.         if `calpha' < 0.5 display as error "warning: Cronbach alpha below 0.5 for `idx' (inputs share little common variance)"
+ 30.         * 5d. PCA (correlation matrix), keep the first component
+.         pca `zvars', components(1)
+ 31.         estat kmo
+ 32.         local kmo = r(kmo)
+ 33.         matrix EV = e(Ev)
+ 34.         matrix L  = e(L)
+ 35.         local ev1 = EV[1,1]
+ 36.         local prop1 = `ev1' / `p'
+ 37.         local nkaiser = 0
+ 38.         forvalues j = 1/`p' {
+ 39.                 if EV[1,`j'] > 1 local ++nkaiser
+ 40.         }
+ 41.         display as text "eigenvalue PC1 = " as result %6.3f `ev1' as text "  share explained = " as result %5.1f 100*`prop1' "%" 
+> ///
+>                 as text "  components with eigenvalue > 1 = " as result `nkaiser' as text "  KMO = " as result %5.3f `kmo'
+ 42.         if `prop1' < 0.5 display as error "warning: PC1 explains less than half of the variance of `idx'"
+ 43.         if `kmo' < 0.5  display as error "warning: KMO below 0.5 for `idx' (sampling adequacy is poor)"
+ 44.         capture noisily {
+ 45.                 screeplot, name(scree_`idx', replace) title("Scree plot: `idx'")
+ 46.                 graph export "$outdir/Determinan TFP - scree `idx'.png", replace width(1200)
+ 47.         }
+ 48.         * 5e. scores, sign orientation by the anchor loading
+.         capture drop sc_`idx'
+ 49.         predict double sc_`idx', score
+ 50.         local r = rownumb(L, "z_`anchor'")
+ 51.         local sgn = 1
+ 52.         if L[`r',1] < 0 {
+ 53.                 local sgn = -1
+ 54.                 qui replace sc_`idx' = -sc_`idx'
+ 55.                 display as text "PC1 sign flipped so that `anchor' loads positively"
+ 56.         }
+ 57.         matrix L1 = L[1..`p', 1] * `sgn'
+ 58.         matrix colnames L1 = PC1_loading
+ 59.         display as text "oriented PC1 loadings (`idx'):"
+ 60.         matlist L1, format(%8.3f)
+ 61.         * polarity check: every input was coded so that 'higher = better'; a negative
+.         * oriented loading means PC1 mixes good and bad directions of that input
+.         local nneg = 0
+ 62.         forvalues j = 1/`p' {
+ 63.                 if L1[`j',1] < 0 local ++nneg
+ 64.         }
+ 65.         global pca_`idx'_nneg = `nneg'
+ 66.         if `nneg' > 0 display as error "warning: `nneg' input(s) of `idx' load with the opposite sign on PC1 " ///
+>                 "(mixed polarity); compare with the additive index idx_`idx'_eq"
+ 67.         * 5f. index versions: PC1 z-score, PC1 0-100, and an equal-weight additive
+.         *     z-score index (OECD/JRC fallback when PCA polarity is inconsistent)
+.         capture drop idx_`idx' idx_`idx'_100 idx_`idx'_eq
+ 68.         egen double idx_`idx' = std(sc_`idx')
+ 69.         qui summarize sc_`idx'
+ 70.         gen double idx_`idx'_100 = 100 * (sc_`idx' - r(min)) / (r(max) - r(min))
+ 71.         tempvar zsum
+ 72.         egen double `zsum' = rowmean(`zvars')
+ 73.         egen double idx_`idx'_eq = std(`zsum')
+ 74.         label variable sc_`idx'      "PC1 score `idx' (raw, oriented)"
+ 75.         label variable idx_`idx'     "Index `idx' (PC1, mean 0 sd 1)"
+ 76.         label variable idx_`idx'_100 "Index `idx' (PC1, 0-100)"
+ 77.         label variable idx_`idx'_eq  "Index `idx' (equal-weight mean of z inputs, mean 0 sd 1)"
+ 78.         * 5g. write the PCA summary to the results workbook
+.         * no 'replace' on the sheet: with sheet(..., replace) the first putexcel write after
+.         * 'set' is discarded in Stata 17; the workbook is recreated at the start of section 5
+.         putexcel set "$out", sheet("PCA_`idx'") modify
+ 79.         putexcel A1 = "Pillar `idx': `title'"
+ 80.         putexcel A2 = "inputs" B2 = "`vars'"
+ 81.         putexcel A3 = "pca_mode" B3 = "$pca_mode"
+ 82.         putexcel A4 = "N" B4 = `n'
+ 83.         putexcel A5 = "Bartlett chi2" B5 = `chi2' C5 = "df" D5 = `df' E5 = "p" F5 = `pb'
+ 84.         putexcel A6 = "KMO" B6 = `kmo'
+ 85.         putexcel A7 = "Cronbach alpha" B7 = `calpha'
+ 86.         putexcel A8 = "eigenvalue PC1" B8 = `ev1' C8 = "share" D8 = `prop1' E8 = "n eigen>1" F8 = `nkaiser'
+ 87.         putexcel A10 = "Eigenvalues"
+ 88.         putexcel A11 = matrix(EV), names
+ 89.         putexcel A14 = "Oriented PC1 loadings"
+ 90.         putexcel A15 = matrix(L1), names
+ 91.         * keep the statistics for the diagnostics sheet
+.         global pca_`idx'_ev1 = `ev1'
+ 92.         global pca_`idx'_prop = `prop1'
+ 93.         global pca_`idx'_kmo = `kmo'
+ 94.         global pca_`idx'_bart_p = `pb'
+ 95.         global pca_`idx'_alpha = `calpha'
+ 96. end
+
+. 
+. build_index hr,   vars($hr_vars)   anchor($hr_anchor)   title("Human resource")
+
+------------------------------------------------------------------------------
+PCA pillar: hr  (Human resource)
+inputs: Educ_Prov ln_campus IPM_Prov_Nm neg_gini
+------------------------------------------------------------------------------
+Bartlett sphericity: chi2(6) =    396.33  p = 0.0000
+Cronbach alpha (std items):  0.602
+
+Principal components/correlation                 Number of obs    =        306
+                                                 Number of comp.  =          1
+                                                 Trace            =          4
+    Rotation: (unrotated = principal)            Rho              =     0.4832
+
+    --------------------------------------------------------------------------
+       Component |   Eigenvalue   Difference         Proportion   Cumulative
+    -------------+------------------------------------------------------------
+           Comp1 |      1.93275      .631894             0.4832       0.4832
+           Comp2 |      1.30085      .719185             0.3252       0.8084
+           Comp3 |      .581668      .396935             0.1454       0.9538
+           Comp4 |      .184733            .             0.0462       1.0000
+    --------------------------------------------------------------------------
+
+Principal components (eigenvectors) 
+
+    --------------------------------------
+        Variable |    Comp1 | Unexplained 
+    -------------+----------+-------------
+     z_Educ_Prov |   0.5975 |       .3099 
+     z_ln_campus |   0.4038 |       .6849 
+    z_IPM_Prov~m |   0.6686 |       .1359 
+      z_neg_gini |  -0.1812 |       .9365 
+    --------------------------------------
+
+Kaiser-Meyer-Olkin measure of sampling adequacy
+
+    -----------------------
+        Variable |     kmo 
+    -------------+---------
+     z_Educ_Prov |  0.4753 
+     z_ln_campus |  0.5551 
+    z_IPM_Prov~m |  0.4944 
+      z_neg_gini |  0.4821 
+    -------------+---------
+         Overall |  0.4946 
+    -----------------------
+eigenvalue PC1 =  1.933  share explained =  48.3%  components with eigenvalue > 1 = 2  KMO = 0.495
+warning: PC1 explains less than half of the variance of hr
+warning: KMO below 0.5 for hr (sampling adequacy is poor)
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP - scree hr.png saved
+    as PNG format
+
+Scoring coefficients 
+    sum of squares(column-loading) = 1
+
+    ------------------------
+        Variable |    Comp1 
+    -------------+----------
+     z_Educ_Prov |   0.5975 
+     z_ln_campus |   0.4038 
+    z_IPM_Prov~m |   0.6686 
+      z_neg_gini |  -0.1812 
+    ------------------------
+oriented PC1 loadings (hr):
+
+             | PC1_lo~g 
+-------------+----------
+ z_Educ_Prov |    0.598 
+ z_ln_campus |    0.404 
+z_IPM_Prov~m |    0.669 
+  z_neg_gini |   -0.181 
+warning: 1 input(s) of hr load with the opposite sign on PC1 (mixed polarity); compare with the additive index idx_hr_eq
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. build_index inst, vars($inst_vars) anchor($inst_anchor) title("Institution")
+
+------------------------------------------------------------------------------
+PCA pillar: inst  (Institution)
+inputs: neg_deflator rasio_pad serapan_belanja neg_crime IDI_Prov2
+------------------------------------------------------------------------------
+Bartlett sphericity: chi2(10) =    309.64  p = 0.0000
+Cronbach alpha (std items):  0.646
+
+Principal components/correlation                 Number of obs    =        306
+                                                 Number of comp.  =          1
+                                                 Trace            =          5
+    Rotation: (unrotated = principal)            Rho              =     0.4266
+
+    --------------------------------------------------------------------------
+       Component |   Eigenvalue   Difference         Proportion   Cumulative
+    -------------+------------------------------------------------------------
+           Comp1 |      2.13319      1.12213             0.4266       0.4266
+           Comp2 |      1.01106     .0661498             0.2022       0.6289
+           Comp3 |      .944913      .313133             0.1890       0.8178
+           Comp4 |       .63178      .352726             0.1264       0.9442
+           Comp5 |      .279054            .             0.0558       1.0000
+    --------------------------------------------------------------------------
+
+Principal components (eigenvectors) 
+
+    --------------------------------------
+        Variable |    Comp1 | Unexplained 
+    -------------+----------+-------------
+    z_neg_defl~r |   0.4584 |       .5517 
+     z_rasio_pad |  -0.4669 |        .535 
+    z_serapan_~a |   0.2363 |       .8809 
+     z_neg_crime |   0.4778 |        .513 
+     z_IDI_Prov2 |  -0.5364 |       .3862 
+    --------------------------------------
+
+Kaiser-Meyer-Olkin measure of sampling adequacy
+
+    -----------------------
+        Variable |     kmo 
+    -------------+---------
+    z_neg_defl~r |  0.4502 
+     z_rasio_pad |  0.4405 
+    z_serapan_~a |  0.4307 
+     z_neg_crime |  0.6239 
+     z_IDI_Prov2 |  0.5047 
+    -------------+---------
+         Overall |  0.4908 
+    -----------------------
+eigenvalue PC1 =  2.133  share explained =  42.7%  components with eigenvalue > 1 = 2  KMO = 0.491
+warning: PC1 explains less than half of the variance of inst
+warning: KMO below 0.5 for inst (sampling adequacy is poor)
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP - scree inst.png
+    saved as PNG format
+
+Scoring coefficients 
+    sum of squares(column-loading) = 1
+
+    ------------------------
+        Variable |    Comp1 
+    -------------+----------
+    z_neg_defl~r |   0.4584 
+     z_rasio_pad |  -0.4669 
+    z_serapan_~a |   0.2363 
+     z_neg_crime |   0.4778 
+     z_IDI_Prov2 |  -0.5364 
+    ------------------------
+PC1 sign flipped so that rasio_pad loads positively
+oriented PC1 loadings (inst):
+
+             | PC1_lo~g 
+-------------+----------
+z_neg_defl~r |   -0.458 
+ z_rasio_pad |    0.467 
+z_serapan_~a |   -0.236 
+ z_neg_crime |   -0.478 
+ z_IDI_Prov2 |    0.536 
+warning: 3 input(s) of inst load with the opposite sign on PC1 (mixed polarity); compare with the additive index idx_inst_eq
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. build_index conn, vars($conn_vars) anchor($conn_anchor) title("Connectivity")
+
+------------------------------------------------------------------------------
+PCA pillar: conn  (Connectivity)
+inputs: jalan_mantap_pct ln_airport ln_cargo
+------------------------------------------------------------------------------
+Bartlett sphericity: chi2(3) =    139.35  p = 0.0000
+Cronbach alpha (std items):  0.450
+warning: Cronbach alpha below 0.5 for conn (inputs share little common variance)
+
+Principal components/correlation                 Number of obs    =        306
+                                                 Number of comp.  =          1
+                                                 Trace            =          3
+    Rotation: (unrotated = principal)            Rho              =     0.5259
+
+    --------------------------------------------------------------------------
+       Component |   Eigenvalue   Difference         Proportion   Cumulative
+    -------------+------------------------------------------------------------
+           Comp1 |      1.57767       .54173             0.5259       0.5259
+           Comp2 |      1.03594      .649548             0.3453       0.8712
+           Comp3 |      .386391            .             0.1288       1.0000
+    --------------------------------------------------------------------------
+
+Principal components (eigenvectors) 
+
+    --------------------------------------
+        Variable |    Comp1 | Unexplained 
+    -------------+----------+-------------
+    z_jalan_ma~t |   0.6956 |       .2367 
+    z_ln_airport |   0.0895 |       .9874 
+      z_ln_cargo |   0.7129 |       .1983 
+    --------------------------------------
+
+Kaiser-Meyer-Olkin measure of sampling adequacy
+
+    -----------------------
+        Variable |     kmo 
+    -------------+---------
+    z_jalan_ma~t |  0.4617 
+    z_ln_airport |  0.2265 
+      z_ln_cargo |  0.4636 
+    -------------+---------
+         Overall |  0.4449 
+    -----------------------
+eigenvalue PC1 =  1.578  share explained =  52.6%  components with eigenvalue > 1 = 2  KMO = 0.445
+warning: KMO below 0.5 for conn (sampling adequacy is poor)
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP - scree conn.png
+    saved as PNG format
+
+Scoring coefficients 
+    sum of squares(column-loading) = 1
+
+    ------------------------
+        Variable |    Comp1 
+    -------------+----------
+    z_jalan_ma~t |   0.6956 
+    z_ln_airport |   0.0895 
+      z_ln_cargo |   0.7129 
+    ------------------------
+oriented PC1 loadings (conn):
+
+             | PC1_lo~g 
+-------------+----------
+z_jalan_ma~t |    0.696 
+z_ln_airport |    0.089 
+  z_ln_cargo |    0.713 
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. build_index ind,  vars($ind_vars)  anchor($ind_anchor)  title("Industry")
+
+------------------------------------------------------------------------------
+PCA pillar: ind  (Industry)
+inputs: ln_wage ln_firms
+------------------------------------------------------------------------------
+Bartlett sphericity: chi2(1) =      1.81  p = 0.1789
+warning: Bartlett does not reject sphericity for ind: the inputs are nearly uncorrelated, so PC1 is not a meaningful common factor (ch
+> eck the inputs / proxy)
+Cronbach alpha (std items):  0.143
+warning: Cronbach alpha below 0.5 for ind (inputs share little common variance)
+
+Principal components/correlation                 Number of obs    =        306
+                                                 Number of comp.  =          1
+                                                 Trace            =          2
+    Rotation: (unrotated = principal)            Rho              =     0.5385
+
+    --------------------------------------------------------------------------
+       Component |   Eigenvalue   Difference         Proportion   Cumulative
+    -------------+------------------------------------------------------------
+           Comp1 |      1.07704      .154087             0.5385       0.5385
+           Comp2 |      .922956            .             0.4615       1.0000
+    --------------------------------------------------------------------------
+
+Principal components (eigenvectors) 
+
+    --------------------------------------
+        Variable |    Comp1 | Unexplained 
+    -------------+----------+-------------
+       z_ln_wage |   0.7071 |       .4615 
+      z_ln_firms |   0.7071 |       .4615 
+    --------------------------------------
+
+Kaiser-Meyer-Olkin measure of sampling adequacy
+
+    -----------------------
+        Variable |     kmo 
+    -------------+---------
+       z_ln_wage |  0.5000 
+      z_ln_firms |  0.5000 
+    -------------+---------
+         Overall |  0.5000 
+    -----------------------
+eigenvalue PC1 =  1.077  share explained =  53.9%  components with eigenvalue > 1 = 1  KMO = 0.500
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP - scree ind.png saved
+    as PNG format
+
+Scoring coefficients 
+    sum of squares(column-loading) = 1
+
+    ------------------------
+        Variable |    Comp1 
+    -------------+----------
+       z_ln_wage |   0.7071 
+      z_ln_firms |   0.7071 
+    ------------------------
+oriented PC1 loadings (ind):
+
+             | PC1_lo~g 
+-------------+----------
+   z_ln_wage |    0.707 
+  z_ln_firms |    0.707 
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. 
+. ** the regressors actually used: z-score or 0-100 version of each index; with
+. ** mixed_rule = eq a pillar whose PC1 has mixed polarity is replaced by its additive index
+. global pillars
+
+. foreach p in hr inst conn ind {
+  2.         local v idx_`p'
+  3.         if "$idx_scale" == "100" local v idx_`p'_100
+  4.         if "$mixed_rule" == "eq" & ${pca_`p'_nneg} > 0 {
+  5.                 local v idx_`p'_eq
+  6.                 display as text "mixed_rule = eq: pillar `p' uses the additive index `v'"
+  7.         }
+  8.         global pillars $pillars `v'
+  9. }
+
+. global env IKLH_Prov Hijau_Prov Biru_Prov
+
+. global X  $pillars $env
+
+. display as text _n "regressors: $X"
+
+regressors: idx_hr idx_inst idx_conn idx_ind IKLH_Prov Hijau_Prov Biru_Prov
+
+. summarize $X, separator(0)
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      idx_hr |        306    7.09e-18           1  -2.602331   3.564272
+    idx_inst |        306   -1.66e-17           1  -2.119032   3.639494
+    idx_conn |        306    9.39e-18           1   -2.55039   2.132036
+     idx_ind |        306    1.03e-17           1    -2.2395   2.778282
+   IKLH_Prov |        306    70.18645     6.99369   47.50403      84.22
+  Hijau_Prov |        306    62.12594    19.78185      24.86        100
+   Biru_Prov |        306    53.10175    5.376916      39.31    71.6261
+
+. correlate $depvar $X
+(obs=306)
+
+             | logtfp~t   idx_hr idx_inst idx_conn  idx_ind IKLH_P~v Hijau_~v Biru_P~v
+-------------+------------------------------------------------------------------------
+   logtfp_it |   1.0000
+      idx_hr |   0.5787   1.0000
+    idx_inst |   0.5275   0.6917   1.0000
+    idx_conn |   0.7787   0.5404   0.3674   1.0000
+     idx_ind |   0.7993   0.7476   0.7135   0.7291   1.0000
+   IKLH_Prov |  -0.3624  -0.2901   0.0190  -0.4802  -0.2705   1.0000
+  Hijau_Prov |  -0.5260  -0.4758  -0.3627  -0.6772  -0.5225   0.6583   1.0000
+   Biru_Prov |  -0.1849  -0.2918   0.0786  -0.2471  -0.1660   0.6733   0.3149   1.0000
+
+
+. ** how the new indices relate to the pre-built ones in the sheet
+. correlate idx_inst Institusi_Prov idx_conn Konektivitas_Prov
+(obs=306)
+
+             | idx_inst Instit~v idx_conn Konekt~v
+-------------+------------------------------------
+    idx_inst |   1.0000
+Institusi_~v |   0.6857   1.0000
+    idx_conn |   0.3674   0.6066   1.0000
+Konektivit~v |   0.4054   0.6251   0.9378   1.0000
+
+
+. ** Mundlak group means of the regressors (for the CRE model)
+. global Xbar
+
+. foreach v of global X {
+  2.         capture drop m_`v'
+  3.         bysort Code_Prov: egen double m_`v' = mean(`v')
+  4.         label variable m_`v' "province mean of `v'"
+  5.         global Xbar $Xbar m_`v'
+  6. }
+
+. 
+. *** 6. Pre-estimation diagnostics ----------------------------------------------
+. ** 6a. panel unit roots. T = 9 is short: Harris-Tzavalis (fixed T, N -> inf) is the
+. **     most appropriate; LLC / IPS / Fisher-ADF are shown for completeness and
+. **     their asymptotics (T -> inf) are NOT satisfied here - read with care.
+. **     Level variables such as log TFP trend upward, so the 'trend' variants are
+. **     also shown. p close to 1 = no evidence at all against a unit root; IPS is
+. **     missing when an input is constant within some province (e.g. Hijau_Prov).
+. local urvars $depvar $X
+
+. local nv : word count `urvars'
+
+. matrix UR = J(`nv', 6, .)
+
+. matrix rownames UR = `urvars'
+
+. matrix colnames UR = HT_p HT_trend_p LLC_p Breitung_p IPS_p FisherADF_p
+
+. local i = 0
+
+. foreach v of local urvars {
+  2.         local ++i
+  3.         capture xtunitroot ht `v'
+  4.         if _rc == 0 matrix UR[`i',1] = r(p)
+  5.         capture xtunitroot ht `v', trend
+  6.         if _rc == 0 matrix UR[`i',2] = r(p)
+  7.         capture xtunitroot llc `v', lags(1)
+  8.         if _rc == 0 matrix UR[`i',3] = r(p_tds)
+  9.         capture xtunitroot breitung `v'
+ 10.         if _rc == 0 matrix UR[`i',4] = r(p)
+ 11.         capture xtunitroot ips `v', lags(1)
+ 12.         if _rc == 0 matrix UR[`i',5] = r(p_wtbar)
+ 13.         capture xtunitroot fisher `v', dfuller lags(1)
+ 14.         if _rc == 0 matrix UR[`i',6] = r(p_P)
+ 15. }
+
+. display as text _n "panel unit-root tests, p-values (H0: panels contain unit roots)"
+
+panel unit-root tests, p-values (H0: panels contain unit roots)
+
+. matlist UR, format(%8.3f)
+
+             |     HT_p  HT_tre~p     LLC_p  Breitu~p     IPS_p  Fisher~p 
+-------------+------------------------------------------------------------
+   logtfp_it |    1.000     0.844     0.999     1.000     1.000     1.000 
+      idx_hr |    1.000     0.000     1.000     1.000     1.000     1.000 
+    idx_inst |    1.000     0.953     1.000     1.000     1.000     1.000 
+    idx_conn |    0.000     0.159     0.000     0.583     0.566     0.026 
+     idx_ind |    1.000     0.000     0.789     1.000     1.000     1.000 
+   IKLH_Prov |    0.998     0.437     0.000     1.000     0.813     0.996 
+  Hijau_Prov |    1.000     0.125     0.931     0.994         .     1.000 
+   Biru_Prov |    1.000     0.998     0.131     0.992     1.000     1.000 
+
+. putexcel set "$out", sheet("UnitRoot") modify
+
+. putexcel A1 = "Panel unit-root p-values; HT = Harris-Tzavalis (suited to T=9), others need large T"
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. putexcel A2 = matrix(UR), names
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/determinan/Determinan TFP Results.xlsx saved
+
+. 
+. ** 6a'. panel cointegration (Kao, Pedroni, Westerlund). With T = 9 these tests, like
+. **      the unit-root tests, have weak asymptotic justification; they are reported so
+. **      that the levels regressions can be defended (or an ECM chosen) explicitly.
+. capture noisily xtcointtest kao $depvar $X
+
+Kao test for cointegration
+--------------------------
+H0: No cointegration                        Number of panels       =     34
+Ha: All panels are cointegrated             Number of periods      =      7
+
+Cointegrating vector: Same
+Panel means:          Included              Kernel:           Bartlett
+Time trend:           Not included          Lags:             1.62 (Newey–West)
+AR parameter:         Same                  Augmented lags:   1 
+------------------------------------------------------------------------------
+                                            Statistic         p-value
+------------------------------------------------------------------------------
+ Modified Dickey–Fuller t                     0.4998          0.3086
+ Dickey–Fuller t                             -1.6334          0.0512
+ Augmented Dickey–Fuller t                    0.1531          0.4392
+ Unadjusted modified Dickey–Fuller t         -3.0044          0.0013
+ Unadjusted Dickey–Fuller t                  -4.0221          0.0000
+------------------------------------------------------------------------------
+
+. if _rc == 0 {
+.         matrix CP = r(p)                         // columns: MDF, DF, ADF, unadjusted MDF, unadjusted DF
+.         global p_kao_df = CP[1,2]
+. }
+
+. capture noisily xtcointtest pedroni $depvar $X
+
+Pedroni test for cointegration
+------------------------------
+H0: No cointegration                        Number of panels       =     34
+Ha: All panels are cointegrated             Number of periods      =      8
+
+Cointegrating vector: Panel specific
+Panel means:          Included              Kernel:           Bartlett
+Time trend:           Not included          Lags:             2.00 (Newey–West)
+AR parameter:         Panel specific        Augmented lags:   1 
+------------------------------------------------------------------------------
+                                            Statistic         p-value
+------------------------------------------------------------------------------
+ Modified Phillips–Perron t                  11.1214          0.0000
+ Phillips–Perron t                          -22.7714          0.0000
+ Augmented Dickey–Fuller t                  -27.2121          0.0000
+------------------------------------------------------------------------------
+
+. if _rc == 0 {
+.         matrix CP = r(p)                         // columns: modified PP, PP, ADF
+.         global p_pedroni_adf = CP[1,3]
+. }
+
+. capture noisily xtcointtest westerlund $depvar $X
+
+Westerlund test for cointegration
+---------------------------------
+H0: No cointegration                        Number of panels       =     34
+Ha: Some panels are cointegrated            Number of periods      =      9
+
+Cointegrating vector: Panel specific
+Panel means:          Included
+Time trend:           Not included
+AR parameter:         Panel specific
+------------------------------------------------------------------------------
+                                            Statistic         p-value
+------------------------------------------------------------------------------
+ Variance ratio                               4.0546          0.0000
+------------------------------------------------------------------------------
+
+. if _rc == 0 global p_westerlund = r(p)
+
+. 
+. ** 6b. multicollinearity among the regressors (pooled)
+. qui regress $depvar $X
+
+. estat vif
+
+    Variable |       VIF       1/VIF  
+-------------+----------------------
+     idx_ind |      4.72    0.211644
+   IKLH_Prov |      3.42    0.292084
+    idx_conn |      3.34    0.299439
+    idx_inst |      3.29    0.304148
+      idx_hr |      3.05    0.328047
+  Hijau_Prov |      3.02    0.330794
+   Biru_Prov |      2.17    0.461511
+-------------+----------------------
+    Mean VIF |      3.29
+
+. 
+. *** 7. Static panel models ------------------------------------------------------
+. ** 7.1 Pooled OLS, cluster-robust by province
+. regress $depvar $X $yrd, vce(cluster Code_Prov) $fmt
+
+Linear regression                               Number of obs     =        306
+                                                F(15, 33)         =      33.95
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.7378
+                                                Root MSE          =     .28701
+
+                             (Std. err. adjusted for 34 clusters in Code_Prov)
+------------------------------------------------------------------------------
+             |               Robust
+   logtfp_it | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      idx_hr |     -0.057      0.058   -0.983   0.333       -0.176       0.061
+    idx_inst |      0.092      0.062    1.478   0.149       -0.035       0.219
+    idx_conn |      0.226      0.099    2.278   0.029        0.024       0.429
+     idx_ind |      0.313      0.120    2.621   0.013        0.070       0.557
+   IKLH_Prov |      0.000      0.025    0.002   0.998       -0.050       0.050
+  Hijau_Prov |      0.002      0.005    0.352   0.727       -0.009       0.013
+   Biru_Prov |      0.001      0.013    0.114   0.910       -0.025       0.028
+      yr2018 |      0.015      0.020    0.732   0.470       -0.026       0.055
+      yr2019 |     -0.027      0.030   -0.924   0.362       -0.088       0.033
+      yr2020 |      0.016      0.174    0.094   0.926       -0.337       0.370
+      yr2021 |     -0.131      0.201   -0.649   0.521       -0.540       0.279
+      yr2022 |     -0.158      0.238   -0.665   0.511       -0.643       0.326
+      yr2023 |     -0.191      0.252   -0.758   0.454       -0.704       0.322
+      yr2024 |     -0.214      0.275   -0.776   0.443       -0.774       0.346
+      yr2025 |     -0.227      0.306   -0.741   0.464       -0.850       0.396
+       _cons |     16.269      0.878   18.532   0.000       14.483      18.055
+------------------------------------------------------------------------------
+
+. estimates store POLS
+
+. qui regress $depvar $X $yrd
+
+. estat hettest                                // Breusch-Pagan / Cook-Weisberg heteroskedasticity
+
+Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+Variable: Fitted values of logtfp_it
+
+H0: Constant variance
+
+    chi2(1) =   0.00
+Prob > chi2 = 0.9914
+
+. global p_bp_hettest = r(p)
+
+. estat ovtest                                 // Ramsey RESET functional form
+
+Ramsey RESET test for omitted variables
+Omitted: Powers of fitted values of logtfp_it
+
+H0: Model has no omitted variables
+
+F(3, 287) =   3.35
+ Prob > F = 0.0195
+
+. global p_reset = r(p)
+
+. xtserial $depvar $X $yrd                     // Wooldridge test for AR(1) in panel data
+command xtserial is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/Determinan TFP Provinsi.do"
+
+. * Determinan residual TFP provinsi (tanpa PCA)
+. * Atha Bintang Wahyu M. | PSE UGM
+. *
+. * Catatan Pak Gigih:
+. * Regresi memakai variabel penyusun, lalu koefisien distandardisasi (z) dan
+. * dikelompokkan per pilar.
+. * FE, RE, RE2W, FGLS. FE2W = within + dummy tahun.
+. *
+. * Y  : logtfp_it (DRS); robustness logtfp_it_crs
+. * X  : z-score penyusun pilar, 2017-2024
+. *     SDM         Educ_Prov, ln Campus_Prov, IPM_Prov_Nm, -Gini_Prov
+. *     Institusi   -PDBDeflator, rasio_pad, serapan_belanja, -ln Crime2, IDI_Prov2
+. *     Konektivitas jalan_mantap, ln Airpot_Total, ln Cargo_Total
+. *     Industri    ln Upah_Agr_Prov
+. *     kontrol     IKLH_Prov (bukan Hijau sebagai kebijakan)
+. *
+. 
+. version 17
+
+. clear all
+
+. set more off
+
+. capture log close

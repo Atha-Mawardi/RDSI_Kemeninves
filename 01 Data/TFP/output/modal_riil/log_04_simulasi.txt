@@ -1,0 +1,42 @@
+Basis harga modal: riil | keluaran: 01 Data/TFP/output/modal_riil
+=============== Simulasi DRS vs CRS ===============
+DRS: b1=0.4019 b2=0.1472 (jumlah 0.5491) | CRS: b1=0.4515 b2=0.5485 | pangsa modal 0.7319
+Input teramati 2018-2024: gY=3.83 gK=3.23 gL=2.08
+
+-- Blok 1: rekonsiliasi kontribusi (poin persen) --
+      wilayah   gY kK_crs sisa_crs kK_drs sisa_drs pangsaK_crs pangsaK_drs
+     Nasional 3.83   1.46     1.23   1.30     2.22       38.14       33.95
+   Bali-Nusra 2.33   0.78     0.08   0.69     1.24       33.41       29.74
+         Jawa 3.80   1.26     1.54   1.12     2.41       33.13       29.49
+   Kalimantan 3.59   2.10     0.36   1.87     1.42       58.33       51.92
+ Maluku-Papua 4.79   2.53    -0.22   2.25     1.88       52.69       46.90
+     Sulawesi 5.70   2.37     1.79   2.11     3.18       41.52       36.96
+     Sumatera 3.49   1.42     1.00   1.27     1.94       40.77       36.29
+ suku_skala sisa_gap
+       1.32     0.99
+       0.89     1.16
+       1.14     0.88
+       1.78     1.06
+       2.39     2.10
+       2.07     1.39
+       1.27     0.94
+
+Nasional: pangsa modal 38.1% (CRS) -> 34.0% (DRS); sisa 1.23 -> 2.22 (selisih 0.99 poin).
+
+-- Blok 2: sweep skala hasil, titik ujung (amplop) --
+       label     S    b1    b2 kontrib_K kontrib_L  sisa pangsaK
+ DRS (0,549) 0.549 0.402 0.147     1.299     0.306 2.222  33.955
+  CRS (1,00) 1.000 0.732 0.268     2.366     0.557 0.904  61.839
+
+-- Blok 3: kontrafaktual maju (output sasaran = 8%) --
+                                  skenario   gK   gL proj_gY_crs proj_gY_drs
+                            Input teramati 3.23 2.08        2.60        1.60
+          Modal 8-4-2-2 (2 poin, alfa=1/3) 6.00 2.08        3.85        2.72
+ Tenaga kerja 8-4-2-2 (4 poin, 1-alfa=2/3) 3.23 6.00        4.75        2.18
+ req_tfp_crs req_tfp_drs selisih_req
+        5.40        6.40        0.99
+        4.15        5.28        1.13
+        3.25        5.82        2.57
+
+=============== SELESAI ===============
+Keluaran: /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/modal_riil 

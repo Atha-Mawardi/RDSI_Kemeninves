@@ -1,0 +1,13 @@
+Sumber terbaca: data_tfp 306 baris, panel 272 baris
+Cadangan sudah ada, dibiarkan: ../../../All Dataset/99 Arsip/Dataset Agregasi Provinsi Penyetaraan Satuan Miliar (sebelum basis riil).xlsx
+Anggota zip: 18
+Tautan 1 dialihkan pada 3 target.
+Cache tautan 1 ditulis ulang: 306 baris.
+Tautan 2 dibuat: 272 baris cache.
+Tautan 2 terdaftar sebagai rId10, nomor [2] di formula.
+Sheet1 kolom lama : 1428 sel berisi, 102 sel kosong.
+Sheet1 kolom baru : 1428 sel berisi, 408 sel kosong.
+
+=============== SELESAI ===============
+Berkas: /Users/eqi/Library/CloudStorage/OneDrive-Personal/KeRjAaaAAAaaAaAAA/Project 2026 (JOGJA)/2026-BKPM-analisis kebijakan makro akselerasi investasi/All Dataset/Dataset Agregasi Provinsi Penyetaraan Satuan Miliar.xlsx
+Anggota zip: 18 -> 19

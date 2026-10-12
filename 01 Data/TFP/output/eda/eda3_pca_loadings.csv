@@ -1,0 +1,14 @@
+pilar,var,label,loading
+hr,z_educ,pendidikan,0.588241343803941
+hr,z_ln_campus,ln kampus,0.4131789296599785
+hr,z_ipm,IPM,0.6669628895264826
+hr,z_eq,−Gini,-0.1959994834668011
+inst,z_price,−deflator,-0.45055082051451967
+inst,z_rasio_pad,rasio PAD,0.48322650712829385
+inst,z_serapan_belanja,serapan belanja,-0.10045959422463138
+inst,z_safe,−ln pidana,-0.4792336635974986
+inst,z_idi,IDI,0.5689807259876423
+conn,z_jalan_mantap,jalan mantap,0.6953194327471766
+conn,z_ln_airport,ln bandara,0.09216914603011261
+conn,z_ln_cargo,ln kargo,0.7127662554892908
+ind,z_ln_wage,ln upah agr.,1.0

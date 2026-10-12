@@ -1,0 +1,1617 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Da
+> ta/TFP/output/eval/eval2.log
+  log type:  text
+ opened on:  20 Sep 2026, 15:39:58
+
+. display as text "proj  = $proj"
+proj  = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves
+
+. display as text "panel = $panel"
+panel = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TF
+> P/output/eval/eval_panel.dta
+
+. 
+. use "${panel}", clear
+
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. isid Code_Prov Year
+
+. 
+. * ===========================================================================
+> ==
+. * 1. BOBOT SPASIAL queen (darat + jembatan laut yang dipakai EDA2) + pulau
+. * ===========================================================================
+> ==
+. 
+. preserve
+
+. clear
+
+. input int i int j
+
+            i         j
+  1. 11 12
+  2. 12 13
+  3. 13 14
+  4. 13 15
+  5. 13 16
+  6. 14 15
+  7. 14 16
+  8. 14 21
+  9. 15 16
+ 10. 15 17
+ 11. 16 17
+ 12. 16 18
+ 13. 16 19
+ 14. 17 18
+ 15. 31 32
+ 16. 31 36
+ 17. 32 33
+ 18. 32 36
+ 19. 33 34
+ 20. 33 35
+ 21. 35 51
+ 22. 51 52
+ 23. 52 53
+ 24. 61 62
+ 25. 61 63
+ 26. 62 63
+ 27. 62 64
+ 28. 63 64
+ 29. 64 65
+ 30. 71 72
+ 31. 71 75
+ 32. 71 82
+ 33. 72 73
+ 34. 72 74
+ 35. 72 75
+ 36. 72 76
+ 37. 73 74
+ 38. 73 76
+ 39. 81 82
+ 40. 81 94
+ 41. 91 94
+ 42. end
+
+. expand 2
+(41 observations created)
+
+. bysort i j: keep if _n == 1
+(41 observations deleted)
+
+. * symmetrise
+. tempfile one
+
+. save `one'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.000002 saved
+    as .dta format
+
+. use `one', clear
+
+. rename (i j) (j i)
+
+. append using `one'
+
+. drop if i == j
+(0 observations deleted)
+
+. duplicates drop i j, force
+
+Duplicates in terms of i j
+
+(0 observations are duplicates)
+
+. rename (i j) (Code_Prov nb)
+
+. tempfile edges
+
+. save `edges'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.000003 saved
+    as .dta format
+
+. restore
+
+. 
+. * spatial lag queen = rata-rata tetangga, per tahun
+. tempfile main
+
+. save `main'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.000004 saved
+    as .dta format
+
+. use `main', clear
+
+. rename Code_Prov nb
+
+. keep nb Year pilar_pendidikan pilar_equity pilar_institusi pilar_konektivitas
+>  ///
+>         pilar_lingkungan pilar_keamanan idx_solow idx_hard idx_fiskal ///
+>         logtfp_it logtfp_it_crs indeks_hijau rasio_pad ln_apbd_belanja apbd_s
+> erapan ///
+>         share_inv_padat_karya share_tk_primer share_tk_ekstraktif pad
+
+. foreach v in pilar_pendidikan pilar_equity pilar_institusi pilar_konektivitas
+>  ///
+>         pilar_lingkungan pilar_keamanan idx_solow idx_hard idx_fiskal ///
+>         logtfp_it logtfp_it_crs indeks_hijau rasio_pad ln_apbd_belanja apbd_s
+> erapan ///
+>         share_inv_padat_karya share_tk_primer share_tk_ekstraktif pad {
+  2.         rename `v' nb_`v'
+  3. }
+
+. tempfile nby
+
+. save `nby'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.000005 saved
+    as .dta format
+
+. 
+. use `main', clear
+
+. joinby Code_Prov using `edges'
+
+. rename nb nb
+  (all newnames==oldnames)
+
+. joinby nb Year using `nby'
+
+. * rata tetangga
+. foreach v in pendidikan equity institusi konektivitas lingkungan keamanan {
+  2.         bysort Code_Prov Year: egen double Wq_pilar_`v' = mean(nb_pilar_`v
+> ')
+  3. }
+
+. foreach v in idx_solow idx_hard idx_fiskal logtfp_it logtfp_it_crs indeks_hij
+> au ///
+>         rasio_pad ln_apbd_belanja apbd_serapan share_inv_padat_karya share_tk
+> _primer ///
+>         share_tk_ekstraktif pad {
+  2.         bysort Code_Prov Year: egen double Wq_`v' = mean(nb_`v')
+  3. }
+
+. bysort Code_Prov Year: keep if _n == 1
+(384 observations deleted)
+
+. drop nb nb_*
+
+. * island lag = rata pulau leave-one-out
+. foreach v in pilar_pendidikan pilar_equity pilar_institusi pilar_konektivitas
+>  ///
+>         pilar_lingkungan pilar_keamanan idx_solow idx_fiskal logtfp_it logtfp
+> _it_crs ///
+>         indeks_hijau rasio_pad {
+  2.         bysort Pulau Year: egen double _sum = total(`v')
+  3.         bysort Pulau Year: egen byte _nisl = count(`v')
+  4.         gen double Wi_`v' = (_sum - `v') / (_nisl - 1) if _nisl > 1
+  5.         drop _sum _nisl
+  6. }
+
+. 
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. save "${outdir}/eval_panel_W.dta", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01
+    Data/TFP/output/eval/eval_panel_W.dta saved
+
+. 
+. * ===========================================================================
+> ==
+. * 2. MORAN pada mean provinsi (N=34) — objek yang boleh dikutip
+. * ===========================================================================
+> ==
+. 
+. preserve
+
+. keep if Year == 2024
+(238 observations deleted)
+
+. keep Code_Prov Pre_Prov Pulau m_* Wq_* Wi_* d_high_fiskal d_high_solow ///
+>         top5_* bot5_* dominan_tk d_ekstraktif d_sawit d_hilir
+
+. * Moran I = z'Wz / z'z dengan W row-standardised (Wq sudah mean tetangga)
+. foreach v in m_logtfp_it m_logtfp_it_crs m_pilar_pendidikan m_pilar_equity //
+> /
+>         m_pilar_institusi m_pilar_konektivitas m_pilar_lingkungan m_pilar_kea
+> manan ///
+>         m_idx_solow m_idx_fiskal m_indeks_hijau m_rasio_pad m_share_tk_primer
+>  {
+  2.         capture confirm variable `v'
+  3. }
+
+. 
+. * hitung Moran dari Wq pada level 2024 (Wq_ adalah lag level, bukan mean —
+. * untuk between pakai rata Wq)
+. tempfile y2024
+
+. save `y2024'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.000007 saved
+    as .dta format
+
+. restore
+
+. 
+. preserve
+
+. collapse (mean) ///
+>         pilar_pendidikan pilar_equity pilar_institusi pilar_konektivitas ///
+>         pilar_lingkungan pilar_keamanan idx_solow idx_hard idx_fiskal ///
+>         logtfp_it logtfp_it_crs indeks_hijau rasio_pad ln_apbd_belanja apbd_s
+> erapan ///
+>         share_tk_primer share_tk_ekstraktif share_inv_padat_karya share_inv_A
+>  ///
+>         Wq_pilar_pendidikan Wq_pilar_equity Wq_pilar_institusi Wq_pilar_konek
+> tivitas ///
+>         Wq_pilar_lingkungan Wq_pilar_keamanan Wq_idx_solow Wq_idx_fiskal ///
+>         Wq_logtfp_it Wq_logtfp_it_crs Wq_indeks_hijau Wq_rasio_pad ///
+>         Wq_share_tk_primer Wq_ln_apbd_belanja Wq_apbd_serapan ///
+>         Wi_pilar_pendidikan Wi_pilar_equity Wi_pilar_institusi Wi_idx_solow /
+> //
+>         Wi_idx_fiskal Wi_logtfp_it Wi_logtfp_it_crs Wi_indeks_hijau Wi_rasio_
+> pad ///
+>         (first) Pre_Prov Pulau d_high_fiskal d_high_solow d_ekstraktif d_sawi
+> t ///
+>         d_hilir d_dom_primer d_dom_sekunder ///
+>         top5_pendidikan top5_equity top5_institusi top5_konektivitas top5_lin
+> gkungan top5_keamanan ///
+>         bot5_pendidikan bot5_equity bot5_institusi bot5_konektivitas bot5_lin
+> gkungan bot5_keamanan, ///
+>         by(Code_Prov)
+
+. 
+. postfile mor str16 var str8 W float I p N using "${outdir}/eval2_moran.dta", 
+> replace
+
+. foreach v in logtfp_it logtfp_it_crs pilar_pendidikan pilar_equity ///
+>         pilar_institusi pilar_konektivitas pilar_lingkungan pilar_keamanan //
+> /
+>         idx_solow idx_fiskal indeks_hijau rasio_pad share_tk_primer {
+  2.         foreach w in Wq Wi {
+  3.                 if "`w'" == "Wq" {
+  4.                         if inlist("`v'", "pilar_pendidikan", "pilar_equity
+> ", "pilar_institusi", ///
+>                                 "pilar_konektivitas", "pilar_lingkungan", "pi
+> lar_keamanan") {
+  5.                                 local wv Wq_`v'
+  6.                         }
+  7.                         else local wv Wq_`v'
+  8.                 }
+  9.                 else {
+ 10.                         capture confirm variable Wi_`v'
+ 11.                         if _rc continue
+ 12.                         local wv Wi_`v'
+ 13.                 }
+ 14.                 capture confirm variable `wv'
+ 15.                 if _rc continue
+ 16.                 quietly summarize `v'
+ 17.                 local n = r(N)
+ 18.                 quietly correlate `v' `wv'
+ 19.                 local I = r(rho)
+ 20.                 quietly regress `v' `wv'
+ 21.                 local p = 2 * ttail(e(df_r), abs(_b[`wv']/_se[`wv']))
+ 22.                 post mor ("`v'") ("`w'") (`I') (`p') (`n')
+ 23.         }
+ 24. }
+
+. postclose mor
+
+. 
+. * kuadran LISA: z vs Wz, median
+. foreach v in idx_solow idx_fiskal logtfp_it_crs indeks_hijau pilar_equity pil
+> ar_pendidikan rasio_pad {
+  2.         capture confirm variable Wq_`v'
+  3.         if _rc {
+  4.                 if inlist("`v'", "pilar_pendidikan", "pilar_equity") local
+>  wv Wq_`v'
+  5.                 else local wv Wq_`v'
+  6.         }
+  7.         else local wv Wq_`v'
+  8.         if inlist("`v'", "pilar_pendidikan", "pilar_equity", "pilar_instit
+> usi", ///
+>                 "pilar_konektivitas", "pilar_lingkungan", "pilar_keamanan") {
+  9.                 local wv Wq_`v'
+ 10.         }
+ 11.         capture confirm variable `wv'
+ 12.         if _rc continue
+ 13.         quietly summarize `v', detail
+ 14.         local med = r(p50)
+ 15.         quietly summarize `wv', detail
+ 16.         local medw = r(p50)
+ 17.         gen str8 lisa_`v' = "LH"
+ 18.         replace lisa_`v' = "HH" if `v' >= `med' & `wv' >= `medw'
+ 19.         replace lisa_`v' = "LL" if `v' <  `med' & `wv' <  `medw'
+ 20.         replace lisa_`v' = "HL" if `v' >= `med' & `wv' <  `medw'
+ 21.         replace lisa_`v' = "LH" if `v' <  `med' & `wv' >= `medw'
+ 22. }
+(14 real changes made)
+(13 real changes made)
+(3 real changes made)
+(0 real changes made)
+(9 real changes made)
+(8 real changes made)
+(8 real changes made)
+(0 real changes made)
+(11 real changes made)
+(11 real changes made)
+(6 real changes made)
+(0 real changes made)
+(13 real changes made)
+(13 real changes made)
+(4 real changes made)
+(0 real changes made)
+(13 real changes made)
+(13 real changes made)
+(4 real changes made)
+(0 real changes made)
+(9 real changes made)
+(9 real changes made)
+(8 real changes made)
+(0 real changes made)
+(12 real changes made)
+(12 real changes made)
+(5 real changes made)
+(0 real changes made)
+
+. 
+. * kantong: LL fiskal atau LL solow, atau bot5 ≥ 3 pilar
+. egen byte n_bot5 = rowtotal(bot5_pendidikan bot5_equity bot5_institusi ///
+>         bot5_konektivitas bot5_keamanan)
+
+. egen byte n_top5 = rowtotal(top5_pendidikan top5_equity top5_institusi ///
+>         top5_konektivitas top5_keamanan)
+
+. * lingkungan dibuang dari hitungan kantong: Jawa selalu bot5 hijau
+. gen byte kantong_lemah = (n_bot5 >= 2) | ///
+>         ((lisa_idx_solow == "LL") & (lisa_logtfp_it_crs == "LL"))
+
+. gen byte kantong_kuat  = (n_top5 >= 2) | (lisa_idx_solow == "HH")
+
+. 
+. gsort Code_Prov
+
+. export excel using "${outdir}/eval2_between.xlsx", sheet("between") firstrow(
+> variables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_between.xlsx saved
+
+. export delimited using "${outdir}/eval2_between.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_between.csv saved
+
+. list Code_Prov Pre_Prov Pulau n_bot5 n_top5 kantong_lemah lisa_idx_solow ///
+>         lisa_idx_fiskal lisa_logtfp_it_crs if kantong_lemah, noobs ab(12)
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        18 |             Lampung |     Sumatera |      0 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LL  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        52 | Nusa Tenggara Barat |   Bali-Nusra |      1 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            HL  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        53 | Nusa Tenggara Timur |   Bali-Nusra |      1 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LH  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        61 |    Kalimantan Barat |   Kalimantan |      1 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            HL  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        75 |           Gorontalo |     Sulawesi |      3 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LL  |            LH  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        76 |      Sulawesi Barat |     Sulawesi |      2 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LH  |            LH  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        81 |              Maluku | Maluku-Papua |      1 |      1 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LL  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        82 |        Maluku Utara | Maluku-Papua |      2 |      2 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LL  |            LL  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        91 |         Papua Barat | Maluku-Papua |      2 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            LL  |            HH  |
+  +------------------------------------------------------------------+
+
+  +------------------------------------------------------------------+
+  | Code_Prov |            Pre_Prov |        Pulau | n_bot5 | n_top5 |
+  |        94 |               Papua | Maluku-Papua |      2 |      0 |
+  |------------------------------------------------------------------|
+  | kantong_le~h  |  lisa_idx_s~w  |  lisa_idx_f~l  |  lisa_logtf~s  |
+  |            1  |            LL  |            HL  |            HH  |
+  +------------------------------------------------------------------+
+
+. restore
+
+. 
+. use "${outdir}/eval2_moran.dta", clear
+
+. export delimited using "${outdir}/eval2_moran.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_moran.csv saved
+
+. 
+. * ===========================================================================
+> ==
+. * 3. GLOBALS — sama Determinan; FGLS grup pada K, L, residual
+. * ===========================================================================
+> ==
+. 
+. use "${outdir}/eval_panel_W.dta", clear
+
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. 
+. global pendidikan ///
+>         z_ln_lama_sekolah_mean ///
+>         z_ln_lama_sekolah_harapan ///
+>         z_db_sd z_db_smp z_db_sma z_db_kampus
+
+. 
+. global equity ///
+>         z_ln_p1 ///
+>         z_ln_ipm ///
+>         z_gini ///
+>         z_ln_upah_rata ///
+>         z_ln_indeks_demokrasi
+
+. 
+. global institusi ///
+>         z_price ///
+>         z_ln_rasio_pad ///
+>         z_ln_pertumbuhan_pdrb_adhb ///
+>         z_ln_apbd_belanja
+
+. 
+. global konektivitas ///
+>         z_ln_jalan_mantap ///
+>         z_ln_kargo_udara ///
+>         z_ln_kargo_kapal ///
+>         z_ln_kargo_kereta ///
+>         z_ln_penumpang_total ///
+>         z_ln_airport_logistik ///
+>         z_ln_airport_komersil
+
+. 
+. global lingkungan ///
+>         z_ln_indeks_lingkungan ///
+>         z_ln_indeks_hijau ///
+>         z_ln_indeks_biru
+
+. 
+. global keamanan ///
+>         z_ln_crime_risk ///
+>         z_ln_crime_rate
+
+. 
+. * ----- F  pendidikan / equity / institusi pada log K dan log L -------------
+> --
+. 
+. xtgls log_K $pendidikan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         7          Time periods      =          8
+                                                Wald chi2(6)      =    1767.49
+Log likelihood             = -197.5332          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_K | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_lam~ean |    .298908   .0217747    13.73   0.000     .2562305    .3415855
+z_ln_lam~pan |   .4233879   .0581733     7.28   0.000     .3093702    .5374055
+     z_db_sd |   .3087702   .0196419    15.72   0.000     .2702728    .3472677
+    z_db_smp |   .0579462   .0183914     3.15   0.002     .0218996    .0939927
+    z_db_sma |   .4569759   .0257983    17.71   0.000     .4064122    .5075397
+ z_db_kampus |   .5878781    .038812    15.15   0.000     .5118079    .6639482
+       _cons |   11.00528   .0129218   851.68   0.000     10.97996    11.03061
+------------------------------------------------------------------------------
+
+. estimates store FGLS_K_pendidikan
+
+. xtgls log_K $equity, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         6          Time periods      =          8
+                                                Wald chi2(5)      =    1227.26
+Log likelihood             = -169.0944          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_K | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_ln_p1 |   .0351689   .0069724     5.04   0.000     .0215033    .0488345
+    z_ln_ipm |   .2198068   .0105312    20.87   0.000      .199166    .2404477
+      z_gini |  -.0993948   .0067629   -14.70   0.000    -.1126499   -.0861396
+z_ln_upah_~a |  -.1063108   .0103049   -10.32   0.000    -.1265079   -.0861136
+z_ln_indek~i |   .0691818   .0119065     5.81   0.000     .0458455     .092518
+       _cons |   10.58765   .0062177  1702.83   0.000     10.57546    10.59983
+------------------------------------------------------------------------------
+
+. estimates store FGLS_K_equity
+
+. xtgls log_K $institusi, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =   15082.65
+Log likelihood             = -30.89693          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_K | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_price |  -.0203458   .0085514    -2.38   0.017    -.0371062   -.0035854
+z_ln_rasio~d |   .5204052   .0126362    41.18   0.000     .4956388    .5451717
+z_ln_pertu~b |  -.0150363   .0078642    -1.91   0.056    -.0304498    .0003772
+z_ln_apbd_~a |    .683503   .0120055    56.93   0.000     .6599727    .7070333
+       _cons |   10.93347   .0074842  1460.87   0.000      10.9188    10.94814
+------------------------------------------------------------------------------
+
+. estimates store FGLS_K_institusi
+
+. xtgls log_K $konektivitas, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         8          Time periods      =          8
+                                                Wald chi2(7)      =   69770.20
+Log likelihood             = -25.34443          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_K | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_jalan~p |   .0737367   .0073466    10.04   0.000     .0593376    .0881359
+z_ln_karg~ra |  -.1886152   .0238083    -7.92   0.000    -.2352786   -.1419517
+z_ln_kargo~l |   .5724264   .0305635    18.73   0.000     .5125231    .6323297
+z_ln_karg~ta |   .5954487   .0171084    34.80   0.000     .5619168    .6289805
+z_ln_penum~l |   .0383938   .0350877     1.09   0.274    -.0303767    .1071644
+z_ln_airpo~k |  -.0991214   .0083437   -11.88   0.000    -.1154748    -.082768
+z_ln_airpo~l |   .1727242   .0093636    18.45   0.000      .154372    .1910764
+       _cons |   10.87695   .0076044  1430.35   0.000     10.86205    10.89186
+------------------------------------------------------------------------------
+
+. estimates store FGLS_K_konektivitas
+
+. xtgls log_K $keamanan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =      21.21
+Log likelihood             = -229.6006          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_K | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_crime~k |  -.0481548   .0142445    -3.38   0.001    -.0760735   -.0202361
+z_ln_crim~te |   .0134612   .0105932     1.27   0.204     -.007301    .0342234
+       _cons |    10.6559   .0103901  1025.58   0.000     10.63554    10.67626
+------------------------------------------------------------------------------
+
+. estimates store FGLS_K_keamanan
+
+. 
+. xtgls log_L $pendidikan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         7          Time periods      =          8
+                                                Wald chi2(6)      =     986.25
+Log likelihood             = -145.5219          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_L | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_lam~ean |  -.0376631   .0171648    -2.19   0.028    -.0713055   -.0040208
+z_ln_lam~pan |    .571329     .04067    14.05   0.000     .4916174    .6510407
+     z_db_sd |   .1955844   .0139332    14.04   0.000     .1682757     .222893
+    z_db_smp |  -.0665345   .0142654    -4.66   0.000    -.0944941   -.0385748
+    z_db_sma |   .2376524   .0223584    10.63   0.000     .1938308     .281474
+ z_db_kampus |   .4405916   .0280763    15.69   0.000     .3855631    .4956201
+       _cons |    14.3663   .0121574  1181.70   0.000     14.34247    14.39013
+------------------------------------------------------------------------------
+
+. estimates store FGLS_L_pendidikan
+
+. xtgls log_L $equity, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         6          Time periods      =          8
+                                                Wald chi2(5)      =    4026.07
+Log likelihood             = -181.1535          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_L | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_ln_p1 |  -.1737512   .0205783    -8.44   0.000    -.2140839   -.1334185
+    z_ln_ipm |   .2181886   .0306631     7.12   0.000     .1580901    .2782871
+      z_gini |   .3326396   .0143036    23.26   0.000     .3046051    .3606741
+z_ln_upah_~a |  -.1813366   .0199304    -9.10   0.000    -.2203995   -.1422737
+z_ln_indek~i |   .2848265   .0186697    15.26   0.000     .2482345    .3214185
+       _cons |   14.54748   .0127821  1138.11   0.000     14.52243    14.57253
+------------------------------------------------------------------------------
+
+. estimates store FGLS_L_equity
+
+. xtgls log_L $institusi, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =   59362.26
+Log likelihood             =  53.38456          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_L | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_price |   .0333908   .0065949     5.06   0.000      .020465    .0463165
+z_ln_rasio~d |   .1461505   .0124209    11.77   0.000     .1218061    .1704949
+z_ln_pertu~b |  -.0018666   .0067978    -0.27   0.784      -.01519    .0114567
+z_ln_apbd_~a |   .8826661   .0067621   130.53   0.000     .8694125    .8959196
+       _cons |   14.74752   .0058179  2534.86   0.000     14.73612    14.75892
+------------------------------------------------------------------------------
+
+. estimates store FGLS_L_institusi
+
+. xtgls log_L $konektivitas, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         8          Time periods      =          8
+                                                Wald chi2(7)      =   27736.78
+Log likelihood             =  32.76245          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       log_L | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_jalan~p |   .3858249   .0075833    50.88   0.000      .370962    .4006878
+z_ln_karg~ra |  -.3399955   .0270914   -12.55   0.000    -.3930937   -.2868973
+z_ln_kargo~l |   .4254937   .0300998    14.14   0.000     .3664992    .4844882
+z_ln_karg~ta |   .7642432   .0171345    44.60   0.000     .7306602    .7978262
+z_ln_penum~l |  -.0336019   .0241121    -1.39   0.163    -.0808608     .013657
+z_ln_airpo~k |  -.3644603   .0063002   -57.85   0.000    -.3768085   -.3521122
+z_ln_airpo~l |   .3889606   .0074938    51.90   0.000      .374273    .4036482
+       _cons |   14.68904   .0073833  1989.49   0.000     14.67457    14.70351
+------------------------------------------------------------------------------
+
+. estimates store FGLS_L_konektivitas
+
+. xtgls log_L $keamanan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =       6.12
+Log likelihood             = -185.5845          Prob > chi2       =     0.0469
+
+------------------------------------------------------------------------------
+       log_L | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_crime~k |   .0222898   .0091018     2.45   0.014     .0044506     .040129
+z_ln_crim~te |  -.0011312   .0073618    -0.15   0.878    -.0155601    .0132977
+       _cons |   14.49549   .0059169  2449.83   0.000     14.48389    14.50708
+------------------------------------------------------------------------------
+
+. estimates store FGLS_L_keamanan
+
+. 
+. estimates table ///
+>         FGLS_K_pendidikan FGLS_K_equity FGLS_K_institusi FGLS_K_konektivitas 
+> FGLS_K_keamanan, ///
+>         star stats(N) b(%7.3f)
+
+-------------------------------------------------------------------------------
+    Variable | FGLS_K_p~n   FGLS_K_e~y   FGLS_K_i~i   FGLS_K_k~s   FGLS_K_k~n  
+-------------+-----------------------------------------------------------------
+z_ln_lam~ean |   0.299***                                                      
+z_ln_lam~pan |   0.423***                                                      
+     z_db_sd |   0.309***                                                      
+    z_db_smp |   0.058**                                                       
+    z_db_sma |   0.457***                                                      
+ z_db_kampus |   0.588***                                                      
+     z_ln_p1 |                0.035***                                         
+    z_ln_ipm |                0.220***                                         
+      z_gini |               -0.099***                                         
+z_ln_upah_~a |               -0.106***                                         
+z_ln_indek~i |                0.069***                                         
+     z_price |                            -0.020*                              
+z_ln_rasio~d |                             0.520***                            
+z_ln_pertu~b |                            -0.015                               
+z_ln_apbd_~a |                             0.684***                            
+z_ln_jalan~p |                                          0.074***               
+z_ln_karg~ra |                                         -0.189***               
+z_ln_kargo~l |                                          0.572***               
+z_ln_karg~ta |                                          0.595***               
+z_ln_penum~l |                                          0.038                  
+z_ln_airpo~k |                                         -0.099***               
+z_ln_airpo~l |                                          0.173***               
+z_ln_crime~k |                                                      -0.048***  
+z_ln_crim~te |                                                       0.013     
+       _cons |  11.005***    10.588***    10.933***    10.877***    10.656***  
+-------------+-----------------------------------------------------------------
+           N |     272          272          272          272          272     
+-------------------------------------------------------------------------------
+                                       Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. estimates table ///
+>         FGLS_L_pendidikan FGLS_L_equity FGLS_L_institusi FGLS_L_konektivitas 
+> FGLS_L_keamanan, ///
+>         star stats(N) b(%7.3f)
+
+-------------------------------------------------------------------------------
+    Variable | FGLS_L_p~n   FGLS_L_e~y   FGLS_L_i~i   FGLS_L_k~s   FGLS_L_k~n  
+-------------+-----------------------------------------------------------------
+z_ln_lam~ean |  -0.038*                                                        
+z_ln_lam~pan |   0.571***                                                      
+     z_db_sd |   0.196***                                                      
+    z_db_smp |  -0.067***                                                      
+    z_db_sma |   0.238***                                                      
+ z_db_kampus |   0.441***                                                      
+     z_ln_p1 |               -0.174***                                         
+    z_ln_ipm |                0.218***                                         
+      z_gini |                0.333***                                         
+z_ln_upah_~a |               -0.181***                                         
+z_ln_indek~i |                0.285***                                         
+     z_price |                             0.033***                            
+z_ln_rasio~d |                             0.146***                            
+z_ln_pertu~b |                            -0.002                               
+z_ln_apbd_~a |                             0.883***                            
+z_ln_jalan~p |                                          0.386***               
+z_ln_karg~ra |                                         -0.340***               
+z_ln_kargo~l |                                          0.425***               
+z_ln_karg~ta |                                          0.764***               
+z_ln_penum~l |                                         -0.034                  
+z_ln_airpo~k |                                         -0.364***               
+z_ln_airpo~l |                                          0.389***               
+z_ln_crime~k |                                                       0.022*    
+z_ln_crim~te |                                                      -0.001     
+       _cons |  14.366***    14.547***    14.748***    14.689***    14.495***  
+-------------+-----------------------------------------------------------------
+           N |     272          272          272          272          272     
+-------------------------------------------------------------------------------
+                                       Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * ----- G / H  investasi sektoral pada residual (bukan CD x share) ----------
+> --
+. 
+. xtgls logtfp_it share_inv_padat_karya share_inv_padat_modal, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =      35.06
+Log likelihood             = -52.40338          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+share_inv_~a |  -.2687091   .1651278    -1.63   0.104    -.5923537    .0549354
+share_inv_~l |  -.0843476   .1679361    -0.50   0.615    -.4134963    .2448011
+       _cons |   5.134981   .1591935    32.26   0.000     4.822967    5.446994
+------------------------------------------------------------------------------
+
+. estimates store FGLS_inv_pk
+
+. 
+. xtgls logtfp_it share_inv_primer share_inv_sekunder share_inv_C, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =     541.91
+Log likelihood             = -49.67869          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+share_in~mer |  -.5217466    .035802   -14.57   0.000    -.5919172    -.451576
+share_in~der |  -.0801993   .0450384    -1.78   0.075    -.1684731    .0080744
+ share_inv_C |  -.2447281   .0384156    -6.37   0.000    -.3200213   -.1694349
+       _cons |   5.343216   .0320695   166.61   0.000     5.280361    5.406071
+------------------------------------------------------------------------------
+
+. estimates store FGLS_inv_sektor
+
+. 
+. xtgls logtfp_it share_inv_primer d_dom_primer share_inv_sekunder d_dom_sekund
+> er, ///
+>         panels(heteroskedastic) igls nolog
+note: d_dom_sekunder omitted because of collinearity.
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =     115.55
+Log likelihood             = -48.61316          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+share_in~mer |  -.3994999   .0529732    -7.54   0.000    -.5033255   -.2956743
+d_dom_primer |   .0988128   .0147098     6.72   0.000     .0699822    .1276434
+share_in~der |  -.2176811   .0629764    -3.46   0.001    -.3411125   -.0942496
+d_dom_seku~r |          0  (omitted)
+       _cons |    5.27758   .0452024   116.75   0.000     5.188985    5.366175
+------------------------------------------------------------------------------
+
+. estimates store FGLS_inv_dom
+
+. 
+. xtgls logtfp_it share_inv_C share_tk_C, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     297.84
+Log likelihood             = -65.36599          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ share_inv_C |  -.0578042   .0521783    -1.11   0.268    -.1600718    .0444634
+  share_tk_C |   2.978694   .1790823    16.63   0.000     2.627699    3.329689
+       _cons |   4.780505   .0210931   226.64   0.000     4.739163    4.821846
+------------------------------------------------------------------------------
+
+. estimates store FGLS_invC_tkC
+
+. 
+. xtgls indeks_hijau share_inv_hijau_inv share_tk_ekstraktif, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =    8159.53
+Log likelihood             = -1033.426          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+indeks_hijau | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+share_inv_~v |  -391.6267   148.7156    -2.63   0.008    -683.1039   -100.1495
+share_tk_e~f |   102.7368   1.333497    77.04   0.000     100.1232    105.3504
+       _cons |   29.17055   .5907533    49.38   0.000     28.01269     30.3284
+------------------------------------------------------------------------------
+
+. estimates store FGLS_hijinv
+
+. 
+. xtgls logtfp_it share_inv_A d_sawit, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     364.32
+Log likelihood             = -44.35335          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ share_inv_A |  -.1185794   .0446502    -2.66   0.008    -.2060921   -.0310667
+     d_sawit |  -.2411989    .017566   -13.73   0.000    -.2756275   -.2067702
+       _cons |   5.065295   .0100299   505.02   0.000     5.045636    5.084953
+------------------------------------------------------------------------------
+
+. estimates store FGLS_sawit
+
+. 
+. estimates table ///
+>         FGLS_inv_pk FGLS_inv_sektor FGLS_inv_dom FGLS_invC_tkC FGLS_hijinv FG
+> LS_sawit, ///
+>         star stats(N) b(%7.3f)
+
+--------------------------------------------------------------------------
+    Variable | FGLS_inv_pk    FGLS_inv_s~r   FGLS_inv_dom   FGLS_invC_~C  
+-------------+------------------------------------------------------------
+share_inv_~a |    -0.269                                                  
+share_inv_~l |    -0.084                                                  
+share_in~mer |                   -0.522***      -0.399***                 
+share_in~der |                   -0.080         -0.218***                 
+ share_inv_C |                   -0.245***                     -0.058     
+d_dom_primer |                                   0.099***                 
+d_dom_seku~r |                               (omitted)                    
+  share_tk_C |                                                  2.979***  
+share_inv_~v |                                                            
+share_tk_e~f |                                                            
+ share_inv_A |                                                            
+     d_sawit |                                                            
+       _cons |     5.135***       5.343***       5.278***       4.781***  
+-------------+------------------------------------------------------------
+           N |       272            272            272            272     
+--------------------------------------------------------------------------
+                                  Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+
+--------------------------------------------
+    Variable | FGLS_hijinv     FGLS_sawit   
+-------------+------------------------------
+share_inv_~a |                              
+share_inv_~l |                              
+share_in~mer |                              
+share_in~der |                              
+ share_inv_C |                              
+d_dom_primer |                              
+d_dom_seku~r |                              
+  share_tk_C |                              
+share_inv_~v |  -391.627**                  
+share_tk_e~f |   102.737***                 
+ share_inv_A |                   -0.119**   
+     d_sawit |                   -0.241***  
+       _cons |    29.171***       5.065***  
+-------------+------------------------------
+           N |       272            272     
+--------------------------------------------
+    Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * ----- J / K  SLX: X + WX, xtgls; island W = geografi ----------------------
+> --
+. * PAD vs belanja: apakah "institusi" = skala fiskal
+. 
+. xtgls logtfp_it z_ln_rasio_pad z_ln_apbd_belanja z_ln_apbd_serapan, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =   38831.49
+Log likelihood             =  168.2289          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_rasio~d |   .1714423   .0042071    40.75   0.000     .1631965    .1796881
+z_ln_apbd_~a |   .4009708   .0030291   132.37   0.000     .3950339    .4069077
+z_ln_apb~pan |  -.0197534   .0036543    -5.41   0.000    -.0269157   -.0125911
+       _cons |   4.957598   .0030772  1611.09   0.000     4.951567    4.963629
+------------------------------------------------------------------------------
+
+. estimates store FGLS_pad_belanja
+
+. 
+. xtgls logtfp_it z_ln_rasio_pad z_ln_apbd_belanja ///
+>         Wq_rasio_pad Wq_ln_apbd_belanja, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =   33906.59
+Log likelihood             =  184.9783          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_rasio~d |   .2819917   .0076319    36.95   0.000     .2670335    .2969499
+z_ln_apbd_~a |   .4316312   .0040198   107.38   0.000     .4237525      .43951
+Wq_rasio_pad |  -.8384142    .054891   -15.27   0.000    -.9459985   -.7308298
+Wq_ln_apbd~a |  -.0561111   .0098684    -5.69   0.000    -.0754528   -.0367694
+       _cons |   5.772229   .0965555    59.78   0.000     5.582984    5.961474
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_fiskal_q
+
+. 
+. xtgls logtfp_it z_ln_rasio_pad z_ln_apbd_belanja ///
+>         Wi_rasio_pad, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =   28880.41
+Log likelihood             =  164.4154          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_rasio~d |   .2067485   .0083259    24.83   0.000     .1904299     .223067
+z_ln_apbd_~a |    .390915   .0037934   103.05   0.000     .3834801      .39835
+Wi_rasio_pad |  -.1870157   .0498298    -3.75   0.000    -.2846803   -.0893512
+       _cons |   4.995631   .0113388   440.58   0.000     4.973407    5.017855
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_fiskal_i
+
+. 
+. xtgls logtfp_it $pendidikan Wq_pilar_pendidikan, panels(heteroskedastic) igls
+>  nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         8          Time periods      =          8
+                                                Wald chi2(7)      =    1965.89
+Log likelihood             = -9.044147          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_lam~ean |   .2895362   .0112733    25.68   0.000      .267441    .3116315
+z_ln_lam~pan |   .2361839   .0267199     8.84   0.000     .1838138     .288554
+     z_db_sd |   .1784962   .0109972    16.23   0.000     .1569421    .2000504
+    z_db_smp |   .0355634   .0116113     3.06   0.002     .0128056    .0583211
+    z_db_sma |   .2047856   .0120677    16.97   0.000     .1811333    .2284378
+ z_db_kampus |   .3692869   .0185248    19.93   0.000      .332979    .4055948
+Wq_pilar_p~n |  -.3020893   .0139285   -21.69   0.000    -.3293885     -.27479
+       _cons |   4.969594   .0074911   663.40   0.000     4.954912    4.984277
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_pend_q
+
+. 
+. xtgls logtfp_it $equity Wq_pilar_equity, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         7          Time periods      =          8
+                                                Wald chi2(6)      =    1923.14
+Log likelihood             = -18.55854          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_ln_p1 |   .0462134   .0058336     7.92   0.000     .0347798    .0576471
+    z_ln_ipm |   .1246559   .0131336     9.49   0.000     .0989146    .1503972
+      z_gini |   .2303516   .0063046    36.54   0.000     .2179948    .2427084
+z_ln_upah_~a |   .1156337   .0075138    15.39   0.000     .1009068    .1303605
+z_ln_indek~i |  -.0273413   .0136249    -2.01   0.045    -.0540456   -.0006369
+Wq_pilar_e~y |   .0401692   .0118232     3.40   0.001     .0169961    .0633422
+       _cons |   5.074138   .0057587   881.13   0.000     5.062851    5.085425
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_eq_q
+
+. 
+. xtgls logtfp_it $institusi Wq_pilar_institusi, panels(heteroskedastic) igls n
+> olog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         6          Time periods      =          8
+                                                Wald chi2(5)      =   51704.68
+Log likelihood             =  182.5478          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     z_price |   .0265786   .0048688     5.46   0.000      .017036    .0361212
+z_ln_rasio~d |   .2343637   .0072515    32.32   0.000      .220151    .2485763
+z_ln_pertu~b |   .0038491   .0039967     0.96   0.336    -.0039843    .0116824
+z_ln_apbd_~a |   .3887091   .0030992   125.42   0.000     .3826348    .3947835
+Wq_pilar_i~i |  -.0538121   .0060998    -8.82   0.000    -.0657675   -.0418567
+       _cons |   4.954174   .0029505  1679.10   0.000     4.948392    4.959957
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_inst_q
+
+. 
+. xtgls logtfp_it_crs z_ln_rasio_pad z_ln_apbd_belanja ///
+>         Wq_rasio_pad Wq_ln_apbd_belanja, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =    2902.05
+Log likelihood             =  183.7175          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+logtfp_it_~s | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+z_ln_rasio~d |   .0723059   .0075772     9.54   0.000     .0574548     .087157
+z_ln_apbd_~a |   .0620484   .0030466    20.37   0.000     .0560771    .0680196
+Wq_rasio_pad |  -.5027765   .0534181    -9.41   0.000     -.607474    -.398079
+Wq_ln_apbd~a |   .0905572   .0074785    12.11   0.000     .0758997    .1052147
+       _cons |  -1.816627   .0682877   -26.60   0.000    -1.950468   -1.682785
+------------------------------------------------------------------------------
+
+. estimates store FGLS_SLX_crs_fiskal
+
+. 
+. estimates table ///
+>         FGLS_pad_belanja FGLS_SLX_fiskal_q FGLS_SLX_fiskal_i ///
+>         FGLS_SLX_pend_q FGLS_SLX_eq_q FGLS_SLX_inst_q FGLS_SLX_crs_fiskal, //
+> /
+>         star stats(N) b(%7.3f)
+
+-------------------------------------------------------------------------------
+    Variable | FGLS_pad~a   FGLS_SLX~q   FGLS_SLX~i   FGLS_SLX~q   FGLS_SLX~q  
+-------------+-----------------------------------------------------------------
+z_ln_rasio~d |   0.171***     0.282***     0.207***                            
+z_ln_apbd_~a |   0.401***     0.432***     0.391***                            
+z_ln_apb~pan |  -0.020***                                                      
+Wq_rasio_pad |               -0.838***                                         
+Wq_ln_apbd~a |               -0.056***                                         
+Wi_rasio_pad |                            -0.187***                            
+z_ln_lam~ean |                                          0.290***               
+z_ln_lam~pan |                                          0.236***               
+     z_db_sd |                                          0.178***               
+    z_db_smp |                                          0.036**                
+    z_db_sma |                                          0.205***               
+ z_db_kampus |                                          0.369***               
+Wq_pilar_p~n |                                         -0.302***               
+     z_ln_p1 |                                                       0.046***  
+    z_ln_ipm |                                                       0.125***  
+      z_gini |                                                       0.230***  
+z_ln_upah_~a |                                                       0.116***  
+z_ln_indek~i |                                                      -0.027*    
+Wq_pilar_e~y |                                                       0.040***  
+     z_price |                                                                 
+z_ln_pertu~b |                                                                 
+Wq_pilar_i~i |                                                                 
+       _cons |   4.958***     5.772***     4.996***     4.970***     5.074***  
+-------------+-----------------------------------------------------------------
+           N |     272          272          272          272          272     
+-------------------------------------------------------------------------------
+                                       Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+
+----------------------------------------
+    Variable | FGLS_SLX~q   FGLS_SLX~l  
+-------------+--------------------------
+z_ln_rasio~d |   0.234***     0.072***  
+z_ln_apbd_~a |   0.389***     0.062***  
+z_ln_apb~pan |                          
+Wq_rasio_pad |               -0.503***  
+Wq_ln_apbd~a |                0.091***  
+Wi_rasio_pad |                          
+z_ln_lam~ean |                          
+z_ln_lam~pan |                          
+     z_db_sd |                          
+    z_db_smp |                          
+    z_db_sma |                          
+ z_db_kampus |                          
+Wq_pilar_p~n |                          
+     z_ln_p1 |                          
+    z_ln_ipm |                          
+      z_gini |                          
+z_ln_upah_~a |                          
+z_ln_indek~i |                          
+Wq_pilar_e~y |                          
+     z_price |   0.027***               
+z_ln_pertu~b |   0.004                  
+Wq_pilar_i~i |  -0.054***               
+       _cons |   4.954***    -1.817***  
+-------------+--------------------------
+           N |     272          272     
+----------------------------------------
+Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * ----- L  kantong (dari between) -------------------------------------------
+> --
+. 
+. preserve
+
+. import delimited "${outdir}/eval2_between.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(76 vars, 34 obs)
+
+. keep code_prov kantong_lemah kantong_kuat n_bot5 n_top5 lisa_idx_solow lisa_i
+> dx_fiskal lisa_logtfp_it_crs
+
+. rename code_prov Code_Prov
+
+. tempfile kantong
+
+. save `kantong'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St73221.00000a saved
+    as .dta format
+
+. restore
+
+. merge m:1 Code_Prov using `kantong', nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. 
+. xtgls logtfp_it kantong_lemah, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         2          Time periods      =          8
+                                                Wald chi2(1)      =     910.17
+Log likelihood             = -53.93054          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+kantong_le~h |  -.4025202   .0133422   -30.17   0.000    -.4286703     -.37637
+       _cons |   5.043821   .0086843   580.80   0.000       5.0268    5.060842
+------------------------------------------------------------------------------
+
+. estimates store FGLS_kantong
+
+. xtgls logtfp_it_crs kantong_lemah, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         2          Time periods      =          8
+                                                Wald chi2(1)      =    1732.45
+Log likelihood             =  162.8529          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+logtfp_it_~s | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+kantong_le~h |  -.2482927   .0059653   -41.62   0.000    -.2599845   -.2366008
+       _cons |  -.8860633   .0040874  -216.78   0.000    -.8940745   -.8780521
+------------------------------------------------------------------------------
+
+. estimates store FGLS_kantong_crs
+
+. 
+. estimates table FGLS_kantong FGLS_kantong_crs, star stats(N) b(%7.3f)
+
+----------------------------------------
+    Variable | FGLS_kan~g   FGLS_kan~s  
+-------------+--------------------------
+kantong_le~h |  -0.403***    -0.248***  
+       _cons |   5.044***    -0.886***  
+-------------+--------------------------
+           N |     272          272     
+----------------------------------------
+Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * ===========================================================================
+> ==
+. * 4. COEF FGLS → csv
+. * ===========================================================================
+> ==
+. 
+. tempname H
+
+. postfile `H' str40 model str40 var float b se t p n using "${outdir}/eval2_co
+> ef.dta", replace
+
+. 
+. foreach m in ///
+>         FGLS_K_pendidikan FGLS_K_equity FGLS_K_institusi FGLS_K_konektivitas 
+> FGLS_K_keamanan ///
+>         FGLS_L_pendidikan FGLS_L_equity FGLS_L_institusi FGLS_L_konektivitas 
+> FGLS_L_keamanan ///
+>         FGLS_inv_pk FGLS_inv_sektor FGLS_inv_dom FGLS_invC_tkC FGLS_hijinv FG
+> LS_sawit ///
+>         FGLS_pad_belanja FGLS_SLX_fiskal_q FGLS_SLX_fiskal_i ///
+>         FGLS_SLX_pend_q FGLS_SLX_eq_q FGLS_SLX_inst_q FGLS_SLX_crs_fiskal ///
+>         FGLS_kantong FGLS_kantong_crs {
+  2.         capture noisily estimates restore `m'
+  3.         if _rc continue
+  4.         quietly count if e(sample)
+  5.         local n = r(N)
+  6.         local vars : colnames e(b)
+  7.         foreach v of local vars {
+  8.                 if "`v'" == "_cons" continue
+  9.                 capture {
+ 10.                         local bi = _b[`v']
+ 11.                         local se = _se[`v']
+ 12.                         local tt = `bi' / `se'
+ 13.                         local pp = 2 * (1 - normal(abs(`tt')))
+ 14.                         post `H' ("`m'") ("`v'") (`bi') (`se') (`tt') (`pp
+> ') (`n')
+ 15.                 }
+ 16.         }
+ 17. }
+(results FGLS_K_pendidikan are active now)
+(results FGLS_K_equity are active now)
+(results FGLS_K_institusi are active now)
+(results FGLS_K_konektivitas are active now)
+(results FGLS_K_keamanan are active now)
+(results FGLS_L_pendidikan are active now)
+(results FGLS_L_equity are active now)
+(results FGLS_L_institusi are active now)
+(results FGLS_L_konektivitas are active now)
+(results FGLS_L_keamanan are active now)
+(results FGLS_inv_pk are active now)
+(results FGLS_inv_sektor are active now)
+(results FGLS_inv_dom are active now)
+(results FGLS_invC_tkC are active now)
+(results FGLS_hijinv are active now)
+(results FGLS_sawit are active now)
+(results FGLS_pad_belanja are active now)
+(results FGLS_SLX_fiskal_q are active now)
+(results FGLS_SLX_fiskal_i are active now)
+(results FGLS_SLX_pend_q are active now)
+(results FGLS_SLX_eq_q are active now)
+(results FGLS_SLX_inst_q are active now)
+(results FGLS_SLX_crs_fiskal are active now)
+(results FGLS_kantong are active now)
+(results FGLS_kantong_crs are active now)
+
+. postclose `H'
+
+. 
+. use "${outdir}/eval2_coef.dta", clear
+
+. gen str8 star = ""
+(97 missing values generated)
+
+. replace star = "*"    if p < 0.05
+(85 real changes made)
+
+. replace star = "**"   if p < 0.01
+(81 real changes made)
+
+. replace star = "***"  if p < 0.001
+(77 real changes made)
+
+. export excel using "${outdir}/eval2_coef.xlsx", sheet("coef") firstrow(variab
+> les) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_coef.xlsx saved
+
+. export delimited using "${outdir}/eval2_coef.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_coef.csv saved
+
+. export delimited using "${outdir}/eval2_coef_fgls.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval2_coef_fgls.csv saved
+
+. 
+. use "${outdir}/eval_panel_W.dta", clear
+
+. export excel using "${outdir}/eval_panel_W.xlsx", sheet("panel") firstrow(var
+> iables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/o
+> utput/eval/eval_panel_W.xlsx saved
+
+. 
+. display as text _n "eval2 done."
+
+eval2 done.
+
+. display as text "between -> ${outdir}/eval2_between.csv"
+between -> /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data
+> /TFP/output/eval/eval2_between.csv
+
+. display as text "moran   -> ${outdir}/eval2_moran.csv"
+moran   -> /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data
+> /TFP/output/eval/eval2_moran.csv
+
+. display as text "coef    -> ${outdir}/eval2_coef.csv"
+coef    -> /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data
+> /TFP/output/eval/eval2_coef.csv
+
+. log close
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Da
+> ta/TFP/output/eval/eval2.log
+  log type:  text
+ closed on:  20 Sep 2026, 15:40:15
+-------------------------------------------------------------------------------

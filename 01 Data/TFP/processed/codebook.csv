@@ -1,0 +1,22 @@
+kolom,definisi,satuan,sumber
+code_prov,Kode BPS provinsi (Code_Prov2022),kode,BPS
+pma_miliar,Realisasi PMA,miliar Rp,Dataset Provinsi / BKPM
+pmdn_miliar,Realisasi PMDN,miliar Rp,Dataset Provinsi / BKPM
+pmtb_miliar,PMTB ADHB,miliar Rp,BPS PDRB pengeluaran
+upah_agregat,Upah sebulan tertimbang 17 sektor,Rp,Sakernas; 2025 diproyeksi UMP
+panjang_jalan_km,Panjang jalan nasional,km,KemenPUPR
+jalan_mantap_pct,Persentase jalan nasional mantap,%,KemenPUPR
+pax_udara,Penumpang udara (alokasi),orang,BPS nasional × H_ADHB
+pax_ka,Penumpang KA (0 jika tidak ada jaringan),orang,BPS nasional × H_ADHB
+pax_laut,Penumpang laut (alokasi),orang,BPS nasional × H_ADHB
+pax_bus,Penumpang bus (alokasi),orang,proksi nasional × H_ADHB
+cargo_*,Barang angkutan (alokasi),juta ton,nasional × H_ADHB
+indeks_konektivitas,"PC1 PCA, 0-100; pax udara+laut+bus digabung",indeks,hitung sendiri
+rasio_pad,PAD / pendapatan daerah,rasio,DJPK SIKD
+serapan_belanja,Realisasi/anggaran belanja,%,DJPK SIKD
+idi,Indeks Demokrasi Indonesia,0-100,BPS; metode baru 2021
+tindak_pidana_per_100rb,Kejahatan per 100 ribu penduduk,rasio,BPS
+ikg,Indeks Ketimpangan Gender,0-1,BPS
+indeks_hijau_iktl,Indeks Kualitas Tutupan Lahan,0-100,KLHK
+indeks_biru_ika,Indeks Kualitas Air,0-100,KLHK
+indeks_institusi,"PC1 PCA institusi, 0-100; IKG & kriminal dibalik",indeks,hitung sendiri

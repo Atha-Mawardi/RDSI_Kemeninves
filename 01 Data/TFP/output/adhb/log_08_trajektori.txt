@@ -1,0 +1,84 @@
+=============== Simulasi trajektori 2026-2029 ===============
+Basis harga modal: adhb
+
+Elastisitas DRS : b1=0.4584 b2=0.0152 (jumlah 0.4737)
+Elastisitas CRS : b1=0.9678 b2=0.0322 (jumlah 1.0000), pangsa modal ditahan 0.9678
+
+Laju basis 2022-2024: gY=8.72 gK=7.92 gL=3.00 (%/thn)
+Kontribusi TFP basis: DRS 5.04 poin | CRS 0.96 poin
+
+Trajektori sasaran:
+ Year gY_target
+ 2026      5.40
+ 2027      6.15
+ 2028      7.00
+ 2029      8.00
+
+=============== Skenario 1: tanpa intervensi ===============
+ Year gY_target gY_proyeksi   gap kontrib_modal kontrib_tk kontrib_tfp
+ 2026      5.40        8.72 -3.32          3.63       0.05        5.04
+ 2027      6.15        8.72 -2.57          3.63       0.05        5.04
+ 2028      7.00        8.72 -1.72          3.63       0.05        5.04
+ 2029      8.00        8.72 -0.72          3.63       0.05        5.04
+
+Tanpa intervensi, sasaran 2029 meleset -0.72 poin persen.
+
+=============== Skenario 2 & 3: jangkar kebutuhan ===============
+         skenario Year gY_target   b1   b2  rts tfp_basis gK_perlu lonjakan_gK
+ 2. RTS tetap DRS 2026      5.40 0.46 0.02 0.47      5.04     0.68       -7.24
+ 2. RTS tetap DRS 2027      6.15 0.46 0.02 0.47      5.04     2.32       -5.61
+ 2. RTS tetap DRS 2028      7.00 0.46 0.02 0.47      5.04     4.17       -3.75
+ 2. RTS tetap DRS 2029      8.00 0.46 0.02 0.47      5.04     6.35       -1.57
+ 3. RTS penuh CRS 2026      5.40 0.97 0.03 1.00      0.96     4.49       -3.43
+ 3. RTS penuh CRS 2027      6.15 0.97 0.03 1.00      0.96     5.27       -2.66
+ 3. RTS penuh CRS 2028      7.00 0.97 0.03 1.00      0.96     6.15       -1.78
+ 3. RTS penuh CRS 2029      8.00 0.97 0.03 1.00      0.96     7.18       -0.74
+ tfp_perlu lonjakan_tfp
+      1.72        -3.32
+      2.47        -2.57
+      3.32        -1.72
+      4.32        -0.72
+     -2.36        -3.32
+     -1.61        -2.57
+     -0.76        -1.72
+      0.24        -0.72
+
+Lolos: lonjakan TFP yang disyaratkan identik di DRS dan CRS, yaitu (target - gY basis).
+Yang berbeda antar skenario hanya kebutuhan investasinya.
+
+=============== Frontier sasaran 8% (petikan) ===============
+   gK 2. RTS tetap DRS 3. RTS penuh CRS
+  0.0             7.95             7.90
+  4.5             5.89             3.55
+  8.0             4.29             0.16
+ 12.0             2.45            -3.71
+ 16.0             0.62            -7.58
+
+Rasio PMTB harga berlaku terhadap PDRB harga berlaku, 2024: 30.8%
+
+Rasio investasi terhadap PDRB di sepanjang jalur (%):
+ Year 1. Tanpa intervensi 2. RTS tetap DRS 3. RTS penuh CRS
+ 2025                30.5             30.5             30.5
+ 2026                31.3             30.8             31.1
+ 2027                31.9             30.9             31.4
+ 2028                32.2             30.7             31.5
+ 2029                32.2             30.2             31.2
+
+Puncak historis Indonesia sekitar 33% (sebelum krisis 1998).
+  1. Tanpa intervensi: 32.2% pada 2029 -> masih di bawah puncak historis
+  2. RTS tetap DRS: 30.2% pada 2029 -> masih di bawah puncak historis
+  3. RTS penuh CRS: 31.2% pada 2029 -> masih di bawah puncak historis
+
+=============== Ringkasan ===============
+                                          butir nilai      satuan
+                    Pertumbuhan basis 2022-2024  8.72       %/thn
+                                   Sasaran 2029  8.00       %/thn
+                         Gap yang harus ditutup -0.72 poin persen
+     Kebutuhan gK bila TFP tetap di basis - DRS  6.35       %/thn
+     Kebutuhan gK bila TFP tetap di basis - CRS  7.18       %/thn
+   Kebutuhan kontribusi TFP bila gK tetap - DRS  4.32 poin persen
+   Kebutuhan kontribusi TFP bila gK tetap - CRS  0.24 poin persen
+ Lonjakan TFP yang disyaratkan (kedua skenario) -0.72 poin persen
+
+=============== SELESAI ===============
+Keluaran: 03 Output (ADHB)/Simulasi Trajektori 2026-2029.xlsx

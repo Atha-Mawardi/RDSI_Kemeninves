@@ -1,0 +1,10 @@
+Basis harga modal: riil | keluaran: 01 Data/TFP/output/modal_riil
+  tersimpan: 01 Data/TFP/output/modal_riil/Dekomposisi Pertumbuhan Nasional.png (2700x1860 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Indeks TFP Nasional.png (2700x1620 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Peringkat TFP Provinsi.png (2700x3150 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Tangga Atenuasi Elastisitas.png (2700x1800 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Amplop Sisa vs Elastisitas Modal.png (2700x1680 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Dekomposisi per Pulau.png (2700x1800 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Indeks TFP per Pulau.png (2700x2100 px)
+  tersimpan: 01 Data/TFP/output/modal_riil/Kontribusi Kumulatif Faktor.png (2700x1740 px)
+Selesai: 8 PNG tersimpan di 01 Data/TFP/output/modal_riil 

@@ -1,0 +1,17 @@
+seri,W,I,p_perm
+mean DRS,queen,0.479,0.006
+mean DRS,knn4,0.239,0.015
+mean DRS,invdist8,0.233,0.008
+mean DRS,island,0.377,0.004
+mean CRS,queen,0.384,0.033
+mean CRS,knn4,0.057,0.6
+mean CRS,invdist8,0.035,0.698
+mean CRS,island,0.077,0.538
+DRS | island FE,queen,-0.062,0.729
+DRS | island FE,knn4,-0.231,0.026
+DRS | island FE,invdist8,-0.152,0.069
+DRS | island FE,island,-0.211,0.039
+sisa two-way 2025,queen,-0.079,0.52
+sisa two-way 2025,knn4,-0.007,0.949
+sisa two-way 2025,invdist8,0.059,0.451
+sisa two-way 2025,island,-0.024,0.826

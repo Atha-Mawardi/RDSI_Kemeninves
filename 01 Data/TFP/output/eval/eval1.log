@@ -1,0 +1,3273 @@
+------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1.log
+  log type:  text
+ opened on:  20 Sep 2026, 17:43:40
+
+. display as text "proj = $proj"
+proj = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves
+
+. display as text "tfp  = $tfp"
+tfp  = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/konstruksi/TFP Provin
+> si 2017-2024.dta
+
+. display as text "xlsx = $xlsx"
+xlsx = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/processed/Dataset Agregasi P
+> rovinsi Penyetaraan Satuan Miliar Float (keamanan).xlsx
+
+. 
+. * =============================================================================
+. * 1. PANEL
+. * =============================================================================
+. 
+. use "${tfp}", clear
+
+. keep Code_Prov Pre_Prov Year pdrb_adhk pmtb_adhk labours_total ///
+>         log_Y log_K log_L logtfp_it logtfp_it_crs z_logtfp z_logtfp_crs
+
+. tempfile tfp
+
+. save `tfp'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//S_20318.000001 saved as .dta format
+
+. 
+. import excel "${xlsx}", sheet("Analisis Luaran 2") firstrow clear
+(111 vars, 306 obs)
+
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. keep if inrange(Year, 2017, 2024)
+(34 observations deleted)
+
+. capture drop logtfp_it logtfp_it_crs log_lab_tot g_Y g_K g_L kontrib_modal kontrib_tk kontrib_tfp
+
+. merge 1:1 Code_Prov Year using `tfp', keep(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. 
+. preserve
+
+. import excel "${xlsx}", sheet("Sheet1") firstrow clear
+(171 vars, 306 obs)
+
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. keep if inrange(Year, 2017, 2024)
+(34 observations deleted)
+
+. keep Code_Prov Year Exp_Prov Inc_Prov PMA_1 PMDN_1 pmtb ///
+>         A_PMA B_PMA C_PMA D_PMA E_PMA F_PMA G_PMA H_PMA I_PMA J_PMA K_PMA L_PMA MN_PMA O_PMA P_PMA Q_PMA R
+> STU_PMA ///
+>         A_PMDN B_PMDN C_PMDN D_PMDN E_PMDN F_PMDN G_PMDN H_PMDN I_PMDN J_PMDN K_PMDN L_PMDN MN_PMDN O_PMDN
+>  P_PMDN Q_PMDN RSTU_PMDN ///
+>         A_ADHB B_ADHB C_ADHB D_ADHB E_ADHB F_ADHB G_ADHB H_ADHB I_ADHB J_ADHB K_ADHB L_ADHB MN_ADHB O_ADHB
+>  P_ADHB Q_ADHB RSTU_ADHB ///
+>         A_ADHK B_ADHK C_ADHK D_ADHK E_ADHK F_ADHK G_ADHK H_ADHK I_ADHK J_ADHK K_ADHK L_ADHK MN_ADHK O_ADHK
+>  P_ADHK Q_ADHK RSTU_ADHK
+
+. tempfile s1
+
+. save `s1'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//S_20318.000003 saved as .dta format
+
+. restore
+
+. merge 1:1 Code_Prov Year using `s1', keep(master match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. 
+. preserve
+
+. import delimited "${peta}", clear
+(encoding automatically selected: ISO-8859-9)
+(3 vars, 342 obs)
+
+. keep code_prov pulau
+
+. rename code_prov Code_Prov
+
+. drop if missing(Code_Prov)
+(308 observations deleted)
+
+. duplicates drop Code_Prov, force
+
+Duplicates in terms of Code_Prov
+
+(0 observations are duplicates)
+
+. replace pulau = strtrim(pulau)
+(0 real changes made)
+
+. replace pulau = "Bali-Nusra" if inlist(pulau, "Bali-Nusa Tenggara", "Bali-Nusra")
+(0 real changes made)
+
+. tempfile peta
+
+. save `peta'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//S_20318.000005 saved as .dta format
+
+. restore
+
+. merge m:1 Code_Prov using `peta', keep(master match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. rename pulau Pulau
+
+. replace Pulau = "Sumatera"     if missing(Pulau) & inlist(Code_Prov, 11,12,13,14,15,16,17,18,19,21)
+(0 real changes made)
+
+. replace Pulau = "Jawa"         if missing(Pulau) & inlist(Code_Prov, 31,32,33,34,35,36)
+(0 real changes made)
+
+. replace Pulau = "Bali-Nusra"   if missing(Pulau) & inlist(Code_Prov, 51,52,53)
+(0 real changes made)
+
+. replace Pulau = "Kalimantan"   if missing(Pulau) & inlist(Code_Prov, 61,62,63,64,65)
+(0 real changes made)
+
+. replace Pulau = "Sulawesi"     if missing(Pulau) & inlist(Code_Prov, 71,72,73,74,75,76)
+(0 real changes made)
+
+. replace Pulau = "Maluku-Papua" if missing(Pulau) & inlist(Code_Prov, 81,82,91,94)
+(0 real changes made)
+
+. 
+. isid Code_Prov Year
+
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. 
+. * --- rename penyusun (sama Determinan TFP Provinsi.do) -----------------------
+. rename RoadC_Prov_National  jalan_mantap_pc
+
+. rename Road_Prov_National       jalan_mantap
+
+. rename Road_Prov                        jalan_total
+
+. rename Cargo_Udara_Prov         kargo_udara
+
+. rename Cargo_Kapal_Prov         kargo_kapal
+
+. rename Cargo_KA_Prov            kargo_kereta
+
+. rename PAX_Kapal                        jml_penumpang_kapal
+
+. rename PAX_KA                           jml_penumpang_kereta
+
+. rename PAX_Bus                          jml_penumpang_bis
+
+. rename PAX_Udara                        jml_penumpang_udara
+
+. rename Airpot_Logis         jml_airport_logistik
+
+. rename Airpot_Commer            jml_airport_komersil
+
+. 
+. rename Educ_Prov            lama_sekolah_mean
+
+. rename Heduc_Prov                       lama_sekolah_harapan
+
+. rename APK_Primer                       partisipasi_sd
+
+. rename APK_Sekunder1            partisipasi_smp
+
+. rename APK_Sekunder2            partisipasi_sma
+
+. rename APK_Tersier          partisipasi_kampus
+
+. 
+. rename IPM_Prov_Nm          ipm
+
+. rename P0_Prov                          p0
+
+. rename Ikk_Prov                         p1
+
+. rename Ikkk_Porv                        p2
+
+. rename Gk_Prov                          garis_kemiskinan
+
+. rename AHH_Prov                         harapan_hidup
+
+. rename Gini_Prov            gini
+
+. rename Upah_Agr_Prov        upah_rata
+
+. rename A_RataUpah               upah_A
+
+. rename B_RataUpah               upah_B
+
+. rename C_RataUpah               upah_C
+
+. rename D_RataUpah               upah_D
+
+. rename E_RataUpah               upah_E
+
+. rename F_RataUpah               upah_F
+
+. rename G_RataUpah               upah_G
+
+. rename H_RataUpah               upah_H
+
+. rename I_RataUpah               upah_I
+
+. rename J_RataUpah               upah_J
+
+. rename K_RataUpah               upah_K
+
+. rename L_RataUpah               upah_L
+
+. rename MN_RataUpah              upah_MN
+
+. rename O_RataUpah               upah_O
+
+. rename P_RataUpah               upah_P
+
+. rename Q_RataUpah               upah_Q
+
+. rename RSTU_RataUpah            upah_RSTU
+
+. 
+. rename PDBDeflator          deflator
+
+. rename RasioPAD_Prov        rasio_pad
+
+. rename Grwth1_Prov                      pertumbuhan_pdrb_adhb
+
+. rename Grwth2_Prov                      pertumbuhan_pdrb_adhk
+
+. rename Pendapatan_APBD_Prov     apbd_pendapatan
+
+. rename Belanja_APBD_Prov        apbd_belanja
+
+. rename Serapan_Prov         apbd_serapan
+
+. rename IDI_Prov2            indeks_demokrasi
+
+. rename PAD_Prov             pad
+
+. rename TK_Prov              tk_sakernas
+
+. 
+. rename IKLH_Prov            indeks_lingkungan
+
+. rename Hijau_Prov                       indeks_hijau
+
+. rename Biru_Prov                        indeks_biru
+
+. 
+. rename Crime2_Prov          crime_case
+
+. rename CrimeRisk_BPS            crime_risk
+
+. rename CR_Prov                          crime_rate
+
+. 
+. rename Exp_Prov             pengeluaran_kapita
+
+. rename Inc_Prov             pendapatan_kapita
+
+. 
+. * --- transform ----------------------------------------------------------------
+. foreach v in jalan_mantap_pc jalan_mantap jalan_total ///
+>         kargo_udara kargo_kapal kargo_kereta ///
+>         jml_penumpang_kapal jml_penumpang_kereta jml_penumpang_bis jml_penumpang_udara ///
+>         jml_airport_logistik jml_airport_komersil ///
+>         lama_sekolah_mean lama_sekolah_harapan ///
+>         ipm p0 garis_kemiskinan harapan_hidup upah_rata ///
+>         rasio_pad apbd_pendapatan apbd_belanja apbd_serapan indeks_demokrasi pad ///
+>         indeks_lingkungan indeks_hijau indeks_biru pengeluaran_kapita pendapatan_kapita {
+  2.         capture confirm variable `v'
+  3.         if !_rc gen double ln_`v' = ln(`v' + 1)
+  4. }
+
+. 
+. gen double ln_airport_logistik = ln(jml_airport_logistik + 1)
+
+. gen double ln_airport_komersil = ln(jml_airport_komersil + 1)
+
+. gen double ln_penumpang_total = ln(jml_penumpang_kapal + jml_penumpang_bis + ///
+>         jml_penumpang_kereta + jml_penumpang_udara + 1)
+
+. gen double ln_p1 = -ln(p1 + 1)
+
+. gen double ln_p2 = -ln(p2 + 1)
+
+. gen double equality = -gini
+
+. gen double price = -ln(deflator + 1)
+
+. gen double ln_crime_case = ln(crime_case + 1)
+
+. gen double ln_crime_risk = -ln(crime_risk + 1)
+
+. gen double ln_crime_rate = -ln(crime_rate + 1)
+
+. gen double ln_pertumbuhan_pdrb_adhb = sign(pertumbuhan_pdrb_adhb) * ln(abs(pertumbuhan_pdrb_adhb) + 1)
+
+. 
+. foreach v in sd smp sma kampus {
+  2.         gen double p_`v' = partisipasi_`v' / 100
+  3.         replace p_`v' = 0.0001 if p_`v' <= 0 & !missing(p_`v')
+  4.         replace p_`v' = 0.9999 if p_`v' >= 1 & !missing(p_`v')
+  5.         gen double logit_partisipasi_`v' = ln(p_`v' / (1 - p_`v'))
+  6.         gen double db_`v' = partisipasi_`v' * (-1)
+  7. }
+(0 real changes made)
+(263 real changes made)
+(0 real changes made)
+(3 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+. 
+. foreach v in ln_lama_sekolah_mean ln_lama_sekolah_harapan ///
+>         logit_partisipasi_sd logit_partisipasi_smp logit_partisipasi_sma logit_partisipasi_kampus ///
+>         db_sd db_smp db_sma db_kampus ///
+>         ln_ipm ln_p0 ln_p1 ln_p2 gini equality ln_garis_kemiskinan ln_harapan_hidup ln_upah_rata ///
+>         price ln_rasio_pad ln_pertumbuhan_pdrb_adhb ln_apbd_pendapatan ln_apbd_belanja ln_apbd_serapan ///
+>         ln_indeks_demokrasi ln_pad ///
+>         ln_jalan_mantap ln_kargo_udara ln_kargo_kapal ln_kargo_kereta ln_penumpang_total ///
+>         ln_airport_logistik ln_airport_komersil ///
+>         ln_indeks_lingkungan ln_indeks_hijau ln_indeks_biru ///
+>         ln_crime_case ln_crime_risk ln_crime_rate ///
+>         ln_pengeluaran_kapita ln_pendapatan_kapita log_Y log_K log_L logtfp_it logtfp_it_crs {
+  2.         capture egen double z_`v' = std(`v')
+  3. }
+
+. 
+. * --- 6 pilar: untuk peta/profil saja. Angka yang dikutip = FGLS grup db_* ---
+. egen double raw_pendidikan = rowmean(z_ln_lama_sekolah_mean z_ln_lama_sekolah_harapan ///
+>         z_logit_partisipasi_sma z_logit_partisipasi_kampus)
+
+. egen double raw_equity = rowmean(z_ln_ipm z_ln_p1 z_equality z_ln_upah_rata z_ln_indeks_demokrasi)
+
+. egen double raw_institusi = rowmean(z_price z_ln_rasio_pad z_ln_apbd_belanja z_ln_apbd_serapan)
+
+. egen double raw_konektivitas = rowmean(z_ln_jalan_mantap z_ln_kargo_kapal z_ln_kargo_kereta ///
+>         z_ln_penumpang_total z_ln_airport_logistik)
+
+. egen double raw_lingkungan = rowmean(z_ln_indeks_lingkungan z_ln_indeks_hijau z_ln_indeks_biru)
+
+. egen double raw_keamanan = rowmean(z_ln_crime_risk z_ln_crime_rate)
+
+. 
+. foreach p in pendidikan equity institusi konektivitas lingkungan keamanan {
+  2.         egen double pilar_`p' = std(raw_`p')
+  3. }
+
+. egen double raw_solow = rowmean(pilar_pendidikan pilar_equity pilar_institusi)
+
+. egen double raw_hard  = rowmean(pilar_konektivitas pilar_keamanan)
+
+. egen double idx_solow = std(raw_solow)
+
+. egen double idx_hard  = std(raw_hard)
+
+. label variable pilar_pendidikan  "pilar pendidikan (z rata penyusun, polaritas benar)"
+
+. label variable pilar_equity      "pilar equity (IPM, -P1, -gini, upah, IDI)"
+
+. label variable pilar_institusi   "pilar institusi (harga, PAD, belanja, serapan)"
+
+. label variable pilar_konektivitas "pilar konektivitas"
+
+. label variable pilar_lingkungan  "pilar lingkungan (IKLH + hijau + biru)"
+
+. label variable pilar_keamanan    "pilar keamanan (risk & rate dibalik)"
+
+. label variable idx_solow         "rata-rata pendidikan, equity, institusi"
+
+. label variable idx_hard          "rata-rata konektivitas dan keamanan"
+
+. 
+. * --- tenaga kerja / upah / investasi / PDRB per sektor -----------------------
+. local secs A B C D E F G H I J K L MN O P Q RSTU
+
+. egen double tk_total = rowtotal(*_TenagaKerja)
+
+. foreach s of local secs {
+  2.         rename `s'_TenagaKerja tk_`s'
+  3.         gen double ln_upah_`s' = ln(upah_`s' + 1)
+  4.         gen double wagebill_`s' = upah_`s' * tk_`s'
+  5.         gen double inv_`s' = `s'_PMA + `s'_PMDN
+  6.         replace inv_`s' = 0 if missing(inv_`s') | inv_`s' < 0
+  7.         gen double share_tk_`s'    = tk_`s' / tk_total
+  8.         gen double share_pdrb_`s'  = `s'_ADHK / pdrb_adhk
+  9.         gen double share_inv_`s'   = .
+ 10. }
+(13 missing values generated)
+(13 real changes made)
+(272 missing values generated)
+(41 missing values generated)
+(41 real changes made)
+(272 missing values generated)
+(2 missing values generated)
+(2 real changes made)
+(272 missing values generated)
+(21 missing values generated)
+(21 real changes made)
+(272 missing values generated)
+(174 missing values generated)
+(174 real changes made)
+(272 missing values generated)
+(146 missing values generated)
+(146 real changes made)
+(272 missing values generated)
+(30 missing values generated)
+(30 real changes made)
+(272 missing values generated)
+(73 missing values generated)
+(73 real changes made)
+(272 missing values generated)
+(31 missing values generated)
+(31 real changes made)
+(272 missing values generated)
+(48 missing values generated)
+(48 real changes made)
+(272 missing values generated)
+(253 missing values generated)
+(253 real changes made)
+(272 missing values generated)
+(15 missing values generated)
+(76 missing values generated)
+(76 real changes made)
+(15 missing values generated)
+(272 missing values generated)
+(79 missing values generated)
+(79 real changes made)
+(272 missing values generated)
+(271 missing values generated)
+(271 real changes made)
+(272 missing values generated)
+(200 missing values generated)
+(200 real changes made)
+(272 missing values generated)
+(136 missing values generated)
+(136 real changes made)
+(272 missing values generated)
+(99 missing values generated)
+(99 real changes made)
+(272 missing values generated)
+
+. 
+. egen double wagebill_total = rowtotal(wagebill_*)
+
+. egen double inv_total      = rowtotal(inv_*)
+
+. foreach s of local secs {
+  2.         replace share_inv_`s' = inv_`s' / inv_total if inv_total > 0
+  3.         gen double share_upah_`s' = wagebill_`s' / wagebill_total
+  4. }
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(15 missing values generated)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+
+. 
+. * megasector: primer A+B ; sekunder C-F ; tersier G-RSTU
+. * ekstraktif A+B ; industrial C+F ; hijau-invest E (+D listrik, dicatat terpisah)
+. * padat karya A C F G I P Q ; padat modal B D K J L H
+. foreach kind in primer sekunder tersier ekstraktif industri hijau_inv padat_karya padat_modal {
+  2.         gen double tk_`kind' = 0
+  3.         gen double wagebill_`kind' = 0
+  4.         gen double inv_`kind' = 0
+  5.         gen double pdrb_`kind' = 0
+  6. }
+
+. 
+. foreach s in A B {
+  2.         replace tk_primer = tk_primer + tk_`s'
+  3.         replace wagebill_primer = wagebill_primer + wagebill_`s'
+  4.         replace inv_primer = inv_primer + inv_`s'
+  5.         replace pdrb_primer = pdrb_primer + `s'_ADHK
+  6.         replace tk_ekstraktif = tk_ekstraktif + tk_`s'
+  7.         replace wagebill_ekstraktif = wagebill_ekstraktif + wagebill_`s'
+  8.         replace inv_ekstraktif = inv_ekstraktif + inv_`s'
+  9.         replace pdrb_ekstraktif = pdrb_ekstraktif + `s'_ADHK
+ 10. }
+(272 real changes made)
+(272 real changes made)
+(259 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(259 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(231 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(231 real changes made)
+(272 real changes made)
+
+. foreach s in C D E F {
+  2.         replace tk_sekunder = tk_sekunder + tk_`s'
+  3.         replace wagebill_sekunder = wagebill_sekunder + wagebill_`s'
+  4.         replace inv_sekunder = inv_sekunder + inv_`s'
+  5.         replace pdrb_sekunder = pdrb_sekunder + `s'_ADHK
+  6. }
+(272 real changes made)
+(272 real changes made)
+(270 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(251 real changes made)
+(272 real changes made)
+(271 real changes made)
+(271 real changes made)
+(98 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(126 real changes made)
+(272 real changes made)
+
+. foreach s in G H I J K L MN O P Q RSTU {
+  2.         replace tk_tersier = tk_tersier + tk_`s'
+  3.         replace wagebill_tersier = wagebill_tersier + wagebill_`s'
+  4.         replace inv_tersier = inv_tersier + inv_`s'
+  5.         replace pdrb_tersier = pdrb_tersier + `s'_ADHK
+  6. }
+(272 real changes made)
+(272 real changes made)
+(242 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(199 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(241 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(224 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(19 real changes made)
+(272 real changes made)
+(272 real changes made, 15 to missing)
+(272 real changes made, 15 to missing)
+(196 real changes made)
+(272 real changes made)
+(257 real changes made)
+(257 real changes made)
+(193 real changes made)
+(272 real changes made)
+(257 real changes made)
+(257 real changes made)
+(1 real change made)
+(272 real changes made)
+(257 real changes made)
+(257 real changes made)
+(72 real changes made)
+(272 real changes made)
+(257 real changes made)
+(257 real changes made)
+(136 real changes made)
+(272 real changes made)
+(257 real changes made)
+(257 real changes made)
+(173 real changes made)
+(272 real changes made)
+
+. foreach s in C F {
+  2.         replace tk_industri = tk_industri + tk_`s'
+  3.         replace wagebill_industri = wagebill_industri + wagebill_`s'
+  4.         replace inv_industri = inv_industri + inv_`s'
+  5.         replace pdrb_industri = pdrb_industri + `s'_ADHK
+  6. }
+(272 real changes made)
+(272 real changes made)
+(270 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(126 real changes made)
+(272 real changes made)
+
+. foreach s in E {
+  2.         replace tk_hijau_inv = tk_hijau_inv + tk_`s'
+  3.         replace wagebill_hijau_inv = wagebill_hijau_inv + wagebill_`s'
+  4.         replace inv_hijau_inv = inv_hijau_inv + inv_`s'
+  5.         replace pdrb_hijau_inv = pdrb_hijau_inv + `s'_ADHK
+  6. }
+(271 real changes made)
+(271 real changes made)
+(98 real changes made)
+(272 real changes made)
+
+. foreach s in A C F G I P Q {
+  2.         replace tk_padat_karya = tk_padat_karya + tk_`s'
+  3.         replace wagebill_padat_karya = wagebill_padat_karya + wagebill_`s'
+  4.         replace inv_padat_karya = inv_padat_karya + inv_`s'
+  5.         replace pdrb_padat_karya = pdrb_padat_karya + `s'_ADHK
+  6. }
+(272 real changes made)
+(272 real changes made)
+(259 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(270 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(126 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(242 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(241 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(72 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(136 real changes made)
+(272 real changes made)
+
+. foreach s in B D H J K L {
+  2.         replace tk_padat_modal = tk_padat_modal + tk_`s'
+  3.         replace wagebill_padat_modal = wagebill_padat_modal + wagebill_`s'
+  4.         replace inv_padat_modal = inv_padat_modal + inv_`s'
+  5.         replace pdrb_padat_modal = pdrb_padat_modal + `s'_ADHK
+  6. }
+(272 real changes made)
+(272 real changes made)
+(231 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(251 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(199 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(224 real changes made)
+(272 real changes made)
+(272 real changes made)
+(272 real changes made)
+(19 real changes made)
+(272 real changes made)
+(272 real changes made, 15 to missing)
+(272 real changes made, 15 to missing)
+(196 real changes made)
+(272 real changes made)
+
+. 
+. foreach kind in primer sekunder tersier ekstraktif industri hijau_inv padat_karya padat_modal {
+  2.         gen double share_tk_`kind'   = tk_`kind' / tk_total
+  3.         gen double share_upah_`kind' = wagebill_`kind' / wagebill_total
+  4.         gen double share_inv_`kind'  = inv_`kind' / inv_total if inv_total > 0
+  5.         replace    share_inv_`kind'  = 0 if missing(share_inv_`kind')
+  6.         gen double share_pdrb_`kind' = pdrb_`kind' / pdrb_adhk
+  7.         gen double ln_inv_`kind'     = ln(inv_`kind' + 1)
+  8. }
+(0 real changes made)
+(0 real changes made)
+(15 missing values generated)
+(15 missing values generated)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(15 missing values generated)
+(15 missing values generated)
+(0 real changes made)
+
+. 
+. * sawit: tidak ada kolom sawit. Proksi = investasi pertanian (A_PMA+A_PMDN)
+. * di daerah dengan pangsa PDRB A di atas median.
+. gen double inv_sawit = inv_A
+
+. gen double ln_inv_sawit = ln(inv_sawit + 1)
+
+. gen double share_inv_sawit = share_inv_A
+
+. label variable inv_sawit "proksi sawit/agri: A_PMA + A_PMDN (Rp, satuan sheet)"
+
+. 
+. * hilirisasi: industri pengolahan (C) — jumlah TK, upah, investasi
+. gen double ln_tk_C     = ln(tk_C + 1)
+
+. gen double ln_inv_C    = ln(inv_C + 1)
+
+. bysort Code_Prov (Year): gen double g_tk_C = (tk_C - tk_C[_n-1]) / tk_C[_n-1] if tk_C[_n-1] > 0
+(34 missing values generated)
+
+. bysort Code_Prov (Year): gen double g_inv_C = (inv_C - inv_C[_n-1]) / (inv_C[_n-1] + 1)
+(34 missing values generated)
+
+. 
+. * K/L intensity
+. gen double log_kl = log_K - log_L
+
+. egen double z_log_kl = std(log_kl)
+
+. 
+. * kapasitas fiskal
+. egen double z_rasio_pad     = std(rasio_pad)
+
+. egen double z_apbd_serapan  = std(apbd_serapan)
+
+. egen double z_ln_belanja    = std(ln_apbd_belanja)
+
+. egen double raw_fiskal = rowmean(z_rasio_pad z_apbd_serapan z_ln_belanja)
+
+. egen double idx_fiskal = std(raw_fiskal)
+
+. label variable idx_fiskal "kapasitas fiskal (PAD + serapan + ln belanja)"
+
+. 
+. * --- klasifikasi (antara-provinsi: rata 2017-2024) ---------------------------
+. foreach v in pilar_pendidikan pilar_equity pilar_institusi pilar_konektivitas ///
+>         pilar_lingkungan pilar_keamanan idx_solow idx_hard idx_fiskal ///
+>         logtfp_it logtfp_it_crs indeks_hijau indeks_biru indeks_lingkungan ///
+>         share_tk_primer share_tk_sekunder share_tk_ekstraktif share_tk_industri ///
+>         share_tk_C share_inv_A share_inv_C share_inv_primer share_inv_padat_karya ///
+>         share_pdrb_primer rasio_pad log_kl ipm gini p0 {
+  2.         bysort Code_Prov: egen double m_`v' = mean(`v')
+  3. }
+
+. 
+. * tercile antar-provinsi (dari mean), dipakai split Solow dan fiskal
+. foreach v in m_pilar_pendidikan m_pilar_equity m_pilar_institusi m_idx_solow ///
+>         m_idx_fiskal m_log_kl m_share_tk_primer m_share_inv_padat_karya m_rasio_pad {
+  2.         xtile t_`v' = `v' if Year == 2017, nq(3)
+  3.         bysort Code_Prov: egen byte terc_`v' = max(t_`v')
+  4.         drop t_`v'
+  5. }
+
+. 
+. quietly summarize m_idx_solow if Year == 2017, detail
+
+. gen byte d_high_solow = (m_idx_solow >= r(p50))
+
+. 
+. quietly summarize m_idx_fiskal if Year == 2017, detail
+
+. gen byte d_high_fiskal = (m_idx_fiskal >= r(p50))
+
+. 
+. quietly summarize m_share_tk_ekstraktif if Year == 2017, detail
+
+. gen byte d_ekstraktif = (m_share_tk_ekstraktif >= r(p75))
+
+. 
+. quietly summarize m_share_inv_A if Year == 2017, detail
+
+. gen byte d_sawit = (m_share_inv_A >= r(p75))
+
+. 
+. quietly summarize m_share_tk_C if Year == 2017, detail
+
+. gen byte d_hilir = (m_share_tk_C >= r(p75))
+
+. 
+. quietly summarize m_log_kl if Year == 2017, detail
+
+. gen byte d_padat_modal_daerah = (m_log_kl >= r(p50))
+
+. gen byte d_padat_karya_daerah = (m_log_kl <  r(p50))
+
+. 
+. * dominan megasector (TK)
+. gen str12 dominan_tk = "tersier"
+
+. replace dominan_tk = "primer"   if share_tk_primer   >= share_tk_sekunder & share_tk_primer   >= share_tk_
+> tersier
+(62 real changes made)
+
+. replace dominan_tk = "sekunder" if share_tk_sekunder >= share_tk_primer   & share_tk_sekunder >= share_tk_
+> tersier
+(0 real changes made)
+
+. gen byte d_dom_primer   = (dominan_tk == "primer")
+
+. gen byte d_dom_sekunder = (dominan_tk == "sekunder")
+
+. gen byte d_dom_tersier  = (dominan_tk == "tersier")
+
+. 
+. * first difference untuk "faktor change" lingkungan
+. foreach v in indeks_hijau indeks_biru indeks_lingkungan ipm gini p0 equality ///
+>         logtfp_it logtfp_it_crs pilar_pendidikan pilar_equity pilar_institusi ///
+>         pengeluaran_kapita pendapatan_kapita rasio_pad {
+  2.         gen double d_`v' = D.`v'
+  3. }
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+
+. 
+. * lingkungan dibersihkan dari ukuran (log PDRB) — yang dicari faktor change
+. quietly regress ln_indeks_hijau log_Y i.Year, vce(cluster Code_Prov)
+
+. predict double hijau_resid_size, resid
+
+. quietly regress ln_indeks_hijau log_Y ln_pengeluaran_kapita i.Year, vce(cluster Code_Prov)
+
+. predict double hijau_resid_pc, resid
+
+. egen double z_hijau_resid_size = std(hijau_resid_size)
+
+. egen double z_hijau_resid_pc   = std(hijau_resid_pc)
+
+. 
+. * interaksi Solow (pilar x log K, log L)
+. foreach p in pendidikan equity institusi konektivitas keamanan solow hard {
+  2.         if "`p'" == "solow" | "`p'" == "hard" {
+  3.                 gen double `p'_x_K = idx_`p' * log_K
+  4.                 gen double `p'_x_L = idx_`p' * log_L
+  5.         }
+  6.         else {
+  7.                 gen double `p'_x_K = pilar_`p' * log_K
+  8.                 gen double `p'_x_L = pilar_`p' * log_L
+  9.         }
+ 10. }
+
+. gen double educ_eq_x_K = pilar_pendidikan * pilar_equity * log_K
+
+. gen double educ_eq_x_L = pilar_pendidikan * pilar_equity * log_L
+
+. gen double educ_x_hilir = pilar_pendidikan * share_tk_C
+
+. gen double educ_x_gC    = pilar_pendidikan * g_tk_C
+(34 missing values generated)
+
+. gen double fiskal_x_tkprimer = idx_fiskal * share_tk_primer
+
+. gen double fiskal_x_ekstr    = idx_fiskal * share_tk_ekstraktif
+
+. gen double hijau_x_ekstr     = z_ln_indeks_hijau * share_tk_ekstraktif
+
+. gen double gini_x_tersier    = z_gini * share_tk_tersier
+(15 missing values generated)
+
+. 
+. foreach p in pendidikan equity institusi konektivitas lingkungan keamanan {
+  2.         egen int rnk_hi = rank(-m_pilar_`p') if Year == 2017, unique
+  3.         egen int rnk_lo = rank( m_pilar_`p') if Year == 2017, unique
+  4.         bysort Code_Prov: egen byte top5_`p' = max(cond(Year == 2017, rnk_hi <= 5, .))
+  5.         bysort Code_Prov: egen byte bot5_`p' = max(cond(Year == 2017, rnk_lo <= 5, .))
+  6.         drop rnk_hi rnk_lo
+  7.         gen byte ekstrem_`p' = .
+  8.         replace ekstrem_`p' = 1 if top5_`p'
+  9.         replace ekstrem_`p' = 0 if bot5_`p'
+ 10. }
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+(238 missing values generated)
+(238 missing values generated)
+(272 missing values generated)
+(40 real changes made)
+(40 real changes made)
+
+. 
+. label variable logtfp_it     "ln residual PMTB riil (DRS)"
+
+. label variable logtfp_it_crs "ln residual per pekerja (CRS)"
+
+. label variable log_K         "ln PMTB ADHK"
+
+. label variable log_L         "ln tenaga kerja 17 sektor"
+
+. 
+. compress
+  variable tk_total was double now long
+  variable tk_primer was double now long
+  variable pdrb_primer was double now long
+  variable tk_sekunder was double now long
+  variable pdrb_sekunder was double now long
+  variable tk_tersier was double now long
+  variable pdrb_tersier was double now long
+  variable tk_ekstraktif was double now long
+  variable pdrb_ekstraktif was double now long
+  variable tk_industri was double now long
+  variable pdrb_industri was double now long
+  variable tk_hijau_inv was double now long
+  variable pdrb_hijau_inv was double now int
+  variable tk_padat_karya was double now long
+  variable pdrb_padat_karya was double now long
+  variable tk_padat_modal was double now long
+  variable pdrb_padat_modal was double now long
+  variable dominan_tk was str12 now str7
+  (20,400 bytes saved)
+
+. save "${outdir}/eval_panel.dta", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval_panel.dta
+    saved
+
+. export excel using "${outdir}/eval_panel.xlsx", sheet("panel") firstrow(variables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval_panel.xlsx sa
+> ved
+
+. 
+. * =============================================================================
+. * 2. PROFIL (deskriptif; bukan estimator)
+. * =============================================================================
+. 
+. preserve
+
+. keep if Year == 2024
+(238 observations deleted)
+
+. keep Code_Prov Pre_Prov Pulau ///
+>         m_pilar_pendidikan m_pilar_equity m_pilar_institusi m_pilar_konektivitas ///
+>         m_pilar_lingkungan m_pilar_keamanan m_idx_solow m_idx_hard m_idx_fiskal ///
+>         m_logtfp_it m_logtfp_it_crs m_indeks_hijau m_ipm m_gini m_p0 ///
+>         m_share_tk_primer m_share_tk_sekunder m_share_tk_ekstraktif m_share_inv_A ///
+>         m_rasio_pad
+
+. foreach p in pendidikan equity institusi konektivitas lingkungan keamanan {
+  2.         gsort -m_pilar_`p'
+  3.         gen byte top5_`p' = (_n <= 5)
+  4.         gsort  m_pilar_`p'
+  5.         gen byte bot5_`p' = (_n <= 5)
+  6. }
+
+. export excel using "${outdir}/eval1_profil_pilar.xlsx", sheet("mean2024") firstrow(variables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1_profil_pilar
+> .xlsx saved
+
+. restore
+
+. 
+. display as text _n "===== top5 vs bottom5 (ttest, snapshot 2017) ====="
+
+===== top5 vs bottom5 (ttest, snapshot 2017) =====
+
+. preserve
+
+. keep if Year == 2017
+(238 observations deleted)
+
+. foreach p in pendidikan equity institusi konektivitas lingkungan keamanan {
+  2.         display as text _n "pilar `p'"
+  3.         ttest m_logtfp_it_crs, by(top5_`p')
+  4.         ttest m_indeks_hijau,  by(top5_`p')
+  5.         ttest m_ipm,           by(top5_`p')
+  6.         ttest m_share_tk_primer, by(top5_`p')
+  7. }
+
+pilar pendidikan
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -.9041676    .0585564    .3153361   -1.024115   -.7842202
+       1 |       5   -.9659573    .2132893    .4769294   -1.558143   -.3737712
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |            .0617897    .1645256                -.273338    .3969174
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   0.3756
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.6451         Pr(|T| > |t|) = 0.7097          Pr(T > t) = 0.3549
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29     59.7434    3.620701    19.49807    52.32673    67.16007
+       1 |       5      74.525    9.341227    20.88762    48.58959    100.4604
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |            -14.7816     9.52834               -34.19019    4.626994
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.5513
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0653         Pr(|T| > |t|) = 0.1307          Pr(T > t) = 0.9347
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    71.18263    .6344192    3.416452    69.88308    72.48218
+       1 |       5      73.629    2.152071    4.812177    67.65389    79.60411
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |           -2.446371    1.753152               -6.017425    1.124684
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.3954
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0863         Pr(|T| > |t|) = 0.1725          Pr(T > t) = 0.9137
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3496657    .0271139    .1460126    .2941255    .4052059
+       1 |       5    .3050237    .0402936    .0900991    .1931509    .4168966
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |            .0446419    .0679128               -.0936919    .1829758
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   0.6573
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.7422         Pr(|T| > |t|) = 0.5157          Pr(T > t) = 0.2578
+
+pilar equity
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -1.002228    .0474616    .2555885   -1.099448   -.9050069
+       1 |       5   -.3972096    .1265238    .2829158   -.7484959   -.0459232
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |            -.605018    .1254951               -.8606432   -.3493927
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -4.8210
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0000          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    61.96288    3.454677    18.60401     54.8863    69.03947
+       1 |       5      61.652    13.47297    30.12649    24.24503    99.05897
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |            .3108825    9.879992                 -19.814    20.43577
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   0.0315
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.5125         Pr(|T| > |t|) = 0.9751          Pr(T > t) = 0.4875
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    70.87103    .5961284     3.21025    69.64992    72.09215
+       1 |       5    75.43625    1.837526    4.108834    70.33446    80.53804
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |           -4.565216    1.615326               -7.855527   -1.274904
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -2.8262
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0040         Pr(|T| > |t|) = 0.0081          Pr(T > t) = 0.9960
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3636049    .0231736    .1247939    .3161359     .411074
+       1 |       5     .224176    .0771218    .1724495    .0100517    .4383003
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |            .1394289    .0637723                .0095289     .269329
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   2.1864
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9819         Pr(|T| > |t|) = 0.0362          Pr(T > t) = 0.0181
+
+pilar institusi
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -.9414048    .0610986     .329026    -1.06656     -.81625
+       1 |       5   -.7499816    .1616883     .361546     -1.1989   -.3010629
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |           -.1914232    .1613781               -.5201397    .1372933
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.1862
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.1221         Pr(|T| > |t|) = 0.2443          Pr(T > t) = 0.8779
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    63.81655    3.741456    20.14835    56.15252    71.48057
+       1 |       5    50.90075    7.885692    17.63294    29.00656    72.79494
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |             12.9158    9.612711               -6.664655    32.49625
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   1.3436
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9057         Pr(|T| > |t|) = 0.1885          Pr(T > t) = 0.0943
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    71.24056    .7109756    3.828721    69.78419    72.69693
+       1 |       5      73.293    .9097044    2.034161    70.76726    75.81874
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |            -2.05244    1.768877               -5.655523    1.550644
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.1603
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.1273         Pr(|T| > |t|) = 0.2545          Pr(T > t) = 0.8727
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3661141    .0249925    .1345886    .3149193    .4173088
+       1 |       5     .209623     .036254    .0810663    .1089659    .3102802
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |             .156491     .062523                .0291358    .2838463
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   2.5029
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9912         Pr(|T| > |t|) = 0.0176          Pr(T > t) = 0.0088
+
+pilar konektivitas
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -.9418196    .0608733    .3278128   -1.066513   -.8171263
+       1 |       5   -.7475755    .1643983    .3676057   -1.204018   -.2911327
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |           -.1942441    .1612728                -.522746    .1342578
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.2044
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.1186         Pr(|T| > |t|) = 0.2373          Pr(T > t) = 0.8814
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    65.43732    3.603174    19.40369    58.05655    72.81809
+       1 |       5    41.50025    4.099968    9.167808    30.11691    52.88359
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |            23.93707    8.928131                5.751064    42.12308
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   2.6811
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9942         Pr(|T| > |t|) = 0.0115          Pr(T > t) = 0.0058
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    71.11159    .6494653    3.497478    69.78123    72.44196
+       1 |       5      74.041    1.814776    4.057963    69.00237    79.07963
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |           -2.929405    1.729854               -6.453003    .5941929
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.6934
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0500         Pr(|T| > |t|) = 0.1001          Pr(T > t) = 0.9500
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3673056    .0235371    .1267511    .3190921    .4155192
+       1 |       5     .202712    .0602256    .1346685     .035499     .369925
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |            .1645936    .0618695                .0385697    .2906176
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   2.6603
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9940         Pr(|T| > |t|) = 0.0121          Pr(T > t) = 0.0060
+
+pilar lingkungan
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -.9448167    .0615897    .3316707   -1.070977   -.8186559
+       1 |       5   -.7301927    .1472686    .3293026   -1.139076   -.3213095
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |           -.2146239    .1604634               -.5414772    .1122293
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.3375
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0952         Pr(|T| > |t|) = 0.1905          Pr(T > t) = 0.9048
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    56.74879    3.052385     16.4376    50.49627    63.00132
+       1 |       5    91.89372    4.943769     11.0546    78.16762    105.6198
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |           -35.14493    7.682339               -50.79334   -19.49651
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -4.5748
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0000         Pr(|T| > |t|) = 0.0001          Pr(T > t) = 1.0000
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    72.04211    .6526374     3.51456    70.70524    73.37898
+       1 |       5      68.644    1.579024    3.530804    64.25993    73.02807
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |            3.398112    1.702855               -.0704909    6.866715
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   1.9955
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9727         Pr(|T| > |t|) = 0.0546          Pr(T > t) = 0.0273
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3270684    .0248136    .1336255    .2762399    .3778968
+       1 |       5    .4360882    .0660577    .1477095    .2526826    .6194937
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |           -.1090198    .0655973               -.2426372    .0245976
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -1.6620
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.0531         Pr(|T| > |t|) = 0.1063          Pr(T > t) = 0.9469
+
+pilar keamanan
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29   -.8948176    .0660521    .3557017   -1.030119   -.7595159
+       1 |       5   -1.020187    .0709462    .1586405   -1.217166   -.8232091
+---------+--------------------------------------------------------------------
+Combined |      34   -.9132543    .0575058    .3353136   -1.030251   -.7962579
+---------+--------------------------------------------------------------------
+    diff |            .1253698    .1633916                -.207448    .4581876
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   0.7673
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.7757         Pr(|T| > |t|) = 0.4485          Pr(T > t) = 0.2243
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    62.75176    3.729549    20.08424    55.11213     70.3914
+       1 |       5     57.0765    9.721066    21.73697    30.08649    84.06651
+---------+--------------------------------------------------------------------
+Combined |      34    61.91716    3.445771    20.09213    54.90669    68.92764
+---------+--------------------------------------------------------------------
+    diff |            5.675262    9.829076               -14.34591    25.69644
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   0.5774
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.7161         Pr(|T| > |t|) = 0.5677          Pr(T > t) = 0.2839
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    71.52875    .7321708    3.942861    70.02897    73.02853
+       1 |       5     71.6215    .6943497    1.552613    69.69368    73.54932
+---------+--------------------------------------------------------------------
+Combined |      34    71.54239     .629752    3.672054    70.26115    72.82363
+---------+--------------------------------------------------------------------
+    diff |             -.09275    1.805629               -3.770696    3.585196
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =  -0.0514
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.4797         Pr(|T| > |t|) = 0.9594          Pr(T > t) = 0.5203
+
+Two-sample t test with equal variances
+------------------------------------------------------------------------------
+   Group |     Obs        Mean    Std. err.   Std. dev.   [95% conf. interval]
+---------+--------------------------------------------------------------------
+       0 |      29    .3609365    .0252913    .1361978    .3091297    .4127434
+       1 |       5    .2396527    .0528172     .118103    .0930085    .3862969
+---------+--------------------------------------------------------------------
+Combined |      34    .3431007    .0238444    .1390358    .2945888    .3916126
+---------+--------------------------------------------------------------------
+    diff |            .1212838    .0649211                -.010956    .2535237
+------------------------------------------------------------------------------
+    diff = mean(0) - mean(1)                                      t =   1.8682
+H0: diff = 0                                     Degrees of freedom =       32
+
+    Ha: diff < 0                 Ha: diff != 0                 Ha: diff > 0
+ Pr(T < t) = 0.9645         Pr(|T| > |t|) = 0.0709          Pr(T > t) = 0.0355
+
+. restore
+
+. 
+. * =============================================================================
+. * 3. GLOBALS — sama dengan Determinan TFP Provinsi.do
+. * =============================================================================
+. 
+. global pendidikan ///
+>         z_ln_lama_sekolah_mean ///
+>         z_ln_lama_sekolah_harapan ///
+>         z_db_sd z_db_smp z_db_sma z_db_kampus
+
+. 
+. global equity ///
+>         z_ln_p1 ///
+>         z_ln_ipm ///
+>         z_gini ///
+>         z_ln_upah_rata ///
+>         z_ln_indeks_demokrasi
+
+. 
+. global institusi ///
+>         z_price ///
+>         z_ln_rasio_pad ///
+>         z_ln_pertumbuhan_pdrb_adhb ///
+>         z_ln_apbd_belanja
+
+. 
+. global konektivitas ///
+>         z_ln_jalan_mantap ///
+>         z_ln_kargo_udara ///
+>         z_ln_kargo_kapal ///
+>         z_ln_kargo_kereta ///
+>         z_ln_penumpang_total ///
+>         z_ln_airport_logistik ///
+>         z_ln_airport_komersil
+
+. 
+. global lingkungan ///
+>         z_ln_indeks_lingkungan ///
+>         z_ln_indeks_hijau ///
+>         z_ln_indeks_biru
+
+. 
+. global keamanan ///
+>         z_ln_crime_risk ///
+>         z_ln_crime_rate
+
+. 
+. global X ///
+>         $pendidikan ///
+>         $equity ///
+>         $institusi ///
+>         $konektivitas ///
+>         $lingkungan ///
+>         $keamanan
+
+. 
+. quietly count
+
+. display as text "N = " r(N)
+N = 272
+
+. xtdescribe
+
+Code_Prov:  11, 12, ..., 94                                  n =         34
+    Year:  2017, 2018, ..., 2024                             T =          8
+           Delta(Year) = 1 unit
+           Span(Year)  = 8 periods
+           (Code_Prov*Year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         8       8       8         8         8       8       8
+
+     Freq.  Percent    Cum. |  Pattern
+ ---------------------------+----------
+       34    100.00  100.00 |  11111111
+ ---------------------------+----------
+       34    100.00         |  XXXXXXXX
+
+. summarize logtfp_it logtfp_it_crs $X, separator(0)
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+   logtfp_it |        272    5.013179    .5496108   3.933584   6.347955
+logtfp_it_~s |        272   -.9132543     .334043  -1.706714  -.0330045
+z_ln_lam~ean |        272   -1.68e-16           1  -2.852314   2.660685
+z_ln_lam~pan |        272    4.63e-15           1  -3.852257   3.142248
+     z_db_sd |        272    2.48e-15           1  -2.450857   4.231166
+    z_db_smp |        272   -7.79e-18           1  -2.753317   2.767945
+    z_db_sma |        272    1.67e-15           1  -1.961642   3.390318
+ z_db_kampus |        272    1.08e-16           1  -3.967752   1.988673
+     z_ln_p1 |        272    5.21e-17           1  -3.043798   1.469161
+    z_ln_ipm |        272    7.24e-16           1  -3.456603   2.756959
+      z_gini |        272    4.41e-16           1  -2.754942     2.4294
+z_ln_upah_~a |        272   -2.24e-15           1  -2.681507   3.291553
+z_ln_indek~i |        272    4.85e-15           1  -3.010111   2.123633
+     z_price |        272   -1.52e-15           1  -3.313674   2.270889
+z_ln_rasio~d |        272   -1.12e-17           1  -1.494499   3.685239
+z_ln_pertu~b |        272    1.85e-17           1  -5.185801   1.457449
+z_ln_apbd_~a |        272    8.12e-16           1  -1.740082   2.345968
+z_ln_jalan~p |        272   -3.74e-17           1  -3.531535   2.717115
+z_ln_karg~ra |        272    2.43e-17           1  -.7228285   3.868542
+z_ln_kargo~l |        272   -2.95e-16           1  -1.913803   2.240431
+z_ln_karg~ta |        272   -4.01e-17           1  -.5721278   2.646887
+z_ln_penum~l |        272    8.76e-16           1  -2.328799   2.199468
+z_ln_airpo~k |        272   -1.37e-16           1  -1.654387   2.212019
+z_ln_airpo~l |        272    5.88e-17           1   -1.64044    2.02199
+z_ln_indek~n |        272    3.96e-16           1  -3.628107   1.907502
+z_ln_inde~au |        272   -2.14e-15           1  -2.551102   1.600412
+z_ln_inde~ru |        272   -1.20e-15           1  -2.951668   2.268295
+z_ln_crime~k |        272    1.22e-16           1  -2.253946   3.725556
+z_ln_crim~te |        272    4.02e-16           1  -1.474212   3.932814
+
+. correlate $X
+(obs=272)
+
+             | z_ln~ean z~arapan  z_db_sd z_db_smp z_db_sma z_db_k~s  z_ln_p1 z_ln_ipm   z_gini z_ln_u~a
+-------------+------------------------------------------------------------------------------------------
+z_ln_lam~ean |   1.0000
+z_ln_lam~pan |   0.5296   1.0000
+     z_db_sd |   0.0329  -0.2772   1.0000
+    z_db_smp |  -0.4477  -0.4446  -0.1586   1.0000
+    z_db_sma |  -0.3016  -0.5765   0.1461   0.2668   1.0000
+ z_db_kampus |  -0.4829  -0.8586   0.1128   0.2135   0.3306   1.0000
+     z_ln_p1 |   0.4843   0.0690  -0.0321  -0.2169   0.0414   0.1113   1.0000
+    z_ln_ipm |   0.7778   0.4741   0.1864  -0.4700  -0.1221  -0.3853   0.6048   1.0000
+      z_gini |  -0.1117   0.0663   0.1877   0.0988   0.3388  -0.3146  -0.3089   0.1087   1.0000
+z_ln_upah_~a |   0.5825   0.0424   0.3280  -0.2548  -0.0560   0.0163   0.5161   0.6272  -0.0718   1.0000
+z_ln_indek~i |   0.4453   0.2848   0.0896  -0.2647  -0.0299  -0.1355   0.4352   0.6560   0.0339   0.4743
+     z_price |  -0.2891  -0.0389  -0.2083   0.0630   0.2207  -0.0909  -0.2764  -0.2456   0.3664  -0.5010
+z_ln_rasio~d |   0.4229   0.1014   0.2321  -0.3785   0.2844  -0.0466   0.5515   0.7080   0.3317   0.5318
+z_ln_pertu~b |   0.0491   0.0682  -0.1474   0.0200  -0.0230  -0.0468   0.0731  -0.0248  -0.0644   0.1034
+z_ln_apbd_~a |  -0.0529  -0.1326   0.2158  -0.2199   0.3202   0.1553  -0.0081   0.1843   0.2698   0.1079
+z_ln_jalan~p |  -0.1545  -0.1199   0.0202  -0.1813   0.0287   0.1453  -0.2901  -0.1457  -0.0781  -0.1203
+z_ln_karg~ra |   0.1920  -0.0900   0.1996  -0.2619   0.3877   0.1116   0.2765   0.3740   0.3673   0.3498
+z_ln_kargo~l |   0.1952  -0.0597   0.2333  -0.3522   0.3354   0.1292   0.3478   0.4578   0.2576   0.3149
+z_ln_karg~ta |   0.1269  -0.0827   0.1486  -0.2252   0.3605   0.1051   0.1776   0.3244   0.3862   0.2194
+z_ln_penum~l |   0.1664  -0.0396   0.1763  -0.3305   0.3420   0.0933   0.2999   0.4505   0.2891   0.2678
+z_ln_airpo~k |   0.0490  -0.0502   0.2883  -0.3017   0.0478   0.1569   0.2080   0.3078  -0.0472   0.1712
+z_ln_airpo~l |   0.0206  -0.0586   0.1699  -0.1908   0.1819   0.1364   0.1339   0.3282   0.0470   0.0943
+z_ln_indek~n |  -0.0882   0.0634   0.1777   0.1319  -0.5223  -0.0193  -0.2981  -0.2666  -0.3770   0.0269
+z_ln_inde~au |  -0.1894  -0.0044   0.0545   0.2033  -0.3727  -0.0627  -0.4392  -0.5101  -0.2156  -0.1407
+z_ln_inde~ru |  -0.1380  -0.2117   0.0183   0.2012  -0.1655   0.2551  -0.1472  -0.3238  -0.4765  -0.0131
+z_ln_crime~k |  -0.2117  -0.1449  -0.0822  -0.1410   0.3057   0.2423   0.2382  -0.0482   0.0389  -0.1458
+z_ln_crim~te |   0.0135  -0.0553   0.1295   0.1287  -0.0099  -0.0611  -0.3370  -0.0992   0.0539   0.0992
+
+             | z_ln_i~i  z_price z_ln_r~d z_ln_p~b z_ln_a~a z_ln_j~p z_ln_~ra z_ln_k~l z_ln~eta z_ln_p~l
+-------------+------------------------------------------------------------------------------------------
+z_ln_indek~i |   1.0000
+     z_price |  -0.4228   1.0000
+z_ln_rasio~d |   0.5656  -0.0891   1.0000
+z_ln_pertu~b |   0.1601  -0.1761   0.0055   1.0000
+z_ln_apbd_~a |   0.2409   0.0915   0.4555  -0.0957   1.0000
+z_ln_jalan~p |  -0.1511  -0.0285  -0.0816  -0.0221   0.6089   1.0000
+z_ln_karg~ra |   0.2889   0.0703   0.7289   0.0458   0.7195   0.2017   1.0000
+z_ln_kargo~l |   0.4076   0.0512   0.7293  -0.0299   0.8222   0.3401   0.8728   1.0000
+z_ln_karg~ta |   0.2853   0.0673   0.6812   0.0099   0.7256   0.2464   0.9023   0.8258   1.0000
+z_ln_penum~l |   0.3990   0.0680   0.7087   0.0403   0.8077   0.3670   0.8509   0.9702   0.8496   1.0000
+z_ln_airpo~k |   0.3279  -0.1545   0.3205  -0.0833   0.4363   0.3166   0.3218   0.5053   0.3897   0.5204
+z_ln_airpo~l |   0.3241   0.0049   0.4104  -0.1252   0.5906   0.3693   0.4085   0.5653   0.4371   0.5623
+z_ln_indek~n |  -0.0744  -0.4239  -0.6036  -0.0617  -0.3280  -0.0114  -0.6287  -0.5573  -0.6075  -0.6184
+z_ln_inde~au |  -0.4467  -0.0190  -0.7466   0.0263  -0.3834  -0.0367  -0.5455  -0.5838  -0.6432  -0.6243
+z_ln_inde~ru |  -0.0197  -0.3261  -0.4074   0.0579  -0.1706  -0.0020  -0.4199  -0.3372  -0.3297  -0.3346
+z_ln_crime~k |  -0.0316   0.2711   0.2389  -0.0755   0.2839  -0.0008   0.3077   0.3022   0.3256   0.2489
+z_ln_crim~te |  -0.1126  -0.2026  -0.1786   0.0886  -0.0471   0.1408  -0.1252  -0.2135  -0.1226  -0.1965
+
+             | z_ln_a~k z_ln_a~l z_ln_i~n z_ln_~au z_ln_~ru z_ln_c~k z_ln_~te
+-------------+---------------------------------------------------------------
+z_ln_airpo~k |   1.0000
+z_ln_airpo~l |   0.7604   1.0000
+z_ln_indek~n |  -0.1465  -0.2722   1.0000
+z_ln_inde~au |  -0.3302  -0.5237   0.6976   1.0000
+z_ln_inde~ru |  -0.1252  -0.2441   0.6587   0.3852   1.0000
+z_ln_crime~k |   0.0864   0.1675  -0.3735  -0.2784  -0.2443   1.0000
+z_ln_crim~te |  -0.0964  -0.0532   0.2980   0.2165   0.1756  -0.2969   1.0000
+
+
+. 
+. * =============================================================================
+. * 4. FULL SPEC — naskah 6.1.2: FE, RE, RE2W, FGLS
+. *    POLS/FE2W disimpan untuk banding, bukan kolom yang dikutip.
+. *    FGLS_crs full X tidak diulang (tidak konvergen, log 19 Sep).
+. * =============================================================================
+. 
+. regress logtfp_it $X, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        272
+                                                F(27, 33)         =     113.62
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9002
+                                                Root MSE          =     .18294
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+                 logtfp_it | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |  -.0356416    .063223    -0.56   0.577    -.1642697    .0929864
+ z_ln_lama_sekolah_harapan |  -.0283798   .1082641    -0.26   0.795    -.2486447    .1918852
+                   z_db_sd |   .0474174   .0375373     1.26   0.215    -.0289529    .1237878
+                  z_db_smp |  -.0065555   .0356384    -0.18   0.855    -.0790625    .0659514
+                  z_db_sma |  -.0201456   .0489794    -0.41   0.684    -.1197949    .0795037
+               z_db_kampus |    .073753   .0796188     0.93   0.361    -.0882327    .2357386
+                   z_ln_p1 |   .0559454    .061972     0.90   0.373    -.0701375    .1820283
+                  z_ln_ipm |   .1359215   .0962595     1.41   0.167    -.0599199    .3317629
+                    z_gini |  -.0513548    .045311    -1.13   0.265    -.1435407     .040831
+            z_ln_upah_rata |   .1130717   .0402912     2.81   0.008     .0310986    .1950448
+     z_ln_indeks_demokrasi |    .030688   .0402692     0.76   0.451    -.0512404    .1126163
+                   z_price |   .0988548   .0487581     2.03   0.051    -.0003442    .1980538
+            z_ln_rasio_pad |   .0542786   .0744093     0.73   0.471    -.0971082    .2056654
+z_ln_pertumbuhan_pdrb_adhb |  -.0086516   .0135595    -0.64   0.528    -.0362387    .0189355
+         z_ln_apbd_belanja |   .4383896   .0801416     5.47   0.000     .2753403    .6014389
+         z_ln_jalan_mantap |   .0212219   .0461422     0.46   0.649    -.0726552     .115099
+          z_ln_kargo_udara |  -.1130631   .0552662    -2.05   0.049    -.2255031   -.0006232
+          z_ln_kargo_kapal |   .0579074   .1238721     0.47   0.643    -.1941123    .3099271
+         z_ln_kargo_kereta |   .1745953   .0733499     2.38   0.023     .0253638    .3238268
+      z_ln_penumpang_total |    -.18402   .1417897    -1.30   0.203    -.4724933    .1044533
+     z_ln_airport_logistik |   .0396159   .0372143     1.06   0.295    -.0360972    .1153289
+     z_ln_airport_komersil |  -.1012529   .0392606    -2.58   0.015    -.1811292   -.0213767
+    z_ln_indeks_lingkungan |  -.0882611   .0941775    -0.94   0.355    -.2798666    .1033444
+         z_ln_indeks_hijau |    .007085   .0636965     0.11   0.912    -.1225065    .1366765
+          z_ln_indeks_biru |  -.0315449   .0487876    -0.65   0.522    -.1308041    .0677143
+           z_ln_crime_risk |  -.0803113   .0241786    -3.32   0.002     -.129503   -.0311195
+           z_ln_crime_rate |  -.0023329   .0123367    -0.19   0.851     -.027432    .0227663
+                     _cons |   5.013179   .0277517   180.64   0.000     4.956718     5.06964
+--------------------------------------------------------------------------------------------
+
+. estimates store POLS
+
+. 
+. xtreg logtfp_it $X, fe vce(cluster Code_Prov)
+note: z_ln_airport_komersil omitted because of collinearity.
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.7029                                         min =          8
+     Between = 0.6183                                         avg =        8.0
+     Overall = 0.5856                                         max =          8
+
+                                                F(26,33)          =     335.35
+corr(u_i, Xb) = 0.6155                          Prob > F          =     0.0000
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+                 logtfp_it | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |   .0398256   .0322088     1.24   0.225    -.0257037    .1053549
+ z_ln_lama_sekolah_harapan |  -.0150999   .0446437    -0.34   0.737    -.1059282    .0757284
+                   z_db_sd |   .0030777   .0154152     0.20   0.843    -.0282848    .0344402
+                  z_db_smp |  -.0079338   .0126759    -0.63   0.536    -.0337232    .0178555
+                  z_db_sma |   .0231793    .013148     1.76   0.087    -.0035705    .0499291
+               z_db_kampus |   .0586463   .0347643     1.69   0.101    -.0120822    .1293749
+                   z_ln_p1 |   .0150376   .0161311     0.93   0.358    -.0177813    .0478566
+                  z_ln_ipm |   .0145779    .006877     2.12   0.042     .0005865    .0285692
+                    z_gini |  -.0075747   .0180038    -0.42   0.677    -.0442037    .0290543
+            z_ln_upah_rata |   .0097021   .0145109     0.67   0.508    -.0198206    .0392248
+     z_ln_indeks_demokrasi |   .0006501   .0102342     0.06   0.950    -.0201715    .0214717
+                   z_price |  -.0122572   .0073332    -1.67   0.104    -.0271767    .0026622
+            z_ln_rasio_pad |  -.0003484   .0252379    -0.01   0.989    -.0516953    .0509985
+z_ln_pertumbuhan_pdrb_adhb |   .0007591   .0047053     0.16   0.873    -.0088139    .0103321
+         z_ln_apbd_belanja |   .0405537   .0376029     1.08   0.289      -.03595    .1170574
+         z_ln_jalan_mantap |  -.0009922   .0089962    -0.11   0.913    -.0192951    .0173107
+          z_ln_kargo_udara |  -.0191711   .0196647    -0.97   0.337    -.0591792    .0208371
+          z_ln_kargo_kapal |    .027844   .0372481     0.75   0.460    -.0479377    .1036258
+         z_ln_kargo_kereta |   .0043458    .052276     0.08   0.934    -.1020106    .1107021
+      z_ln_penumpang_total |   .0496153   .0327006     1.52   0.139    -.0169147    .1161452
+     z_ln_airport_logistik |   .0094401   .0108484     0.87   0.390    -.0126312    .0315114
+     z_ln_airport_komersil |          0  (omitted)
+    z_ln_indeks_lingkungan |   .0301257   .0180158     1.67   0.104    -.0065278    .0667792
+         z_ln_indeks_hijau |   .0150458   .0133613     1.13   0.268    -.0121381    .0422296
+          z_ln_indeks_biru |   .0066172    .011884     0.56   0.581    -.0175609    .0307954
+           z_ln_crime_risk |  -.0067881   .0075967    -0.89   0.378    -.0222437    .0086675
+           z_ln_crime_rate |  -.0000744   .0031472    -0.02   0.981    -.0064775    .0063286
+                     _cons |   5.013179          .        .       .            .           .
+---------------------------+----------------------------------------------------------------
+                   sigma_u |  .45286819
+                   sigma_e |  .03681946
+                       rho |  .99343326   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------------------
+
+. estimates store FE
+
+. 
+. xtreg logtfp_it $X i.Year, fe vce(cluster Code_Prov)
+note: z_ln_airport_komersil omitted because of collinearity.
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.7496                                         min =          8
+     Between = 0.0768                                         avg =        8.0
+     Overall = 0.0847                                         max =          8
+
+                                                F(33,33)          =    5654.15
+corr(u_i, Xb) = 0.0094                          Prob > F          =     0.0000
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+                 logtfp_it | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |  -.0591819   .0414303    -1.43   0.163    -.1434724    .0251086
+ z_ln_lama_sekolah_harapan |   -.032932   .0437428    -0.75   0.457    -.1219274    .0560634
+                   z_db_sd |  -.0149996   .0173101    -0.87   0.392    -.0502173    .0202181
+                  z_db_smp |  -.0081493   .0114808    -0.71   0.483    -.0315072    .0152085
+                  z_db_sma |   .0148816   .0135503     1.10   0.280    -.0126867      .04245
+               z_db_kampus |    .070762   .0367082     1.93   0.063    -.0039214    .1454453
+                   z_ln_p1 |   .0117127   .0149756     0.78   0.440    -.0187554    .0421808
+                  z_ln_ipm |   .0107096    .004284     2.50   0.018     .0019938    .0194254
+                    z_gini |  -.0045988   .0160767    -0.29   0.777    -.0373071    .0281095
+            z_ln_upah_rata |  -.0134234   .0211399    -0.63   0.530    -.0564329    .0295861
+     z_ln_indeks_demokrasi |   .0055531   .0100977     0.55   0.586    -.0149908     .026097
+                   z_price |   .0011818    .009159     0.13   0.898    -.0174523    .0198158
+            z_ln_rasio_pad |   .0096199   .0220442     0.44   0.665    -.0352293    .0544691
+z_ln_pertumbuhan_pdrb_adhb |   .0040387   .0040606     0.99   0.327    -.0042227       .0123
+         z_ln_apbd_belanja |   .0061006   .0460053     0.13   0.895    -.0874979    .0996991
+         z_ln_jalan_mantap |  -.0022146   .0083559    -0.27   0.793    -.0192149    .0147856
+          z_ln_kargo_udara |   .0007503   .0163979     0.05   0.964    -.0326115    .0341122
+          z_ln_kargo_kapal |   .1623905   .0818237     1.98   0.056    -.0040811     .328862
+         z_ln_kargo_kereta |  -.0219696   .0497086    -0.44   0.661    -.1231025    .0791632
+      z_ln_penumpang_total |  -.1177117   .1147724    -1.03   0.313     -.351218    .1157945
+     z_ln_airport_logistik |   .0000641   .0103473     0.01   0.995    -.0209876    .0211158
+     z_ln_airport_komersil |          0  (omitted)
+    z_ln_indeks_lingkungan |   .0051185   .0230998     0.22   0.826    -.0418784    .0521155
+         z_ln_indeks_hijau |   .0052771   .0193272     0.27   0.787    -.0340444    .0445985
+          z_ln_indeks_biru |   .0068308    .012997     0.53   0.603    -.0196118    .0332733
+           z_ln_crime_risk |   .0008271   .0079064     0.10   0.917    -.0152585    .0169128
+           z_ln_crime_rate |   .0061753   .0036498     1.69   0.100    -.0012503     .013601
+                           |
+                      Year |
+                     2018  |   .0241705   .0109126     2.21   0.034     .0019685    .0463724
+                     2019  |   .0667098   .0190822     3.50   0.001     .0278869    .1055328
+                     2020  |   .0412648   .0621871     0.66   0.512    -.0852559    .1677854
+                     2021  |    .059396   .0772083     0.77   0.447    -.0976855    .2164775
+                     2022  |   .1152636   .0647899     1.78   0.084    -.0165525    .2470797
+                     2023  |   .1805181   .0702733     2.57   0.015      .037546    .3234902
+                     2024  |    .220904    .073826     2.99   0.005     .0707039    .3711041
+                           |
+                     _cons |    4.92465   .0437465   112.57   0.000     4.835647    5.013653
+---------------------------+----------------------------------------------------------------
+                   sigma_u |   .5319049
+                   sigma_e |  .03437644
+                       rho |  .99584048   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------------------
+
+. estimates store FE2W
+
+. 
+. xtreg logtfp_it $X, re vce(cluster Code_Prov)
+
+Random-effects GLS regression                   Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.6751                                         min =          8
+     Between = 0.7957                                         avg =        8.0
+     Overall = 0.7930                                         max =          8
+
+                                                Wald chi2(27)     =    3260.21
+corr(u_i, X) = 0 (assumed)                      Prob > chi2       =     0.0000
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+                 logtfp_it | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |   .0529143   .0295409     1.79   0.073    -.0049848    .1108134
+ z_ln_lama_sekolah_harapan |  -.0242194   .0434744    -0.56   0.577    -.1094277    .0609889
+                   z_db_sd |   .0073126   .0153958     0.47   0.635    -.0228625    .0374877
+                  z_db_smp |  -.0105799   .0138598    -0.76   0.445    -.0377446    .0165849
+                  z_db_sma |   .0285039   .0121278     2.35   0.019     .0047337     .052274
+               z_db_kampus |   .0725809   .0317112     2.29   0.022     .0104282    .1347337
+                   z_ln_p1 |   .0182113   .0148749     1.22   0.221     -.010943    .0473655
+                  z_ln_ipm |   .0107076   .0092064     1.16   0.245    -.0073366    .0287517
+                    z_gini |   .0028089   .0191668     0.15   0.883    -.0347573    .0403752
+            z_ln_upah_rata |      .0115   .0155541     0.74   0.460    -.0189855    .0419855
+     z_ln_indeks_demokrasi |  -.0015068   .0107755    -0.14   0.889    -.0226263    .0196127
+                   z_price |  -.0051488   .0084389    -0.61   0.542    -.0216889    .0113912
+            z_ln_rasio_pad |    .046902   .0285321     1.64   0.100    -.0090199    .1028239
+z_ln_pertumbuhan_pdrb_adhb |  -.0006311   .0045765    -0.14   0.890    -.0096009    .0083386
+         z_ln_apbd_belanja |   .1010773    .040496     2.50   0.013     .0217067     .180448
+         z_ln_jalan_mantap |   .0118013   .0111389     1.06   0.289    -.0100304     .033633
+          z_ln_kargo_udara |  -.0515634   .0198249    -2.60   0.009    -.0904195   -.0127072
+          z_ln_kargo_kapal |   .0689254   .0467422     1.47   0.140    -.0226876    .1605385
+         z_ln_kargo_kereta |   .1356844   .0505368     2.68   0.007      .036634    .2347347
+      z_ln_penumpang_total |   .0424405   .0351197     1.21   0.227    -.0263928    .1112738
+     z_ln_airport_logistik |   -.001833   .0279343    -0.07   0.948    -.0565833    .0529173
+     z_ln_airport_komersil |   .0124478   .0251748     0.49   0.621     -.036894    .0617896
+    z_ln_indeks_lingkungan |   .0301879   .0197216     1.53   0.126    -.0084656    .0688415
+         z_ln_indeks_hijau |   -.018716   .0200516    -0.93   0.351    -.0580164    .0205845
+          z_ln_indeks_biru |   .0003168   .0128644     0.02   0.980    -.0248969    .0255305
+           z_ln_crime_risk |   -.004177   .0078995    -0.53   0.597    -.0196598    .0113058
+           z_ln_crime_rate |   .0002155   .0032003     0.07   0.946     -.006057     .006488
+                     _cons |   5.013179    .050071   100.12   0.000     4.915041    5.111316
+---------------------------+----------------------------------------------------------------
+                   sigma_u |  .21065865
+                   sigma_e |  .03681946
+                       rho |  .97035662   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------------------
+
+. estimates store RE
+
+. 
+. xtreg logtfp_it $X i.Year, re vce(cluster Code_Prov)
+
+Random-effects GLS regression                   Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.7117                                         min =          8
+     Between = 0.7432                                         avg =        8.0
+     Overall = 0.7418                                         max =          8
+
+                                                Wald chi2(33)     =          .
+corr(u_i, X) = 0 (assumed)                      Prob > chi2       =          .
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+                 logtfp_it | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |   .0151766     .03442     0.44   0.659    -.0522855    .0826386
+ z_ln_lama_sekolah_harapan |  -.0377336   .0443266    -0.85   0.395    -.1246121     .049145
+                   z_db_sd |  -.0066476   .0171651    -0.39   0.699    -.0402907    .0269954
+                  z_db_smp |  -.0098886    .012087    -0.82   0.413    -.0335787    .0138016
+                  z_db_sma |   .0236398   .0117921     2.00   0.045     .0005278    .0467518
+               z_db_kampus |   .0748911   .0344853     2.17   0.030     .0073011     .142481
+                   z_ln_p1 |   .0172255   .0141746     1.22   0.224    -.0105561    .0450071
+                  z_ln_ipm |   .0056909   .0064484     0.88   0.377    -.0069476    .0183295
+                    z_gini |   .0036501   .0178264     0.20   0.838     -.031289    .0385893
+            z_ln_upah_rata |  -.0086713   .0230531    -0.38   0.707    -.0538546     .036512
+     z_ln_indeks_demokrasi |   .0013136    .011922     0.11   0.912    -.0220531    .0246803
+                   z_price |   .0071201   .0105695     0.67   0.501    -.0135957    .0278359
+            z_ln_rasio_pad |   .0482906   .0274697     1.76   0.079    -.0055491    .1021303
+z_ln_pertumbuhan_pdrb_adhb |   .0027467   .0044775     0.61   0.540     -.006029    .0115224
+         z_ln_apbd_belanja |   .0842427   .0472259     1.78   0.074    -.0083182    .1768037
+         z_ln_jalan_mantap |   .0098099   .0106218     0.92   0.356    -.0110085    .0306283
+          z_ln_kargo_udara |   -.038245   .0186426    -2.05   0.040    -.0747838   -.0017062
+          z_ln_kargo_kapal |   .0449118   .0813277     0.55   0.581    -.1144876    .2043112
+         z_ln_kargo_kereta |   .0864657   .0621719     1.39   0.164     -.035389    .2083203
+      z_ln_penumpang_total |    .099005   .1051021     0.94   0.346    -.1069914    .3050014
+     z_ln_airport_logistik |   .0168878   .0359666     0.47   0.639    -.0536053     .087381
+     z_ln_airport_komersil |  -.0075351    .034105    -0.22   0.825    -.0743798    .0593095
+    z_ln_indeks_lingkungan |   .0005063    .029268     0.02   0.986    -.0568579    .0578706
+         z_ln_indeks_hijau |  -.0280685   .0245764    -1.14   0.253    -.0762372    .0201003
+          z_ln_indeks_biru |   .0034852   .0140805     0.25   0.805     -.024112    .0310823
+           z_ln_crime_risk |   .0015582   .0081711     0.19   0.849     -.014457    .0175733
+           z_ln_crime_rate |    .005301   .0042745     1.24   0.215    -.0030769    .0136789
+                           |
+                      Year |
+                     2018  |     .01318   .0104194     1.26   0.206    -.0072417    .0336018
+                     2019  |   .0361557   .0161501     2.24   0.025     .0045021    .0678092
+                     2020  |   .1026343   .0643176     1.60   0.111    -.0234259    .2286944
+                     2021  |   .1225065   .0801799     1.53   0.127    -.0346431    .2796561
+                     2022  |   .1161843   .0767635     1.51   0.130    -.0342693    .2666379
+                     2023  |   .1537581   .0848319     1.81   0.070    -.0125093    .3200255
+                     2024  |   .1684458    .088466     1.90   0.057    -.0049444     .341836
+                           |
+                     _cons |   4.924071   .0926055    53.17   0.000     4.742567    5.105574
+---------------------------+----------------------------------------------------------------
+                   sigma_u |  .21071025
+                   sigma_e |  .03437644
+                       rho |  .97407359   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------------------
+
+. estimates store RE2W
+
+. 
+. xtgls logtfp_it $X, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =        28          Time periods      =          8
+                                                Wald chi2(27)     =  155162.74
+Log likelihood             =  303.9726          Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------------------
+                 logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |   .0839393   .0096423     8.71   0.000     .0650408    .1028378
+ z_ln_lama_sekolah_harapan |  -.0682066   .0185851    -3.67   0.000    -.1046327   -.0317805
+                   z_db_sd |   .0032614   .0054204     0.60   0.547    -.0073624    .0138853
+                  z_db_smp |  -.0118172   .0063685    -1.86   0.064    -.0242993    .0006649
+                  z_db_sma |   .0225677   .0079851     2.83   0.005     .0069171    .0382183
+               z_db_kampus |   .0018314   .0151914     0.12   0.904    -.0279432     .031606
+                   z_ln_p1 |   .0229102   .0074082     3.09   0.002     .0083903      .03743
+                  z_ln_ipm |   .0102793   .0122907     0.84   0.403      -.01381    .0343686
+                    z_gini |  -.0019435   .0055707    -0.35   0.727    -.0128619    .0089749
+            z_ln_upah_rata |  -.0041876   .0075574    -0.55   0.580    -.0189997    .0106246
+     z_ln_indeks_demokrasi |   .0050818   .0043435     1.17   0.242    -.0034313    .0135949
+                   z_price |  -.0335061   .0055715    -6.01   0.000    -.0444261   -.0225861
+            z_ln_rasio_pad |   .1202683   .0092698    12.97   0.000     .1020999    .1384367
+z_ln_pertumbuhan_pdrb_adhb |   .0001639   .0033438     0.05   0.961    -.0063899    .0067177
+         z_ln_apbd_belanja |   .3010475   .0080882    37.22   0.000     .2851949    .3169002
+         z_ln_jalan_mantap |   .0768162   .0074974    10.25   0.000     .0621216    .0915108
+          z_ln_kargo_udara |  -.0192839   .0071005    -2.72   0.007    -.0332007   -.0053671
+          z_ln_kargo_kapal |  -.0907259     .01722    -5.27   0.000    -.1244764   -.0569753
+         z_ln_kargo_kereta |    .152834   .0126845    12.05   0.000     .1279728    .1776951
+      z_ln_penumpang_total |  -.0693478   .0156911    -4.42   0.000    -.1001019   -.0385938
+     z_ln_airport_logistik |  -.0001281    .005606    -0.02   0.982    -.0111157    .0108594
+     z_ln_airport_komersil |    .004792   .0056738     0.84   0.398    -.0063284    .0159123
+    z_ln_indeks_lingkungan |   -.030231   .0079437    -3.81   0.000    -.0458003   -.0146617
+         z_ln_indeks_hijau |   -.035344   .0067261    -5.25   0.000    -.0485269    -.022161
+          z_ln_indeks_biru |  -.0081128   .0042682    -1.90   0.057    -.0164784    .0002528
+           z_ln_crime_risk |  -.0105001    .003587    -2.93   0.003    -.0175304   -.0034698
+           z_ln_crime_rate |  -.0019055   .0019283    -0.99   0.323     -.005685    .0018739
+                     _cons |   4.990362   .0049604  1006.04   0.000     4.980639    5.000084
+--------------------------------------------------------------------------------------------
+
+. estimates store FGLS
+
+. 
+. xtreg logtfp_it_crs $X, fe vce(cluster Code_Prov)
+note: z_ln_airport_komersil omitted because of collinearity.
+
+Fixed-effects (within) regression               Number of obs     =        272
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.4395                                         min =          8
+     Between = 0.0721                                         avg =        8.0
+     Overall = 0.0783                                         max =          8
+
+                                                F(26,33)          =      37.64
+corr(u_i, Xb) = -0.0920                         Prob > F          =     0.0000
+
+                                           (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------------------
+                           |               Robust
+             logtfp_it_crs | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+    z_ln_lama_sekolah_mean |  -.0015374   .0326299    -0.05   0.963    -.0679234    .0648486
+ z_ln_lama_sekolah_harapan |  -.0254669   .0422666    -0.60   0.551    -.1114588     .060525
+                   z_db_sd |  -.0118287   .0183265    -0.65   0.523    -.0491143    .0254569
+                  z_db_smp |  -.0157206   .0128109    -1.23   0.228    -.0417845    .0103434
+                  z_db_sma |   .0071672   .0122135     0.59   0.561    -.0176814    .0320158
+               z_db_kampus |   .0491919   .0312856     1.57   0.125    -.0144592    .1128429
+                   z_ln_p1 |    .012941   .0177941     0.73   0.472    -.0232614    .0491435
+                  z_ln_ipm |  -.0026442   .0044863    -0.59   0.560    -.0117717    .0064833
+                    z_gini |   .0022837   .0180045     0.13   0.900    -.0343467    .0389141
+            z_ln_upah_rata |   .0021766   .0141599     0.15   0.879    -.0266318    .0309851
+     z_ln_indeks_demokrasi |   .0006975   .0099573     0.07   0.945    -.0195608    .0209557
+                   z_price |  -.0177008   .0061276    -2.89   0.007    -.0301675   -.0052341
+            z_ln_rasio_pad |   -.004421   .0262568    -0.17   0.867    -.0578408    .0489988
+z_ln_pertumbuhan_pdrb_adhb |   .0009153   .0057009     0.16   0.873    -.0106832    .0125139
+         z_ln_apbd_belanja |   .0295826   .0420825     0.70   0.487    -.0560348       .1152
+         z_ln_jalan_mantap |  -.0045145   .0091673    -0.49   0.626    -.0231655    .0141366
+          z_ln_kargo_udara |  -.0306954    .020552    -1.49   0.145    -.0725088     .011118
+          z_ln_kargo_kapal |   .0674493   .0446655     1.51   0.141    -.0234234    .1583219
+         z_ln_kargo_kereta |  -.0048239    .062564    -0.08   0.939    -.1321114    .1224635
+      z_ln_penumpang_total |   .0370144   .0349092     1.06   0.297    -.0340088    .1080377
+     z_ln_airport_logistik |   .0133692   .0118236     1.13   0.266    -.0106862    .0374246
+     z_ln_airport_komersil |          0  (omitted)
+    z_ln_indeks_lingkungan |   .0246219   .0183255     1.34   0.188    -.0126616    .0619053
+         z_ln_indeks_hijau |   .0379139   .0143876     2.64   0.013     .0086421    .0671858
+          z_ln_indeks_biru |   .0037038   .0125343     0.30   0.769    -.0217974    .0292049
+           z_ln_crime_risk |  -.0053896   .0060345    -0.89   0.378    -.0176669    .0068876
+           z_ln_crime_rate |   .0007956   .0035901     0.22   0.826    -.0065085    .0080997
+                     _cons |  -.9132543          .        .       .            .           .
+---------------------------+----------------------------------------------------------------
+                   sigma_u |  .32447018
+                   sigma_e |  .03835967
+                       rho |  .98621609   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------------------
+
+. estimates store FE_crs
+
+. 
+. estimates table POLS FE FE2W RE RE2W FGLS FE_crs, ///
+>         keep($X) star stats(N) b(%7.3f)
+
+--------------------------------------------------------------------------------------------------------
+    Variable |     POLS            FE            FE2W            RE            RE2W           FGLS      
+-------------+------------------------------------------------------------------------------------------
+z_ln_lam~ean |    -0.036          0.040         -0.059          0.053          0.015          0.084***  
+z_ln_lam~pan |    -0.028         -0.015         -0.033         -0.024         -0.038         -0.068***  
+     z_db_sd |     0.047          0.003         -0.015          0.007         -0.007          0.003     
+    z_db_smp |    -0.007         -0.008         -0.008         -0.011         -0.010         -0.012     
+    z_db_sma |    -0.020          0.023          0.015          0.029*         0.024*         0.023**   
+ z_db_kampus |     0.074          0.059          0.071          0.073*         0.075*         0.002     
+     z_ln_p1 |     0.056          0.015          0.012          0.018          0.017          0.023**   
+    z_ln_ipm |     0.136          0.015*         0.011*         0.011          0.006          0.010     
+      z_gini |    -0.051         -0.008         -0.005          0.003          0.004         -0.002     
+z_ln_upah_~a |     0.113**        0.010         -0.013          0.012         -0.009         -0.004     
+z_ln_indek~i |     0.031          0.001          0.006         -0.002          0.001          0.005     
+     z_price |     0.099         -0.012          0.001         -0.005          0.007         -0.034***  
+z_ln_rasio~d |     0.054         -0.000          0.010          0.047          0.048          0.120***  
+z_ln_pertu~b |    -0.009          0.001          0.004         -0.001          0.003          0.000     
+z_ln_apbd_~a |     0.438***       0.041          0.006          0.101*         0.084          0.301***  
+z_ln_jalan~p |     0.021         -0.001         -0.002          0.012          0.010          0.077***  
+z_ln_karg~ra |    -0.113*        -0.019          0.001         -0.052**       -0.038*        -0.019**   
+z_ln_kargo~l |     0.058          0.028          0.162          0.069          0.045         -0.091***  
+z_ln_karg~ta |     0.175*         0.004         -0.022          0.136**        0.086          0.153***  
+z_ln_penum~l |    -0.184          0.050         -0.118          0.042          0.099         -0.069***  
+z_ln_airpo~k |     0.040          0.009          0.000         -0.002          0.017         -0.000     
+z_ln_airpo~l |    -0.101*     (omitted)      (omitted)          0.012         -0.008          0.005     
+z_ln_indek~n |    -0.088          0.030          0.005          0.030          0.001         -0.030***  
+z_ln_inde~au |     0.007          0.015          0.005         -0.019         -0.028         -0.035***  
+z_ln_inde~ru |    -0.032          0.007          0.007          0.000          0.003         -0.008     
+z_ln_crime~k |    -0.080**       -0.007          0.001         -0.004          0.002         -0.011**   
+z_ln_crim~te |    -0.002         -0.000          0.006          0.000          0.005         -0.002     
+-------------+------------------------------------------------------------------------------------------
+           N |       272            272            272            272            272            272     
+--------------------------------------------------------------------------------------------------------
+                                                                Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+
+-----------------------------
+    Variable |    FE_crs     
+-------------+---------------
+z_ln_lam~ean |    -0.002     
+z_ln_lam~pan |    -0.025     
+     z_db_sd |    -0.012     
+    z_db_smp |    -0.016     
+    z_db_sma |     0.007     
+ z_db_kampus |     0.049     
+     z_ln_p1 |     0.013     
+    z_ln_ipm |    -0.003     
+      z_gini |     0.002     
+z_ln_upah_~a |     0.002     
+z_ln_indek~i |     0.001     
+     z_price |    -0.018**   
+z_ln_rasio~d |    -0.004     
+z_ln_pertu~b |     0.001     
+z_ln_apbd_~a |     0.030     
+z_ln_jalan~p |    -0.005     
+z_ln_karg~ra |    -0.031     
+z_ln_kargo~l |     0.067     
+z_ln_karg~ta |    -0.005     
+z_ln_penum~l |     0.037     
+z_ln_airpo~k |     0.013     
+z_ln_airpo~l | (omitted)     
+z_ln_indek~n |     0.025     
+z_ln_inde~au |     0.038*    
+z_ln_inde~ru |     0.004     
+z_ln_crime~k |    -0.005     
+z_ln_crim~te |     0.001     
+-------------+---------------
+           N |       272     
+-----------------------------
+Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. quietly xtreg logtfp_it $X, fe
+
+. estimates store FE_h
+
+. quietly xtreg logtfp_it $X, re
+
+. estimates store RE_h
+
+. capture noisily hausman FE_h RE_h, sigmamore
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |      FE_h         RE_h        Difference       Std. err.
+-------------+----------------------------------------------------------------
+z_ln_lam~ean |    .0398256     .0529143       -.0130887        .0155258
+z_ln_lam~pan |   -.0150999    -.0242194        .0091195        .0102622
+     z_db_sd |    .0030777     .0073126       -.0042349        .0036914
+    z_db_smp |   -.0079338    -.0105799         .002646        .0020586
+    z_db_sma |    .0231793     .0285039       -.0053246        .0030158
+ z_db_kampus |    .0586463     .0725809       -.0139346        .0123492
+     z_ln_p1 |    .0150376     .0182113       -.0031736        .0067367
+    z_ln_ipm |    .0145779     .0107076        .0038703        .0025455
+      z_gini |   -.0075747     .0028089       -.0103836        .0031419
+z_ln_upah_~a |    .0097021        .0115       -.0017979        .0032902
+z_ln_indek~i |    .0006501    -.0015068        .0021569        .0017929
+     z_price |   -.0122572    -.0051488       -.0071084        .0020879
+z_ln_rasio~d |   -.0003484      .046902       -.0472504        .0099658
+z_ln_pertu~b |    .0007591    -.0006311        .0013902        .0005632
+z_ln_apbd_~a |    .0405537     .1010773       -.0605237        .0122347
+z_ln_jalan~p |   -.0009922     .0118013       -.0127935        .0045364
+z_ln_karg~ra |   -.0191711    -.0515634        .0323923        .0099912
+z_ln_kargo~l |     .027844     .0689254       -.0410814        .0175817
+z_ln_karg~ta |    .0043458     .1356844       -.1313386        .0450205
+z_ln_penum~l |    .0496153     .0424405        .0071748        .0080776
+z_ln_airpo~k |    .0094401     -.001833        .0112731               .
+z_ln_indek~n |    .0301257     .0301879       -.0000622        .0034296
+z_ln_inde~au |    .0150458     -.018716        .0337617        .0117846
+z_ln_inde~ru |    .0066172     .0003168        .0063004        .0022217
+z_ln_crime~k |   -.0067881     -.004177       -.0026111        .0010576
+z_ln_crim~te |   -.0000744     .0002155       -.0002899        .0003975
+------------------------------------------------------------------------------
+                          b = Consistent under H0 and Ha; obtained from xtreg.
+           B = Inconsistent under Ha, efficient under H0; obtained from xtreg.
+
+Test of H0: Difference in coefficients not systematic
+
+   chi2(26) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+            =  60.49
+Prob > chi2 = 0.0001
+(V_b-V_B is not positive definite)
+
+. 
+. * =============================================================================
+. * 5. FGLS PER GRUP — angka yang dikutip (19 Sep)
+. * =============================================================================
+. 
+. xtgls logtfp_it $pendidikan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         7          Time periods      =          8
+                                                Wald chi2(6)      =    2075.84
+Log likelihood             = -2.049011          Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------------------
+                logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+   z_ln_lama_sekolah_mean |   .0592221   .0092319     6.41   0.000      .041128    .0773162
+z_ln_lama_sekolah_harapan |   .1595007   .0193747     8.23   0.000      .121527    .1974744
+                  z_db_sd |   .0728173   .0065805    11.07   0.000     .0599197    .0857148
+                 z_db_smp |   .0038462    .005385     0.71   0.475    -.0067082    .0144006
+                 z_db_sma |   .0553687   .0085259     6.49   0.000     .0386583    .0720791
+              z_db_kampus |   .2795585   .0119026    23.49   0.000     .2562299    .3028871
+                    _cons |   4.912833   .0041386  1187.06   0.000     4.904721    4.920945
+-------------------------------------------------------------------------------------------
+
+. estimates store FGLS_pendidikan
+
+. 
+. xtgls logtfp_it $equity, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         6          Time periods      =          8
+                                                Wald chi2(5)      =   13310.61
+Log likelihood             =   1.67682          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------------
+            logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+              z_ln_p1 |   .1061731    .004859    21.85   0.000     .0966497    .1156965
+             z_ln_ipm |    .358278   .0103475    34.62   0.000     .3379973    .3785587
+               z_gini |   .1784019   .0045988    38.79   0.000     .1693883    .1874155
+       z_ln_upah_rata |  -.0331674    .008942    -3.71   0.000    -.0506933   -.0156415
+z_ln_indeks_demokrasi |   .0350831   .0081916     4.28   0.000     .0190279    .0511382
+                _cons |   5.002135    .004918  1017.11   0.000     4.992495    5.011774
+---------------------------------------------------------------------------------------
+
+. estimates store FGLS_equity
+
+. 
+. xtgls logtfp_it $institusi, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =   42743.64
+Log likelihood             =  165.3025          Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------------------
+                 logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+                   z_price |  -.0056631   .0036601    -1.55   0.122    -.0128367    .0015105
+            z_ln_rasio_pad |   .1719226   .0045132    38.09   0.000     .1630768    .1807683
+z_ln_pertumbuhan_pdrb_adhb |  -.0140598   .0038353    -3.67   0.000    -.0215768   -.0065427
+         z_ln_apbd_belanja |   .3963639   .0031058   127.62   0.000     .3902766    .4024511
+                     _cons |   4.957435   .0031948  1551.70   0.000     4.951173    4.963697
+--------------------------------------------------------------------------------------------
+
+. estimates store FGLS_institusi
+
+. 
+. xtgls logtfp_it $konektivitas, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         8          Time periods      =          8
+                                                Wald chi2(7)      =   15204.24
+Log likelihood             =  142.9375          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------------
+            logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+    z_ln_jalan_mantap |    .052738   .0055003     9.59   0.000     .0419577    .0635183
+     z_ln_kargo_udara |    .039501   .0116775     3.38   0.001     .0166134    .0623886
+     z_ln_kargo_kapal |   .2879664   .0195438    14.73   0.000     .2496613    .3262716
+    z_ln_kargo_kereta |   .1664569   .0098406    16.92   0.000     .1471698    .1857441
+ z_ln_penumpang_total |  -.1202621    .018081    -6.65   0.000    -.1557003   -.0848239
+z_ln_airport_logistik |   .0374581   .0050536     7.41   0.000     .0275532     .047363
+z_ln_airport_komersil |    .020801   .0052347     3.97   0.000     .0105413    .0310608
+                _cons |     4.9636   .0049318  1006.45   0.000     4.953934    4.973266
+---------------------------------------------------------------------------------------
+
+. estimates store FGLS_konektivitas
+
+. 
+. xtgls logtfp_it $lingkungan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =     734.22
+Log likelihood             = -33.40028          Prob > chi2       =     0.0000
+
+----------------------------------------------------------------------------------------
+             logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+z_ln_indeks_lingkungan |   .0480204   .0110881     4.33   0.000     .0262882    .0697526
+     z_ln_indeks_hijau |  -.2204679   .0089747   -24.57   0.000    -.2380579   -.2028779
+      z_ln_indeks_biru |   .0057704   .0089454     0.65   0.519    -.0117623    .0233031
+                 _cons |   5.093179   .0062116   819.94   0.000     5.081004    5.105353
+----------------------------------------------------------------------------------------
+
+. estimates store FGLS_lingkungan
+
+. 
+. xtgls logtfp_it $keamanan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =      22.74
+Log likelihood             = -54.53353          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------
+      logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+z_ln_crime_risk |  -.0268228   .0062895    -4.26   0.000    -.0391499   -.0144957
+z_ln_crime_rate |   .0013168   .0073373     0.18   0.858    -.0130641    .0156978
+          _cons |   4.950562   .0065032   761.25   0.000     4.937816    4.963308
+---------------------------------------------------------------------------------
+
+. estimates store FGLS_keamanan
+
+. 
+. estimates table ///
+>         FGLS_pendidikan ///
+>         FGLS_equity ///
+>         FGLS_institusi ///
+>         FGLS_konektivitas ///
+>         FGLS_lingkungan ///
+>         FGLS_keamanan, ///
+>         star stats(N) b(%7.3f)
+
+--------------------------------------------------------------------------------------------
+    Variable | FGLS_pen~n   FGLS_equ~y   FGLS_ins~i   FGLS_kon~s   FGLS_lin~n   FGLS_kea~n  
+-------------+------------------------------------------------------------------------------
+z_ln_lam~ean |   0.059***                                                                   
+z_ln_lam~pan |   0.160***                                                                   
+     z_db_sd |   0.073***                                                                   
+    z_db_smp |   0.004                                                                      
+    z_db_sma |   0.055***                                                                   
+ z_db_kampus |   0.280***                                                                   
+     z_ln_p1 |                0.106***                                                      
+    z_ln_ipm |                0.358***                                                      
+      z_gini |                0.178***                                                      
+z_ln_upah_~a |               -0.033***                                                      
+z_ln_indek~i |                0.035***                                                      
+     z_price |                            -0.006                                            
+z_ln_rasio~d |                             0.172***                                         
+z_ln_pertu~b |                            -0.014***                                         
+z_ln_apbd_~a |                             0.396***                                         
+z_ln_jalan~p |                                          0.053***                            
+z_ln_karg~ra |                                          0.040***                            
+z_ln_kargo~l |                                          0.288***                            
+z_ln_karg~ta |                                          0.166***                            
+z_ln_penum~l |                                         -0.120***                            
+z_ln_airpo~k |                                          0.037***                            
+z_ln_airpo~l |                                          0.021***                            
+z_ln_indek~n |                                                       0.048***               
+z_ln_inde~au |                                                      -0.220***               
+z_ln_inde~ru |                                                       0.006                  
+z_ln_crime~k |                                                                   -0.027***  
+z_ln_crim~te |                                                                    0.001     
+       _cons |   4.913***     5.002***     4.957***     4.964***     5.093***     4.951***  
+-------------+------------------------------------------------------------------------------
+           N |     272          272          272          272          272          272     
+--------------------------------------------------------------------------------------------
+                                                    Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * jumlah efek per grup (sama rumus Determinan; restore FGLS grup dulu)
+. estimates restore FGLS_pendidikan
+(results FGLS_pendidikan are active now)
+
+. margins, dydx($pendidikan) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_ln_lama_sekolah_mean z_ln_lama_sekolah_harapan z_db_sd z_db_smp z_db_sma z_db_kampus
+
+-------------------------------------------------------------------------------------------
+                          |            Delta-method
+                          |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+   z_ln_lama_sekolah_mean |   .0592221   .0092319     6.41   0.000      .041128    .0773162
+z_ln_lama_sekolah_harapan |   .1595007   .0193747     8.23   0.000      .121527    .1974744
+                  z_db_sd |   .0728173   .0065805    11.07   0.000     .0599197    .0857148
+                 z_db_smp |   .0038462    .005385     0.71   0.475    -.0067082    .0144006
+                 z_db_sma |   .0553687   .0085259     6.49   0.000     .0386583    .0720791
+              z_db_kampus |   .2795585   .0119026    23.49   0.000     .2562299    .3028871
+-------------------------------------------------------------------------------------------
+
+. nlcom (pendidikan: ///
+>         _b[z_ln_lama_sekolah_mean] + ///
+>         _b[z_ln_lama_sekolah_harapan] + ///
+>         _b[z_db_sd] + ///
+>         _b[z_db_smp] + ///
+>         _b[z_db_sma] + ///
+>         _b[z_db_kampus])
+
+  pendidikan: _b[z_ln_lama_sekolah_mean] +         _b[z_ln_lama_sekolah_harapan] +         _b[z_db_sd] +    
+>      _b[z_db_smp] +         _b[z_db_sma] +         _b[z_db_kampus]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+  pendidikan |   .6303134   .0436456    14.44   0.000     .5447696    .7158573
+------------------------------------------------------------------------------
+
+. 
+. estimates restore FGLS_equity
+(results FGLS_equity are active now)
+
+. margins, dydx($equity) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_ln_p1 z_ln_ipm z_gini z_ln_upah_rata z_ln_indeks_demokrasi
+
+---------------------------------------------------------------------------------------
+                      |            Delta-method
+                      |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+              z_ln_p1 |   .1061731    .004859    21.85   0.000     .0966497    .1156965
+             z_ln_ipm |    .358278   .0103475    34.62   0.000     .3379973    .3785587
+               z_gini |   .1784019   .0045988    38.79   0.000     .1693883    .1874155
+       z_ln_upah_rata |  -.0331674    .008942    -3.71   0.000    -.0506933   -.0156415
+z_ln_indeks_demokrasi |   .0350831   .0081916     4.28   0.000     .0190279    .0511382
+---------------------------------------------------------------------------------------
+
+. nlcom (equity: ///
+>         _b[z_ln_p1] + ///
+>         _b[z_ln_ipm] + ///
+>         _b[z_gini] + ///
+>         _b[z_ln_upah_rata] + ///
+>         _b[z_ln_indeks_demokrasi])
+
+      equity: _b[z_ln_p1] +         _b[z_ln_ipm] +         _b[z_gini] +         _b[z_ln_upah_rata] +        
+>  _b[z_ln_indeks_demokrasi]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      equity |   .6447687   .0078337    82.31   0.000     .6294149    .6601225
+------------------------------------------------------------------------------
+
+. 
+. estimates restore FGLS_institusi
+(results FGLS_institusi are active now)
+
+. margins, dydx($institusi) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_price z_ln_rasio_pad z_ln_pertumbuhan_pdrb_adhb z_ln_apbd_belanja
+
+--------------------------------------------------------------------------------------------
+                           |            Delta-method
+                           |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+                   z_price |  -.0056631   .0036601    -1.55   0.122    -.0128367    .0015105
+            z_ln_rasio_pad |   .1719226   .0045132    38.09   0.000     .1630768    .1807683
+z_ln_pertumbuhan_pdrb_adhb |  -.0140598   .0038353    -3.67   0.000    -.0215768   -.0065427
+         z_ln_apbd_belanja |   .3963639   .0031058   127.62   0.000     .3902766    .4024511
+--------------------------------------------------------------------------------------------
+
+. nlcom (institusi: ///
+>         _b[z_price] + ///
+>         _b[z_ln_rasio_pad] + ///
+>         _b[z_ln_pertumbuhan_pdrb_adhb] + ///
+>         _b[z_ln_apbd_belanja])
+
+   institusi: _b[z_price] +         _b[z_ln_rasio_pad] +         _b[z_ln_pertumbuhan_pdrb_adhb] +         _b
+> [z_ln_apbd_belanja]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   institusi |   .5485636   .0067902    80.79   0.000      .535255    .5618722
+------------------------------------------------------------------------------
+
+. 
+. estimates restore FGLS_konektivitas
+(results FGLS_konektivitas are active now)
+
+. margins, dydx($konektivitas) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_ln_jalan_mantap z_ln_kargo_udara z_ln_kargo_kapal z_ln_kargo_kereta z_ln_penumpang_total
+            z_ln_airport_logistik z_ln_airport_komersil
+
+---------------------------------------------------------------------------------------
+                      |            Delta-method
+                      |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+    z_ln_jalan_mantap |    .052738   .0055003     9.59   0.000     .0419577    .0635183
+     z_ln_kargo_udara |    .039501   .0116775     3.38   0.001     .0166134    .0623886
+     z_ln_kargo_kapal |   .2879664   .0195438    14.73   0.000     .2496613    .3262716
+    z_ln_kargo_kereta |   .1664569   .0098406    16.92   0.000     .1471698    .1857441
+ z_ln_penumpang_total |  -.1202621    .018081    -6.65   0.000    -.1557003   -.0848239
+z_ln_airport_logistik |   .0374581   .0050536     7.41   0.000     .0275532     .047363
+z_ln_airport_komersil |    .020801   .0052347     3.97   0.000     .0105413    .0310608
+---------------------------------------------------------------------------------------
+
+. nlcom (konektivitas: ///
+>         _b[z_ln_jalan_mantap] + ///
+>         _b[z_ln_kargo_udara] + ///
+>         _b[z_ln_kargo_kapal] + ///
+>         _b[z_ln_kargo_kereta] + ///
+>         _b[z_ln_penumpang_total] + ///
+>         _b[z_ln_airport_logistik] + ///
+>         _b[z_ln_airport_komersil])
+
+konektivitas: _b[z_ln_jalan_mantap] +         _b[z_ln_kargo_udara] +         _b[z_ln_kargo_kapal] +         
+> _b[z_ln_kargo_kereta] +         _b[z_ln_penumpang_total] +         _b[z_ln_airport_logistik] +         _b[
+> z_ln_airport_komersil]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+konektivitas |   .4846594   .0054656    88.67   0.000     .4739469    .4953718
+------------------------------------------------------------------------------
+
+. 
+. estimates restore FGLS_lingkungan
+(results FGLS_lingkungan are active now)
+
+. margins, dydx($lingkungan) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_ln_indeks_lingkungan z_ln_indeks_hijau z_ln_indeks_biru
+
+----------------------------------------------------------------------------------------
+                       |            Delta-method
+                       |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+z_ln_indeks_lingkungan |   .0480204   .0110881     4.33   0.000     .0262882    .0697526
+     z_ln_indeks_hijau |  -.2204679   .0089747   -24.57   0.000    -.2380579   -.2028779
+      z_ln_indeks_biru |   .0057704   .0089454     0.65   0.519    -.0117623    .0233031
+----------------------------------------------------------------------------------------
+
+. nlcom (lingkungan: ///
+>         _b[z_ln_indeks_lingkungan] + ///
+>         _b[z_ln_indeks_hijau] + ///
+>         _b[z_ln_indeks_biru])
+
+  lingkungan: _b[z_ln_indeks_lingkungan] +         _b[z_ln_indeks_hijau] +         _b[z_ln_indeks_biru]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+  lingkungan |  -.1666771   .0083667   -19.92   0.000    -.1830754   -.1502788
+------------------------------------------------------------------------------
+
+. 
+. estimates restore FGLS_keamanan
+(results FGLS_keamanan are active now)
+
+. margins, dydx($keamanan) predict(xb) post
+
+Average marginal effects                                   Number of obs = 272
+
+Expression: Fitted values, predict(xb)
+dy/dx wrt:  z_ln_crime_risk z_ln_crime_rate
+
+---------------------------------------------------------------------------------
+                |            Delta-method
+                |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+z_ln_crime_risk |  -.0268228   .0062895    -4.26   0.000    -.0391499   -.0144957
+z_ln_crime_rate |   .0013168   .0073373     0.18   0.858    -.0130641    .0156978
+---------------------------------------------------------------------------------
+
+. nlcom (keamanan: ///
+>         _b[z_ln_crime_risk] + ///
+>         _b[z_ln_crime_rate])
+
+    keamanan: _b[z_ln_crime_risk] +         _b[z_ln_crime_rate]
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+    keamanan |   -.025506   .0114691    -2.22   0.026    -.0479851   -.0030269
+------------------------------------------------------------------------------
+
+. 
+. * CRS: FGLS grup (bukan full X)
+. xtgls logtfp_it_crs $pendidikan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         7          Time periods      =          8
+                                                Wald chi2(6)      =    3124.95
+Log likelihood             =  207.3479          Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------------------
+            logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+--------------------------+----------------------------------------------------------------
+   z_ln_lama_sekolah_mean |   .1429909   .0036934    38.72   0.000      .135752    .1502299
+z_ln_lama_sekolah_harapan |  -.1405385   .0123458   -11.38   0.000    -.1647359   -.1163411
+                  z_db_sd |   .0119194   .0039255     3.04   0.002     .0042256    .0196133
+                 z_db_smp |  -.0250638   .0041475    -6.04   0.000    -.0331928   -.0169349
+                 z_db_sma |   .0134719   .0036302     3.71   0.000     .0063569     .020587
+              z_db_kampus |  -.0384345   .0094437    -4.07   0.000    -.0569438   -.0199252
+                    _cons |  -.9675489    .002256  -428.88   0.000    -.9719706   -.9631273
+-------------------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_pendidikan
+
+. xtgls logtfp_it_crs $equity, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         6          Time periods      =          8
+                                                Wald chi2(5)      =    6388.75
+Log likelihood             =  206.4507          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------------
+        logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+              z_ln_p1 |   .1143385   .0019888    57.49   0.000     .1104406    .1182365
+             z_ln_ipm |   .0017688   .0041081     0.43   0.667    -.0062829    .0098205
+               z_gini |  -.0043774   .0020814    -2.10   0.035    -.0084568    -.000298
+       z_ln_upah_rata |   .0515846   .0039705    12.99   0.000     .0438026    .0593667
+z_ln_indeks_demokrasi |  -.0067261   .0046458    -1.45   0.148    -.0158317    .0023795
+                _cons |  -1.003121   .0023652  -424.12   0.000    -1.007757   -.9984854
+---------------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_equity
+
+. xtgls logtfp_it_crs $institusi, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =    5481.57
+Log likelihood             =  202.2185          Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------------------
+             logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------------------+----------------------------------------------------------------
+                   z_price |   -.032751   .0023613   -13.87   0.000     -.037379    -.028123
+            z_ln_rasio_pad |  -.0032374   .0039364    -0.82   0.411    -.0109526    .0044778
+z_ln_pertumbuhan_pdrb_adhb |  -.0020159   .0024477    -0.82   0.410    -.0068133    .0027815
+         z_ln_apbd_belanja |   .0875197   .0020795    42.09   0.000     .0834439    .0915955
+                     _cons |  -.9960497   .0020133  -494.73   0.000    -.9999957   -.9921036
+--------------------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_institusi
+
+. xtgls logtfp_it_crs $konektivitas, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         8          Time periods      =          8
+                                                Wald chi2(7)      =    7981.96
+Log likelihood             =  188.1833          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------------
+        logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+    z_ln_jalan_mantap |  -.0887701   .0056036   -15.84   0.000    -.0997529   -.0777873
+     z_ln_kargo_udara |   .0197168   .0065085     3.03   0.002     .0069604    .0324731
+     z_ln_kargo_kapal |   .2233141   .0139345    16.03   0.000     .1960031    .2506252
+    z_ln_kargo_kereta |  -.0738873   .0078664    -9.39   0.000    -.0893052   -.0584694
+ z_ln_penumpang_total |   -.031224   .0125122    -2.50   0.013    -.0557474   -.0067005
+z_ln_airport_logistik |   .1922079   .0030954    62.10   0.000     .1861411    .1982747
+z_ln_airport_komersil |   -.170793   .0034441   -49.59   0.000    -.1775434   -.1640427
+                _cons |  -1.042459   .0031473  -331.22   0.000    -1.048628    -1.03629
+---------------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_konektivitas
+
+. xtgls logtfp_it_crs $lingkungan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =     730.07
+Log likelihood             =  142.9048          Prob > chi2       =     0.0000
+
+----------------------------------------------------------------------------------------
+         logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-----------------------+----------------------------------------------------------------
+z_ln_indeks_lingkungan |   .0352683   .0058585     6.02   0.000     .0237859    .0467507
+     z_ln_indeks_hijau |  -.1445618   .0054411   -26.57   0.000    -.1552262   -.1338975
+      z_ln_indeks_biru |  -.0004831   .0043517    -0.11   0.912    -.0090124    .0080461
+                 _cons |  -.9578398   .0036361  -263.43   0.000    -.9649664   -.9507132
+----------------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_lingkungan
+
+. xtgls logtfp_it_crs $keamanan, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     132.64
+Log likelihood             =  119.9524          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------
+  logtfp_it_crs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+z_ln_crime_risk |  -.0324072   .0031413   -10.32   0.000    -.0385641   -.0262503
+z_ln_crime_rate |   .0056092   .0045026     1.25   0.213    -.0032158    .0144342
+          _cons |  -.9960761   .0040759  -244.38   0.000    -1.004065   -.9880875
+---------------------------------------------------------------------------------
+
+. estimates store FGLS_crs_keamanan
+
+. 
+. estimates table ///
+>         FGLS_crs_pendidikan FGLS_crs_equity FGLS_crs_institusi ///
+>         FGLS_crs_konektivitas FGLS_crs_lingkungan FGLS_crs_keamanan, ///
+>         star stats(N) b(%7.3f)
+
+--------------------------------------------------------------------------------------------
+    Variable | FGLS_crs~n   FGLS_crs~y   FGLS_crs~i   FGLS_crs~s   FGLS_crs~n   FGLS_crs~n  
+-------------+------------------------------------------------------------------------------
+z_ln_lam~ean |   0.143***                                                                   
+z_ln_lam~pan |  -0.141***                                                                   
+     z_db_sd |   0.012**                                                                    
+    z_db_smp |  -0.025***                                                                   
+    z_db_sma |   0.013***                                                                   
+ z_db_kampus |  -0.038***                                                                   
+     z_ln_p1 |                0.114***                                                      
+    z_ln_ipm |                0.002                                                         
+      z_gini |               -0.004*                                                        
+z_ln_upah_~a |                0.052***                                                      
+z_ln_indek~i |               -0.007                                                         
+     z_price |                            -0.033***                                         
+z_ln_rasio~d |                            -0.003                                            
+z_ln_pertu~b |                            -0.002                                            
+z_ln_apbd_~a |                             0.088***                                         
+z_ln_jalan~p |                                         -0.089***                            
+z_ln_karg~ra |                                          0.020**                             
+z_ln_kargo~l |                                          0.223***                            
+z_ln_karg~ta |                                         -0.074***                            
+z_ln_penum~l |                                         -0.031*                              
+z_ln_airpo~k |                                          0.192***                            
+z_ln_airpo~l |                                         -0.171***                            
+z_ln_indek~n |                                                       0.035***               
+z_ln_inde~au |                                                      -0.145***               
+z_ln_inde~ru |                                                      -0.000                  
+z_ln_crime~k |                                                                   -0.032***  
+z_ln_crim~te |                                                                    0.006     
+       _cons |  -0.968***    -1.003***    -0.996***    -1.042***    -0.958***    -0.996***  
+-------------+------------------------------------------------------------------------------
+           N |     272          272          272          272          272          272     
+--------------------------------------------------------------------------------------------
+                                                    Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * =============================================================================
+. * 6. IMPLIKASI — xtgls eksplisit, satu spesifikasi per pertanyaan
+. * =============================================================================
+. 
+. * lingkungan: hijau vs biru (bukan komposit pilar)
+. xtgls logtfp_it z_ln_indeks_hijau z_ln_indeks_biru, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     589.84
+Log likelihood             = -36.91287          Prob > chi2       =     0.0000
+
+-----------------------------------------------------------------------------------
+        logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+z_ln_indeks_hijau |  -.2253847   .0093079   -24.21   0.000    -.2436279   -.2071415
+ z_ln_indeks_biru |   .0517119   .0075592     6.84   0.000     .0368961    .0665277
+            _cons |   5.121473   .0058482   875.74   0.000     5.110011    5.132935
+-----------------------------------------------------------------------------------
+
+. estimates store FGLS_hijau_biru
+
+. 
+. xtgls z_ln_indeks_hijau share_tk_ekstraktif share_tk_industri share_inv_ekstraktif, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =    4230.78
+Log likelihood             = -192.1192          Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------------
+   z_ln_indeks_hijau | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------------+----------------------------------------------------------------
+ share_tk_ekstraktif |    1.55093   .2144633     7.23   0.000     1.130589     1.97127
+   share_tk_industri |  -1.826241   .5031035    -3.63   0.000    -2.812306    -.840176
+share_inv_ekstraktif |     1.4074   .0876961    16.05   0.000     1.235518    1.579281
+               _cons |  -.7372866   .1639276    -4.50   0.000    -1.058579   -.4159944
+--------------------------------------------------------------------------------------
+
+. estimates store FGLS_hijau_ekstr
+
+. 
+. xtgls logtfp_it z_ln_indeks_hijau share_tk_ekstraktif, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     401.18
+Log likelihood             = -29.29768          Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------------
+          logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+  z_ln_indeks_hijau |  -.1315064   .0072084   -18.24   0.000    -.1456346   -.1173782
+share_tk_ekstraktif |   -.575127   .0556484   -10.34   0.000    -.6841958   -.4660583
+              _cons |   5.178069   .0217512   238.06   0.000     5.135437    5.220701
+-------------------------------------------------------------------------------------
+
+. estimates store FGLS_tfp_hijau_ekstr
+
+. 
+. * equity: gini + IPM + upah (bukan interaksi gini x tersier)
+. xtgls logtfp_it z_gini z_ln_ipm z_ln_upah_rata, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =    1437.84
+Log likelihood             = -22.10402          Prob > chi2       =     0.0000
+
+--------------------------------------------------------------------------------
+     logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+        z_gini |   .1149693     .00386    29.78   0.000     .1074038    .1225347
+      z_ln_ipm |   .1761097   .0059527    29.58   0.000     .1644427    .1877768
+z_ln_upah_rata |   .0452328   .0057593     7.85   0.000     .0339448    .0565208
+         _cons |   5.127745   .0036816  1392.79   0.000     5.120529     5.13496
+--------------------------------------------------------------------------------
+
+. estimates store FGLS_gini_ipm
+
+. 
+. * institusi: PAD vs belanja vs serapan
+. xtgls logtfp_it z_ln_rasio_pad z_ln_apbd_belanja z_ln_apbd_serapan, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =   38831.49
+Log likelihood             =  168.2289          Prob > chi2       =     0.0000
+
+-----------------------------------------------------------------------------------
+        logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+------------------+----------------------------------------------------------------
+   z_ln_rasio_pad |   .1714423   .0042071    40.75   0.000     .1631965    .1796881
+z_ln_apbd_belanja |   .4009708   .0030291   132.37   0.000     .3950339    .4069077
+z_ln_apbd_serapan |  -.0197534   .0036543    -5.41   0.000    -.0269157   -.0125911
+            _cons |   4.957598   .0030772  1611.09   0.000     4.951567    4.963629
+-----------------------------------------------------------------------------------
+
+. estimates store FGLS_pad_belanja
+
+. 
+. * tenaga kerja / investasi sektoral
+. xtgls logtfp_it share_tk_primer share_tk_sekunder share_tk_ekstraktif share_tk_C, ///
+>         panels(heteroskedastic) igls nolog
+note: share_tk_ekstraktif omitted because of collinearity.
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         4          Time periods      =          8
+                                                Wald chi2(3)      =     131.86
+Log likelihood             = -36.40277          Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------------
+          logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+    share_tk_primer |  -.3468671   .1061443    -3.27   0.001    -.5549061   -.1388281
+  share_tk_sekunder |  -6.347975   .6222595   -10.20   0.000    -7.567582   -5.128369
+share_tk_ekstraktif |          0  (omitted)
+         share_tk_C |   7.408906   .7164321    10.34   0.000     6.004725    8.813087
+              _cons |   5.428436   .0790533    68.67   0.000     5.273495    5.583378
+-------------------------------------------------------------------------------------
+
+. estimates store FGLS_tk
+
+. 
+. xtgls logtfp_it share_inv_primer share_inv_sekunder share_inv_C share_inv_padat_karya, ///
+>         panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         5          Time periods      =          8
+                                                Wald chi2(4)      =     469.48
+Log likelihood             = -44.82445          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------------
+            logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------------+----------------------------------------------------------------
+     share_inv_primer |  -.3665342    .044068    -8.32   0.000    -.4529059   -.2801626
+   share_inv_sekunder |  -.0719992   .0476715    -1.51   0.131    -.1654335    .0214352
+          share_inv_C |  -.0936907   .0510206    -1.84   0.066    -.1936891    .0063078
+share_inv_padat_karya |  -.1523251   .0303763    -5.01   0.000    -.2118615   -.0927887
+                _cons |   5.341372   .0335368   159.27   0.000     5.275641    5.407103
+---------------------------------------------------------------------------------------
+
+. estimates store FGLS_inv
+
+. 
+. xtgls logtfp_it share_inv_A d_sawit, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     364.32
+Log likelihood             = -44.35335          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+ share_inv_A |  -.1185794   .0446502    -2.66   0.008    -.2060921   -.0310667
+     d_sawit |  -.2411989    .017566   -13.73   0.000    -.2756275   -.2067702
+       _cons |   5.065295   .0100299   505.02   0.000     5.045636    5.084953
+------------------------------------------------------------------------------
+
+. estimates store FGLS_sawit
+
+. 
+. xtgls indeks_hijau share_tk_ekstraktif share_tk_industri, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =    3981.30
+Log likelihood             = -1024.043          Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------------
+       indeks_hijau | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+--------------------+----------------------------------------------------------------
+share_tk_ekstraktif |    46.5467   4.083097    11.40   0.000     38.54398    54.54943
+  share_tk_industri |  -107.3253   6.761012   -15.87   0.000    -120.5766   -94.07395
+              _cons |   65.87536   2.406368    27.38   0.000     61.15897    70.59176
+-------------------------------------------------------------------------------------
+
+. estimates store FGLS_hijau_tk
+
+. 
+. xtgls equality idx_fiskal share_tk_primer, panels(heteroskedastic) igls nolog
+
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =         3          Time periods      =          8
+                                                Wald chi2(2)      =     362.24
+Log likelihood             =  593.6556          Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------
+       equality | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+     idx_fiskal |  -.0055843    .001426    -3.92   0.000    -.0083791   -.0027894
+share_tk_primer |   .1213099    .010442    11.62   0.000     .1008439    .1417758
+          _cons |   -.387054   .0040482   -95.61   0.000    -.3949884   -.3791197
+---------------------------------------------------------------------------------
+
+. estimates store FGLS_eq_fiskal_tk
+
+. 
+. estimates table ///
+>         FGLS_hijau_biru FGLS_hijau_ekstr FGLS_tfp_hijau_ekstr FGLS_gini_ipm ///
+>         FGLS_pad_belanja FGLS_tk FGLS_inv FGLS_sawit FGLS_hijau_tk FGLS_eq_fiskal_tk, ///
+>         star stats(N) b(%7.3f)
+
+--------------------------------------------------------------------------------------------------------
+    Variable | FGLS_hijau~u   FGLS_hijau~r   FGLS_tfp_h~r   FGLS_gini_~m   FGLS_pad_b~a     FGLS_tk     
+-------------+------------------------------------------------------------------------------------------
+z_ln_inde~au |    -0.225***                     -0.132***                                               
+z_ln_inde~ru |     0.052***                                                                             
+share_tk_e~f |                    1.551***      -0.575***                                 (omitted)     
+share_tk_i~i |                   -1.826***                                                              
+share_inv_~f |                    1.407***                                                              
+      z_gini |                                                  0.115***                                
+    z_ln_ipm |                                                  0.176***                                
+z_ln_upah_~a |                                                  0.045***                                
+z_ln_rasio~d |                                                                 0.171***                 
+z_ln_apbd_~a |                                                                 0.401***                 
+z_ln_apb~pan |                                                                -0.020***                 
+share_tk_p~r |                                                                               -0.347**   
+share_tk_s~r |                                                                               -6.348***  
+  share_tk_C |                                                                                7.409***  
+share_in~mer |                                                                                          
+share_in~der |                                                                                          
+ share_inv_C |                                                                                          
+share_inv_~a |                                                                                          
+ share_inv_A |                                                                                          
+     d_sawit |                                                                                          
+  idx_fiskal |                                                                                          
+       _cons |     5.121***      -0.737***       5.178***       5.128***       4.958***       5.428***  
+-------------+------------------------------------------------------------------------------------------
+           N |       272            272            272            272            272            272     
+--------------------------------------------------------------------------------------------------------
+                                                                Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+
+--------------------------------------------------------------------------
+    Variable |   FGLS_inv      FGLS_sawit    FGLS_hijau~k   FGLS_eq_fi~k  
+-------------+------------------------------------------------------------
+z_ln_inde~au |                                                            
+z_ln_inde~ru |                                                            
+share_tk_e~f |                                  46.547***                 
+share_tk_i~i |                                -107.325***                 
+share_inv_~f |                                                            
+      z_gini |                                                            
+    z_ln_ipm |                                                            
+z_ln_upah_~a |                                                            
+z_ln_rasio~d |                                                            
+z_ln_apbd_~a |                                                            
+z_ln_apb~pan |                                                            
+share_tk_p~r |                                                  0.121***  
+share_tk_s~r |                                                            
+  share_tk_C |                                                            
+share_in~mer |    -0.367***                                               
+share_in~der |    -0.072                                                  
+ share_inv_C |    -0.094                                                  
+share_inv_~a |    -0.152***                                               
+ share_inv_A |                   -0.119**                                 
+     d_sawit |                   -0.241***                                
+  idx_fiskal |                                                 -0.006***  
+       _cons |     5.341***       5.065***      65.875***      -0.387***  
+-------------+------------------------------------------------------------
+           N |       272            272            272            272     
+--------------------------------------------------------------------------
+                                  Legend: * p<0.05; ** p<0.01; *** p<0.001
+
+. 
+. * =============================================================================
+. * 7. COEF FGLS → csv (bukan 5 estimator)
+. * =============================================================================
+. 
+. tempname H
+
+. postfile `H' str40 model str40 var float b se t p n using "${outdir}/eval1_coef.dta", replace
+
+. 
+. foreach m in ///
+>         FGLS_pendidikan FGLS_equity FGLS_institusi FGLS_konektivitas FGLS_lingkungan FGLS_keamanan ///
+>         FGLS_crs_pendidikan FGLS_crs_equity FGLS_crs_institusi FGLS_crs_konektivitas FGLS_crs_lingkungan F
+> GLS_crs_keamanan ///
+>         FGLS_hijau_biru FGLS_hijau_ekstr FGLS_tfp_hijau_ekstr FGLS_gini_ipm ///
+>         FGLS_pad_belanja FGLS_tk FGLS_inv FGLS_sawit FGLS_hijau_tk FGLS_eq_fiskal_tk ///
+>         FGLS FE RE RE2W {
+  2.         capture noisily estimates restore `m'
+  3.         if _rc continue
+  4.         quietly count if e(sample)
+  5.         local n = r(N)
+  6.         local vars : colnames e(b)
+  7.         foreach v of local vars {
+  8.                 if "`v'" == "_cons" continue
+  9.                 if strpos("`v'", "Year") continue
+ 10.                 capture {
+ 11.                         local bi = _b[`v']
+ 12.                         local se = _se[`v']
+ 13.                         local tt = `bi' / `se'
+ 14.                         local pp = 2 * (1 - normal(abs(`tt')))
+ 15.                         post `H' ("`m'") ("`v'") (`bi') (`se') (`tt') (`pp') (`n')
+ 16.                 }
+ 17.         }
+ 18. }
+(results FGLS_pendidikan are active now)
+(results FGLS_equity are active now)
+(results FGLS_institusi are active now)
+(results FGLS_konektivitas are active now)
+(results FGLS_lingkungan are active now)
+(results FGLS_keamanan are active now)
+(results FGLS_crs_pendidikan are active now)
+(results FGLS_crs_equity are active now)
+(results FGLS_crs_institusi are active now)
+(results FGLS_crs_konektivitas are active now)
+(results FGLS_crs_lingkungan are active now)
+(results FGLS_crs_keamanan are active now)
+(results FGLS_hijau_biru are active now)
+(results FGLS_hijau_ekstr are active now)
+(results FGLS_tfp_hijau_ekstr are active now)
+(results FGLS_gini_ipm are active now)
+(results FGLS_pad_belanja are active now)
+(results FGLS_tk are active now)
+(results FGLS_inv are active now)
+(results FGLS_sawit are active now)
+(results FGLS_hijau_tk are active now)
+(results FGLS_eq_fiskal_tk are active now)
+(results FGLS are active now)
+(results FE are active now)
+(results RE are active now)
+(results RE2W are active now)
+
+. postclose `H'
+
+. 
+. use "${outdir}/eval1_coef.dta", clear
+
+. gen str8 star = ""
+(189 missing values generated)
+
+. replace star = "*"    if p < 0.05
+(92 real changes made)
+
+. replace star = "**"   if p < 0.01
+(83 real changes made)
+
+. replace star = "***"  if p < 0.001
+(73 real changes made)
+
+. export excel using "${outdir}/eval1_coef.xlsx", sheet("coef") firstrow(variables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1_coef.xlsx sa
+> ved
+
+. export delimited using "${outdir}/eval1_coef.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1_coef.csv sav
+> ed
+
+. keep if strpos(model, "FGLS")
+(81 observations deleted)
+
+. export delimited using "${outdir}/eval1_coef_fgls.csv", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1_coef_fgls.cs
+> v saved
+
+. 
+. display as text _n "eval1 done. panel -> ${outdir}/eval_panel.dta"
+
+eval1 done. panel -> /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/ev
+> al_panel.dta
+
+. display as text "coef  -> ${outdir}/eval1_coef.csv"
+coef  -> /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1_coef.csv
+
+. log close
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/01 Data/TFP/output/eval/eval1.log
+  log type:  text
+ closed on:  20 Sep 2026, 17:43:51
+------------------------------------------------------------------------------------------------------------
