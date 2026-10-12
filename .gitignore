@@ -4,28 +4,10 @@ __pycache__/
 .ipynb_checkpoints/
 Invoice_*
 
+# Master data stays on this machine
+01 Data/00 sumber/
+
 # Local only: larger than 10MB
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Aceh_KabKota/apbd_Aceh_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jabar KabKota/apbd_Jabar_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jatim KabKota/apbd_Jatim_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jatim KabKota/apbd_Jatim_all_2011_2025.xlsx
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Barat_KabKota/apbd_Jawa_Barat_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Tengah_KabKota/apbd_Jawa_Tengah_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Tengah_KabKota/apbd_Jawa_Tengah_all_2011_2025.xlsx
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Timur_KabKota/apbd_Jawa_Timur_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Timur_KabKota/apbd_Jawa_Timur_all_2011_2025.xlsx
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Barat_KabKota/apbd_Kalimantan_Barat_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Selatan_KabKota/apbd_Kalimantan_Selatan_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Tengah_KabKota/apbd_Kalimantan_Tengah_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Lampung_KabKota/apbd_Lampung_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Nusa_Tenggara_Timur_KabKota/apbd_Nusa_Tenggara_Timur_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Selatan_KabKota/apbd_Sulawesi_Selatan_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Tenggara_KabKota/apbd_Sulawesi_Tenggara_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Utara_KabKota/apbd_Sulawesi_Utara_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Barat_KabKota/apbd_Sumatera_Barat_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Selatan_KabKota/apbd_Sumatera_Selatan_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Utara_KabKota/apbd_Sumatera_Utara_all_2011_2025.csv
-01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Utara_KabKota/apbd_Sumatera_Utara_all_2011_2025.xlsx
 01 Data/IO-IRIO-NA/output/updating_2024/Multiplier results/v1_multiplier_linkage_IRIO52_2024.xlsx
 01 Data/IO-IRIO-NA/output/updating_2024/v4_irio_2024(1768x1768).xlsx
 01 Data/IO-IRIO-NA/processed/Tabel IRIO/Tabel IRIO Indonesia_34 Provinsi_52 Usaha.xlsx
