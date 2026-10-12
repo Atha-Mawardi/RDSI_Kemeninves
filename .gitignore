@@ -3,3 +3,39 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 Invoice_*
+
+# Local only: larger than 10MB
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Aceh_KabKota/apbd_Aceh_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jabar KabKota/apbd_Jabar_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jatim KabKota/apbd_Jatim_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jatim KabKota/apbd_Jatim_all_2011_2025.xlsx
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Barat_KabKota/apbd_Jawa_Barat_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Tengah_KabKota/apbd_Jawa_Tengah_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Tengah_KabKota/apbd_Jawa_Tengah_all_2011_2025.xlsx
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Timur_KabKota/apbd_Jawa_Timur_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Jawa_Timur_KabKota/apbd_Jawa_Timur_all_2011_2025.xlsx
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Barat_KabKota/apbd_Kalimantan_Barat_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Selatan_KabKota/apbd_Kalimantan_Selatan_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Kalimantan_Tengah_KabKota/apbd_Kalimantan_Tengah_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Lampung_KabKota/apbd_Lampung_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Nusa_Tenggara_Timur_KabKota/apbd_Nusa_Tenggara_Timur_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Selatan_KabKota/apbd_Sulawesi_Selatan_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Tenggara_KabKota/apbd_Sulawesi_Tenggara_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sulawesi_Utara_KabKota/apbd_Sulawesi_Utara_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Barat_KabKota/apbd_Sumatera_Barat_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Selatan_KabKota/apbd_Sumatera_Selatan_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Utara_KabKota/apbd_Sumatera_Utara_all_2011_2025.csv
+01 Data/00 sumber/APBD/APBD 2011 2025/APBD_Sumatera_Utara_KabKota/apbd_Sumatera_Utara_all_2011_2025.xlsx
+01 Data/IO-IRIO-NA/output/updating_2024/Multiplier results/v1_multiplier_linkage_IRIO52_2024.xlsx
+01 Data/IO-IRIO-NA/output/updating_2024/v4_irio_2024(1768x1768).xlsx
+01 Data/IO-IRIO-NA/processed/Tabel IRIO/Tabel IRIO Indonesia_34 Provinsi_52 Usaha.xlsx
+01 Data/IO-IRIO-NA/processed/updating_masukan/irio16.csv
+01 Data/TFP/raw/Masterplan TFP/Materi Paparan/11. Kadin_BPD_Peningkatan Produktivitas Nasional Tantangan, Mitigasi dan Usulan Kebijakan Dunia Usaha.pdf
+01 Data/TFP/raw/masterplan_extract/figures/Materi Paparan__11. Kadin_BPD_Peningkatan Produktivitas Nasional Tantangan_ Mitigasi dan Usulan Kebijakan Dunia Usaha/p001_x31_3000x2000.png
+01 Data/TFP/raw/masterplan_extract/figures/Materi Paparan__11. Kadin_BPD_Peningkatan Produktivitas Nasional Tantangan_ Mitigasi dan Usulan Kebijakan Dunia Usaha/p003_x574_2912x1632.png
+01 Data/TFP/raw/masterplan_extract/figures/Materi Paparan__11. Kadin_BPD_Peningkatan Produktivitas Nasional Tantangan_ Mitigasi dan Usulan Kebijakan Dunia Usaha/p008_x655_3120x2080.png
+99 Arsip/IO/io-irio-updating.git/objects/32/c2d14e65aefe015218c286f5baa20b19f111aa
+99 Arsip/IO/io-irio-updating.git/objects/pack/pack-b1ed32edc31a4c27cf77f4ab22c4c5dc2db79ca3.pack
+99 Arsip/IO/updating_2024_Unused/v1_multiplier_linkage_2024.xlsx
+99 Arsip/IO/updating_2024_Unused/v3_irio_2024(1768x1768).xlsx
+99 Arsip/IO/updating_2024_Unused/v4_irio_2024(1768x1768).xlsx
