@@ -2,8 +2,11 @@
 
 ditulis: tim PSE Atha Bintang Wahyu M. | PSE UGM
 
-Dua rantai. Jalankan dari root. Residual = produksi berbasis PMTB, bukan TFP Hicks-neutral.
-Vintage: `docs/VINTAGE.md`.
+Kode ditulis tangan, dalam bahasa Indonesia. AI dipakai untuk penyesuaian gaya, perbaikan kesalahan, dan dokumentasi.
+
+Jalankan dari akar repositori. Proyek RStudio: `02 Code/BKPM/2026bkpm.Rproj`.
+
+Residual pada keluaran ini adalah sisa produksi dari arus PMTB. Batas seri: `docs/VINTAGE.md`.
 
 ## Estimasi (`estimasi/`)
 
@@ -11,7 +14,7 @@ Vintage: `docs/VINTAGE.md`.
 --> `01` estimasi
 --> `02` dekomposisi nasional
 --> `03` visualisasi
---> `04` simulasi DRS vs CRS
+--> `04` simulasi DRS dan CRS
 --> `05` kontribusi pertumbuhan tahunan
 --> `06` panel provinsi-tahun
 --> `07` predicted value
@@ -28,11 +31,16 @@ Palet: `02 Code/BKPM/palet-bkpm.R`.
 --> `08`–`09` eval
 --> `10` determinan spasial
 --> `11` tampilan gambar yang sudah ada
---> `12` tabel revisi
+--> `12` tabel hasil
 
 Mesin SAR/SDM ada di dalam `06_eda_spasial2.ipynb`.
 
 ## Panel (`panel_provinsi/`)
 
 --> `01` unduh → `02` kerangka → `03` imputasi → `04` pca → `05` audit R → `06` sheet 1 → `07` luaran 2 → `08` sel agregasi
---> `pengaturan.py` dan `tulis_bantuan.py` dipakai bersama, bukan langkah
+
+`pengaturan.py` dan `tulis_bantuan.py` dipakai bersama oleh langkah 02–08.
+
+## Do-file
+
+`Konstruksi TFP Provinsi.do`, `Determinan TFP Provinsi.do`, `eval1.do`–`eval3_1.do`, `compile_panel.do`.

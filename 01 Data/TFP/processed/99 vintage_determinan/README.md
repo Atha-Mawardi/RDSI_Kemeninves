@@ -1,4 +1,6 @@
-# Vintage determinan — jangan dicampur dengan TFP terkini
+# Vintage determinan
+
+Seri di folder ini terpisah dari TFP terkini di `01 Data/TFP/output/modal_riil/`.
 
 Berkas di folder ini adalah hasil model determinan dari seri TFP **yang lain**.
 Generator skripnya tidak ada di repo; hanya workbook dan tabel yang tersimpan.

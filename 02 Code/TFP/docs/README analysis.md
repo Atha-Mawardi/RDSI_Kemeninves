@@ -1,8 +1,16 @@
 # TFP analysis (07182026)
 
-Perhitungan dan report Total Factor Productivity provinsi Indonesia untuk BAB 7 laporan
-`Laporan/Analisis I Kebijakan Makro Investasi.docx`.
+Catatan hitungan 18 Juli–20 Agustus 2026. Lokasi berkas sekarang:
 
+--> skrip estimasi: `02 Code/TFP/estimasi/`
+--> keluaran: `01 Data/TFP/output/`
+--> bahan Masterplan: `01 Data/TFP/raw/`
+--> naskah yang sedang dikerjakan: `03 Dokumen/`
+--> arsip skrip yang diganti: `99 Arsip/TFP/`
+
+Seri yang dikutip laporan ada di `01 Data/TFP/output/modal_riil/`. Batasnya: `VINTAGE.md`.
+
+Perhitungan dan report Total Factor Productivity provinsi Indonesia untuk BAB 7 laporan.
 Dibuat 2026-07-18. Menggantikan perhitungan awal di `../01_analisis TFP provinsi.R`, yang
 angkanya terbukti mengandung tiga kesalahan (lihat `00 Docs/memory_tfp.md` §5).
 
@@ -28,14 +36,18 @@ Urutan membaca yang paling cepat memberi konteks substansi:
 ## Struktur folder
 
 ```
-00 Docs/     catatan metodologi, literatur, memori, analisis figur
-01 Input/    txt/      hasil konversi 13 dokumen Masterplan TFP (272 halaman)
-             figures/  gambar tertanam + render halaman penuh
-             manifest_konversi.csv
-02 Code/     skrip Python dan R, dijalankan berurutan sesuai nomor
-03 Output/   tabel hasil (.xlsx), grafik (.png), log eksekusi
-04 Report/   kerangka.md -> Report TFP.md -> Report TFP.docx
+00 Docs/          catatan metode
+04 Report/        naskah Report TFP
+05 Presentasi/    bahan paparan
+06 Review/        layar diagnostik
+07 Revisi 5.3.1/  eksibit revisi
+VINTAGE.md        batas seri yang boleh dikutip
+STATUS.md         status keluaran
 ```
+
+Path pada tabel eksekusi di bawah adalah path lama di dalam folder analisis 18 Juli.
+Padanannya sekarang: skrip di `02 Code/TFP/estimasi/`, keluaran di `01 Data/TFP/output/`,
+ekstrak Masterplan di `01 Data/TFP/raw/masterplan_extract/`.
 
 ## Urutan eksekusi
 
@@ -52,8 +64,7 @@ Urutan membaca yang paling cepat memberi konteks substansi:
 | 9 | `02 Code/07_predicted value tfp.R` | `Predicted Value TFP 2017-2025.xlsx`, dua basis, dua lokasi |
 | 10 | `02 Code/md_to_docx.py` | `04 Report/Report TFP.docx` |
 
-Skrip Python dijalankan dengan `PYTHONIOENCODING=utf-8` — stdout Windows default cp1252 dan
-akan gagal pada karakter seperti panah atau em-dash. Skrip R dijalankan dari folder ini.
+Skrip Python dijalankan dengan `PYTHONIOENCODING=utf-8`. Skrip R dijalankan dari akar repositori.
 
 ## Sembilan skrip yang pindah ke arsip, 20 Agustus 2026
 
