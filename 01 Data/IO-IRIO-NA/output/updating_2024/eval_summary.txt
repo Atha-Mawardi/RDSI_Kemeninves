@@ -1,0 +1,97 @@
+=======================================================
+  EVALUATION SUMMARY FOR PPT DOCUMENTATION
+  Generated: 2026-06-14 12:55:54 
+=======================================================
+
+-----------------------------------------------------------
+MODULE 1: IO 52 Updating (2020 -> 2024)
+-----------------------------------------------------------
+RAS internal consistency (should be near machine zero):
+  Row consistency    (max |A*X - U|)  : 2.5000e-01
+  Column consistency (max |colS(AX)-V|): 0.0000e+00
+  Total output X (Rp)                 : 4.971836e+16
+  Total intermediate flow Z (Rp)      : 2.038193e+16
+
+-----------------------------------------------------------
+MODULE 2: IO 185 Disaggregation (52 -> 185 products)
+-----------------------------------------------------------
+Disaggregation consistency (re-aggregate Z185 -> Z51, compare to Z51):
+  Max absolute difference (any cell)      : 6.2500e-02
+  Relative max difference                 : 8.9973e-17
+  Total Z185 sum                          : 2.0382e+16
+  Total Z51 sum                           : 2.0382e+16
+  Sum difference                          : 0.0000e+00
+
+Top 5 subsectors with largest diagonal discrepancy:
+  I-44     | Z51: 1698684303680.25 | Z51_check: 1698684303680.25 | abs_diff: 2.4414e-04
+  I-01     | Z51: 49931345660115.20 | Z51_check: 49931345660115.20 | abs_diff: 0.0000e+00
+  I-02     | Z51: 8939522871133.76 | Z51_check: 8939522871133.76 | abs_diff: 0.0000e+00
+  I-03     | Z51: 155823116036889.00 | Z51_check: 155823116036889.00 | abs_diff: 0.0000e+00
+  I-04     | Z51: 11775396643245.60 | Z51_check: 11775396643245.60 | abs_diff: 0.0000e+00
+
+-----------------------------------------------------------
+MODULE 3: IRIO 52 Updating (2016 -> 2024)
+-----------------------------------------------------------
+RAS internal consistency (1768x1768 matrix):
+  Row consistency    (max |A*X - U|)  : 6.4233e+13
+  Column consistency (max |colS(AX)-V|): 6.2500e-02
+  Total output X (Rp)                 : 4.165960e+16
+
+-----------------------------------------------------------
+SEED SECTOR DIAGNOSTICS
+-----------------------------------------------------------
+IO 52: zero-column sectors in 2020 A matrix (needed seed): 0
+
+-----------------------------------------------------------
+MODULE 4: MULTIPLIER & LINKAGE SUMMARY STATISTICS
+-----------------------------------------------------------
+
+IO 52 (52 subsectors):
+  Sectors total                     : 52
+  Key sectors (BL>1 & FL>1)         : 12
+  Backward-dependent (BL>1, FL<=1)  : 15
+  Forward-dependent  (BL<=1, FL>1)  : 13
+  Independent        (BL<=1, FL<=1)  : 12
+  HEM structurally important (nTL>1): 17
+  OM range                          : [1.208, 2.790]
+  BL range                          : [0.740, 1.707]
+  FL range                          : [0.570, 1.746]
+  nTL range                         : [0.058, 5.439]
+  Top 3 by Output Multiplier (OM)   : I-28=2.790, I-16=2.006, I-36=1.943 
+  Top 3 by Structural Importance (nTL): I-31=5.439, I-33=4.263, I-14=4.186 
+
+IO 185 (185 products):
+  Sectors total                     : 185
+  Key sectors (BL>1 & FL>1)         : 42
+  Backward-dependent (BL>1, FL<=1)  : 65
+  Forward-dependent  (BL<=1, FL>1)  : 47
+  Independent        (BL<=1, FL<=1)  : 31
+  HEM structurally important (nTL>1): 44
+  OM range                          : [1.041, 2.798]
+  BL range                          : [0.640, 1.719]
+  FL range                          : [0.552, 1.958]
+  nTL range                         : [0.002, 14.580]
+  Top 3 by Output Multiplier (OM)   : 145=2.798, 180=2.204, 109=2.174 
+  Top 3 by Structural Importance (nTL): 156=14.580, 149=11.729, 158=7.740 
+
+IRIO 52 (1768 province-sectors):
+  Sectors total                     : 1768
+  Key sectors (BL>1 & FL>1)         : 197
+  Backward-dependent (BL>1, FL<=1)  : 239
+  Forward-dependent  (BL<=1, FL>1)  : 649
+  Independent        (BL<=1, FL<=1)  : 683
+  HEM structurally important (nTL>1): 246
+  OM range                          : [1.000, 3.806]
+  BL range                          : [0.880, 3.348]
+  FL range                          : [0.565, 3.069]
+  nTL range                         : [0.000, 72.553]
+  Top 3 by Output Multiplier (OM)   : 82-I-28=3.806, 12-I-13=3.612, 33-I-31=3.319 
+  Top 3 by Structural Importance (nTL): 31-I-31=72.553, 35-I-13=57.086, 33-I-31=49.280 
+
+  IRIO Province-level (mean across subsectors):
+  Top 3 provinces by mean nTL     : 32=6.123, 31=5.236, 35=5.201 
+  nTL_mean range across provinces : [0.041, 6.123]
+
+=======================================================
+  END OF SUMMARY — paste values into LaTeX PPT
+=======================================================

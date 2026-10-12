@@ -1,0 +1,17 @@
+series,year,path,value,lo,hi,kind
+PMA,2026,"Recent growth, 2022–2025",566.1835708337359,,,scenario
+PMA,2026,Half of recent growth,543.3812233677355,,,scenario
+PMA,2027,"Recent growth, 2022–2025",615.7834109706553,,,scenario
+PMA,2027,Half of recent growth,567.1823571349654,,,scenario
+PMA,2028,"Recent growth, 2022–2025",669.728386269277,,,scenario
+PMA,2028,Half of recent growth,592.0260259480231,,,scenario
+PMA,2029,"Recent growth, 2022–2025",728.3991471414041,,,scenario
+PMA,2029,Half of recent growth,617.957894829945,,,scenario
+PMDN,2026,"Recent growth, 2022–2025",716.5377845814368,,,scenario
+PMDN,2026,Half of recent growth,656.0575727569966,,,scenario
+PMDN,2027,"Recent growth, 2022–2025",862.0649984562024,,,scenario
+PMDN,2027,Half of recent growth,722.679482137908,,,scenario
+PMDN,2028,"Recent growth, 2022–2025",1037.148462446268,,,scenario
+PMDN,2028,Half of recent growth,796.0667715614678,,,scenario
+PMDN,2029,"Recent growth, 2022–2025",1247.7909845324825,,,scenario
+PMDN,2029,Half of recent growth,876.906457769567,,,scenario
