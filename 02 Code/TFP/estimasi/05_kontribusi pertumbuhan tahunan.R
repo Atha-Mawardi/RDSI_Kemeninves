@@ -14,7 +14,7 @@
 # log_02_dekomposisi.txt dan di 03_visualisasi.R kolom yang sama bernama `sisa`.
 # Isinya residual Solow berbasis arus PMTB, bukan TFP Hicks-neutral.
 #
-# Path relatif dari ROOT project (.Rproj), mengikuti konvensi CLAUDE.md.
+# Path relatif dari akar repositori. Berkas proyek: 02 Code/BKPM/2026bkpm.Rproj.
 # Jalankan: Rscript "02 Code/05_kontribusi pertumbuhan tahunan.R" dari root.
 
 # 1) Persiapan ----

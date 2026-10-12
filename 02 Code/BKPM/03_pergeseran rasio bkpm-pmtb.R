@@ -42,8 +42,9 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-# Path relatif dari root project (.Rproj), mengikuti konvensi CLAUDE.md dan
-# skrip 01/02. Ditulis sebagai string apa adanya, bukan dirakit lewat
+# Path relatif dari akar repositori. Berkas proyek ada di folder ini
+# (2026bkpm.Rproj); sesi RStudio mengembalikan direktori kerja ke akar.
+# Ditulis sebagai string apa adanya, bukan dirakit lewat
 # file.path(): path yang dihitung tidak bisa diikuti pembaca yang memindai
 # "palet mana yang dipakai skrip ini", dan tidak bisa diikuti periksa-viz.py.
 source("02 Code/BKPM/palet-bkpm.R")
@@ -57,7 +58,7 @@ rasio <- read.csv(file.path(out_dir, "Rasio BKPM terhadap PMTB.csv"),
                   check.names = FALSE, stringsAsFactors = FALSE)
 
 # Uji berkas data terhadap angka yang log analisis 02 sendiri nyatakan
-# (CLAUDE.md: "Rasio naik 15,8%->26,8%"; subtitle gambar garis: 15,8% -> 26,8%).
+# (subtitle gambar garis: 15,8% -> 26,8%).
 # Kalau CSV-nya dirender ulang dengan angka lain, skrip ini berhenti di sini,
 # bukan menghasilkan gambar yang salah dengan caption yang meyakinkan.
 stopifnot(

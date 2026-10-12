@@ -70,18 +70,17 @@ capture log close
 *** 0. Setup ---------------------------------------------------------------------
 * Prefer the copy in 02 Code/TFP/. This file is kept so old paths still resolve.
 if `"${proj}"' == "" {
-	if fileexists("2026bkpm.Rproj") {
-		global proj "`c(pwd)'"
+	local _here "`c(pwd)'"
+	local _found 0
+	forvalues _i = 1/8 {
+		if fileexists("`_here'/02 Code/BKPM/2026bkpm.Rproj") {
+			global proj "`_here'"
+			local _found 1
+			continue, break
+		}
+		local _here "`_here'/.."
 	}
-	else if fileexists("../2026bkpm.Rproj") {
-		global proj "`c(pwd)'/.."
-	}
-	else if fileexists("../../2026bkpm.Rproj") {
-		global proj "`c(pwd)'/../.."
-	}
-	else {
-		global proj "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves"
-	}
+	if !_found global proj "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves"
 }
 
 global datadir "${proj}/01 Data/TFP/AI-Pak_Yudis"

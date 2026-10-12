@@ -18,7 +18,7 @@
 #       laporan: PMTB itu arus, jadi kolom tahunan berayun mengikuti investasi.
 #       Berkas ini alat kerja, bukan bahan tabel laporan.
 #
-# Path relatif dari ROOT project (.Rproj), mengikuti konvensi CLAUDE.md.
+# Path relatif dari akar repositori. Berkas proyek: 02 Code/BKPM/2026bkpm.Rproj.
 # Jalankan: Rscript "02 Code/06_panel provinsi-tahun.R" dari root.
 
 # 1) Persiapan ----

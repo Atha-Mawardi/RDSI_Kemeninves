@@ -120,7 +120,7 @@ PATH_YLIM = (60, 580)
 def find_root():
     here = Path.cwd().resolve()
     for cand in [here, *here.parents]:
-        if (cand / "2026bkpm.Rproj").exists():
+        if (cand / "02 Code" / "BKPM" / "2026bkpm.Rproj").exists():
             return cand
     return Path("/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves")
 

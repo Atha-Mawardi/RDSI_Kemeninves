@@ -19,10 +19,17 @@ set more off
 capture log close
 
 if `"${proj}"' == "" {
-	if fileexists("2026bkpm.Rproj") global proj "`c(pwd)'"
-	else if fileexists("../2026bkpm.Rproj") global proj "`c(pwd)'/.."
-	else if fileexists("../../2026bkpm.Rproj") global proj "`c(pwd)'/../.."
-	else global proj "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves"
+	local _here "`c(pwd)'"
+	local _found 0
+	forvalues _i = 1/8 {
+		if fileexists("`_here'/02 Code/BKPM/2026bkpm.Rproj") {
+			global proj "`_here'"
+			local _found 1
+			continue, break
+		}
+		local _here "`_here'/.."
+	}
+	if !_found global proj "/Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves"
 }
 
 global xlsx   "${proj}/01 Data/TFP/processed/Dataset Agregasi Provinsi Penyetaraan Satuan Miliar Float (keamanan).xlsx"

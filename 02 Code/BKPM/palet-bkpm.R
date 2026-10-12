@@ -103,7 +103,7 @@ persen_id <- function(d = 1) function(x) {
 
 # --- ekspor ------------------------------------------------------------------
 #
-# dpi 300 mengikuti inventaris keluaran di CLAUDE.md. `bg` dikunci putih karena
+# dpi 300. `bg` dikunci putih karena
 # ggsave tanpa bg menghasilkan latar transparan, dan itu tampak sebagai kotak
 # hitam saat gambarnya ditempel ke slide bertema gelap.
 
