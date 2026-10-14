@@ -43,4 +43,4 @@ Mesin SAR/SDM ada di dalam `06_eda_spasial2.ipynb`.
 
 ## Do-file
 
-`Konstruksi TFP Provinsi.do`, `Determinan TFP Provinsi.do`, `eval1.do`–`eval3_1.do`, `compile_panel.do`.
+`Konstruksi TFP Provinsi.do`, `Determinan TFP Provinsi.do`, `eval1.do`–`eval3_1.do`, `compile_panel.do`, `13_Sectoral.do`.

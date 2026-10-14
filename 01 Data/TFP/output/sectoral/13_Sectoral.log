@@ -1,0 +1,1387 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.log
+  log type:  text
+ opened on:  14 Oct 2026, 11:04:31
+
+. display as text "proj = $proj"
+proj = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../..
+
+. display as text "tfp  = $tfp"
+tfp  = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/konstruksi/TFP Provinsi 2017-2024.dta
+
+. display as text "xlsx = $xlsx"
+xlsx = /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/processed/Dataset Agregasi Provinsi Penyetaraan Satuan Miliar Float (keamanan).xlsx
+
+. 
+. * =============================================================================
+. * 1. PANEL
+. * =============================================================================
+. 
+. use "${tfp}", clear
+
+. keep Code_Prov Year logtfp_it logtfp_it_crs log_Y log_K log_L ///
+>         pdrb_adhk pmtb_adhk labours_total
+
+. tempfile tfp
+
+. save `tfp'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000001 saved as .dta format
+
+. 
+. import excel "${xlsx}", sheet("Sheet1") firstrow clear
+(171 vars, 306 obs)
+
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. keep if inrange(Year, 2017, 2024)
+(34 observations deleted)
+
+. capture drop logtfp_it logtfp_it_crs
+
+. merge 1:1 Code_Prov Year using `tfp', keep(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. isid Code_Prov Year
+
+. 
+. local secs A B C D E F G H I J K L MN O P Q RSTU
+
+. foreach s of local secs {
+  2.         capture confirm variable `s'_ADHK
+  3.         if _rc {
+  4.                 display as error "kolom `s'_ADHK tidak ada"
+  5.                 exit 111
+  6.         }
+  7.         gen double Y_`s' = `s'_ADHK
+  8.         gen double L_`s' = `s'_TenagaKerja
+  9.         gen double I_`s' = max(`s'_PMA, 0) + max(`s'_PMDN, 0)
+ 10.         gen double W_`s' = `s'_RataUpah
+ 11. }
+
+. 
+. quietly count if missing(L_L)
+
+. display as text "sel L_TenagaKerja kosong (real estat), sebelum imputasi: " as result r(N)
+sel L_TenagaKerja kosong (real estat), sebelum imputasi: 0
+
+. bysort Code_Prov (Year): ipolate L_L Year, gen(L_L_i) epolate
+
+. replace L_L = L_L_i if missing(L_L)
+(0 real changes made)
+
+. drop L_L_i
+
+. quietly count if missing(L_L)
+
+. display as text "sel L_TenagaKerja masih kosong: " as result r(N)
+sel L_TenagaKerja masih kosong: 0
+
+. 
+. gen double Y_primer   = Y_A + Y_B
+
+. gen double L_primer   = L_A + L_B
+
+. gen double I_primer   = I_A + I_B
+
+. gen double Y_sekunder = Y_C + Y_D + Y_E + Y_F
+
+. gen double L_sekunder = L_C + L_D + L_E + L_F
+
+. gen double I_sekunder = I_C + I_D + I_E + I_F
+
+. gen double Y_Conly    = Y_C
+
+. gen double L_Conly    = L_C
+
+. gen double I_Conly    = I_C
+
+. gen double Y_def      = Y_D + Y_E + Y_F
+
+. gen double L_def      = L_D + L_E + L_F
+
+. gen double I_def      = I_D + I_E + I_F
+
+. gen double Y_tva      = Y_H + Y_J + Y_K + Y_MN
+
+. gen double L_tva      = L_H + L_J + L_K + L_MN
+
+. gen double I_tva      = I_H + I_J + I_K + I_MN
+
+. gen double Y_tlain    = Y_G + Y_I + Y_L + Y_O + Y_P + Y_Q + Y_RSTU
+
+. gen double L_tlain    = L_G + L_I + L_L + L_O + L_P + L_Q + L_RSTU
+
+. gen double I_tlain    = I_G + I_I + I_L + I_O + I_P + I_Q + I_RSTU
+
+. gen double Y_tersier  = Y_tva + Y_tlain
+
+. gen double L_tersier  = L_tva + L_tlain
+
+. gen double I_tersier  = I_tva + I_tlain
+
+. gen double Y_hmn      = Y_H + Y_MN
+
+. gen double L_hmn      = L_H + L_MN
+
+. gen double Y_low      = Y_G + Y_I + Y_RSTU
+
+. gen double L_low      = L_G + L_I + L_RSTU
+
+. 
+. gen double Ytot = Y_primer + Y_sekunder + Y_tersier
+
+. gen double Ltot = L_primer + L_sekunder + L_tersier
+
+. gen double Itot = I_primer + I_sekunder + I_tersier
+
+. 
+. assert abs(Y_tersier - (Y_tva + Y_tlain)) < 1e-4
+
+. assert abs(I_sekunder - (I_Conly + I_def)) < 1e-4
+
+. gen double cek_y = Ytot / pdrb_adhk
+
+. gen double cek_l = Ltot / labours_total
+
+. summarize cek_y cek_l, separator(0)
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       cek_y |        272    .9958955    .0067117   .9811356   1.024741
+       cek_l |        272           1           0          1          1
+
+. display as text "Y sektoral / 9_ADHK dan L sektoral / tenaga kerja konstruksi (harus di sekitar 1)"
+Y sektoral / 9_ADHK dan L sektoral / tenaga kerja konstruksi (harus di sekitar 1)
+
+. 
+. gen double Pprov = Ytot / Ltot
+
+. foreach g in primer sekunder tersier tva tlain Conly def hmn low A B C {
+  2.         gen double p_`g'   = Y_`g' / L_`g' if L_`g' > 0
+  3.         gen double th_`g'  = L_`g' / Ltot if Ltot > 0
+  4.         gen double va_`g'  = Y_`g' / Ytot if Ytot > 0
+  5.         gen double rel_`g' = p_`g' / Pprov if Pprov > 0
+  6.         gen double gap_`g' = va_`g' - th_`g'
+  7. }
+
+. gen double inv_primer   = I_primer / Itot if Itot > 0
+
+. gen double inv_sekunder = I_sekunder / Itot if Itot > 0
+
+. gen double inv_tva      = I_tva / Itot if Itot > 0
+
+. gen double inv_tlain    = I_tlain / Itot if Itot > 0
+
+. gen double inv_C        = I_Conly / Itot if Itot > 0
+
+. gen double inv_def      = I_def / Itot if Itot > 0
+
+. 
+. label variable th_primer   "pangsa kerja primer"
+
+. label variable va_primer   "pangsa nilai tambah primer"
+
+. label variable rel_primer  "produktivitas relatif primer"
+
+. label variable th_sekunder "pangsa kerja sekunder"
+
+. label variable va_sekunder "pangsa nilai tambah sekunder"
+
+. label variable rel_sekunder "produktivitas relatif sekunder"
+
+. label variable th_tersier  "pangsa kerja tersier"
+
+. label variable va_tersier  "pangsa nilai tambah tersier"
+
+. label variable rel_tersier "produktivitas relatif tersier"
+
+. label variable th_tva      "pangsa kerja tersier nilai tambah"
+
+. label variable va_tva      "pangsa nilai tambah tersier nilai tambah"
+
+. label variable rel_tva     "produktivitas relatif tersier nilai tambah"
+
+. label variable th_tlain    "pangsa kerja tersier lainnya"
+
+. label variable va_tlain    "pangsa nilai tambah tersier lainnya"
+
+. label variable rel_tlain   "produktivitas relatif tersier lainnya"
+
+. label variable inv_primer   "pangsa investasi PMA+PMDN primer"
+
+. label variable inv_sekunder "pangsa investasi PMA+PMDN sekunder"
+
+. label variable inv_tva      "pangsa investasi PMA+PMDN tersier nilai tambah"
+
+. label variable inv_C        "pangsa investasi industri pengolahan (C)"
+
+. label variable inv_def      "pangsa investasi listrik, air, konstruksi"
+
+. label variable logtfp_it    "ln residual TFP DRS (dari Konstruksi)"
+
+. 
+. * paparan eksternal: pangsa kerja 2017 x indeks nilai tambah nasional leave-one-out
+. foreach s of local secs {
+  2.         bysort Year: egen double natY_`s' = total(Y_`s')
+  3.         gen double looY_`s' = natY_`s' - Y_`s'
+  4.         bysort Code_Prov: egen double looY0_`s' = max(cond(Year==2017, looY_`s', .))
+  5.         gen double gY_`s' = looY_`s' / looY0_`s' if looY0_`s' > 0
+  6.         bysort Code_Prov: egen double sL_`s' = max(cond(Year==2017 & Ltot>0, L_`s'/Ltot, .))
+  7. }
+
+. egen double sL_cek = rowtotal(sL_A sL_B sL_C sL_D sL_E sL_F sL_G sL_H sL_I sL_J sL_K sL_L sL_MN sL_O sL_P sL_Q sL_RSTU)
+
+. quietly summarize sL_cek if Year==2017
+
+. display as text "jumlah pangsa kerja 2017 (harus 1): " as result %8.5f r(mean)
+jumlah pangsa kerja 2017 (harus 1):  1.00000
+
+. 
+. gen double BY_primer   = sL_A*gY_A + sL_B*gY_B
+
+. gen double BY_sekunder = sL_C*gY_C + sL_D*gY_D + sL_E*gY_E + sL_F*gY_F
+
+. gen double BY_tva      = sL_H*gY_H + sL_J*gY_J + sL_K*gY_K + sL_MN*gY_MN
+
+. gen double BY_tlain    = sL_G*gY_G + sL_I*gY_I + sL_L*gY_L + sL_O*gY_O + sL_P*gY_P + sL_Q*gY_Q + sL_RSTU*gY_RSTU
+
+. label variable BY_primer   "paparan primer: pangsa kerja 2017 x pertumbuhan VA nasional LOO"
+
+. label variable BY_sekunder "paparan sekunder"
+
+. label variable BY_tva      "paparan tersier nilai tambah"
+
+. label variable BY_tlain    "paparan tersier lainnya"
+
+. 
+. xtset Code_Prov Year
+
+Panel variable: Code_Prov (strongly balanced)
+ Time variable: Year, 2017 to 2024
+         Delta: 1 unit
+
+. foreach v in inv_primer inv_sekunder inv_tva inv_tlain inv_C inv_def logtfp_it logtfp_it_crs ///
+>         BY_primer BY_sekunder BY_tva BY_tlain {
+  2.         gen double `v'_l1 = L.`v'
+  3. }
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+(34 missing values generated)
+
+. gen double d_logtfp = D.logtfp_it
+(34 missing values generated)
+
+. gen double d_logK   = D.log_K
+(34 missing values generated)
+
+. gen double d_logL   = D.log_L
+(34 missing values generated)
+
+. label variable d_logtfp    "perubahan ln residual TFP DRS"
+
+. label variable d_logK      "perubahan ln PMTB ADHK"
+
+. label variable d_logL      "perubahan ln tenaga kerja"
+
+. label variable logtfp_it_l1 "ln residual TFP tahun lalu"
+
+. label variable inv_primer_l1   "pangsa investasi primer, t-1"
+
+. label variable inv_sekunder_l1 "pangsa investasi sekunder, t-1"
+
+. label variable inv_tva_l1      "pangsa investasi tersier nilai tambah, t-1"
+
+. label variable inv_C_l1        "pangsa investasi industri C, t-1"
+
+. label variable inv_def_l1      "pangsa investasi D+E+F, t-1"
+
+. 
+. gen byte samp = !missing(d_logtfp, d_logK, d_logL, logtfp_it_l1, ///
+>         inv_primer_l1, inv_sekunder_l1, inv_tva_l1, inv_C_l1, inv_def_l1)
+
+. quietly count if samp
+
+. display as text "sampel model pertumbuhan (2018-2024, lengkap): " as result r(N)
+sampel model pertumbuhan (2018-2024, lengkap): 238
+
+. 
+. * kontrafaktual lokal, 1 poin kerja, K dan L agregat provinsi tetap
+. gen double dlog_A_C   = ln( (Pprov + 0.01*(p_C   - p_A)) / Pprov ) if p_A<. & p_C<.
+
+. gen double dlog_A_tva = ln( (Pprov + 0.01*(p_tva - p_A)) / Pprov ) if p_A<. & p_tva<.
+
+. label variable dlog_A_C   "d log TFP lokal, 1pp kerja A ke C, produk rata-rata"
+
+. label variable dlog_A_tva "d log TFP lokal, 1pp kerja A ke jasa nilai tambah"
+
+. 
+. * =============================================================================
+. * 2. KOMPOSISI NASIONAL
+. * =============================================================================
+. 
+. tempfile level_long shift_d cf_d op_d
+
+. postfile H ///
+>         str8 tahun str40 kelompok ///
+>         double pekerja va rel_lp gap ///
+>         using `level_long', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000002 not found)
+
+. postfile S ///
+>         str4 skema str40 kelompok ///
+>         double within_level between_level dinamik_level total_level ///
+>         double within_share between_share dinamik_share total_share ///
+>         using `shift_d', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000003 not found)
+
+. postfile C ///
+>         str72 skenario ///
+>         double dlog_tfp persen_P ///
+>         using `cf_d', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000004 not found)
+
+. postfile O ///
+>         str8 tahun str16 agregasi str40 kelompok ///
+>         double pbar kovarians pangsa_dari_P ///
+>         using `op_d', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000005 not found)
+
+. 
+. preserve
+
+. collapse (sum) ///
+>         Y_A Y_B Y_C Y_D Y_E Y_F Y_G Y_H Y_I Y_J Y_K Y_L Y_MN Y_O Y_P Y_Q Y_RSTU ///
+>         L_A L_B L_C L_D L_E L_F L_G L_H L_I L_J L_K L_L L_MN L_O L_P L_Q L_RSTU ///
+>         , by(Year)
+
+. 
+. gen double Y_primer   = Y_A + Y_B
+
+. gen double L_primer   = L_A + L_B
+
+. gen double Y_sekunder = Y_C + Y_D + Y_E + Y_F
+
+. gen double L_sekunder = L_C + L_D + L_E + L_F
+
+. gen double Y_tva      = Y_H + Y_J + Y_K + Y_MN
+
+. gen double L_tva      = L_H + L_J + L_K + L_MN
+
+. gen double Y_tlain    = Y_G + Y_I + Y_L + Y_O + Y_P + Y_Q + Y_RSTU
+
+. gen double L_tlain    = L_G + L_I + L_L + L_O + L_P + L_Q + L_RSTU
+
+. gen double Y_tersier  = Y_tva + Y_tlain
+
+. gen double L_tersier  = L_tva + L_tlain
+
+. gen double Y_hmn      = Y_H + Y_MN
+
+. gen double L_hmn      = L_H + L_MN
+
+. gen double Y_low      = Y_G + Y_I + Y_RSTU
+
+. gen double L_low      = L_G + L_I + L_RSTU
+
+. gen double Y_Conly    = Y_C
+
+. gen double L_Conly    = L_C
+
+. gen double Y_all      = Y_primer + Y_sekunder + Y_tersier
+
+. gen double L_all      = L_primer + L_sekunder + L_tersier
+
+. gen double P          = Y_all / L_all
+
+. 
+. local groups primer sekunder tersier tva tlain hmn low Conly A B C D E F G H I J K L MN O P Q RSTU
+
+. foreach g of local groups {
+  2.         gen double p_`g'   = Y_`g' / L_`g'
+  3.         gen double th_`g' = L_`g' / L_all
+  4.         gen double va_`g' = Y_`g' / Y_all
+  5.         gen double rel_`g' = p_`g' / P
+  6.         gen double gap_`g' = va_`g' - th_`g'
+  7. }
+
+. 
+. foreach y in 2017 2024 {
+  2.         foreach g of local groups {
+  3.                 foreach stub in th va rel gap {
+  4.                         quietly summarize `stub'_`g' if Year==`y', meanonly
+  5.                         scalar `stub'_`g'_`y' = r(mean)
+  6.                 }
+  7.                 quietly summarize p_`g' if Year==`y', meanonly
+  8.                 scalar p_`g'_`y' = r(mean)
+  9.         }
+ 10.         quietly summarize P if Year==`y', meanonly
+ 11.         scalar P_`y' = r(mean)
+ 12.         quietly summarize Y_all if Year==`y', meanonly
+ 13.         scalar Y_`y' = r(mean)
+ 14.         quietly summarize L_all if Year==`y', meanonly
+ 15.         scalar L_`y' = r(mean)
+ 16. }
+
+. 
+. local namaprimer    "Primer (A+B)"
+
+. local namasekunder  "Sekunder (C-F)"
+
+. local namatersier   "Tersier (G-RSTU)"
+
+. local namatva       "Tersier nilai tambah (H J K MN)"
+
+. local namatlain     "Tersier lainnya"
+
+. local namahmn       "Jasa penghubung (H+MN)"
+
+. local namalow       "Jasa lapis bawah (G I RSTU)"
+
+. local namaConly     "Industri pengolahan (C)"
+
+. local namaA "A pertanian"
+
+. local namaB "B pertambangan"
+
+. local namaC "C industri"
+
+. local namaD "D listrik"
+
+. local namaE "E air"
+
+. local namaF "F konstruksi"
+
+. local namaG "G perdagangan"
+
+. local namaH "H transportasi"
+
+. local namaI "I akomodasi"
+
+. local namaJ "J informasi"
+
+. local namaK "K keuangan"
+
+. local namaL "L real estat"
+
+. local namaMN "MN jasa perusahaan"
+
+. local namaO "O pemerintah"
+
+. local namaP "P pendidikan"
+
+. local namaQ "Q kesehatan"
+
+. local namaRSTU "RSTU jasa lainnya"
+
+. 
+. foreach y in 2017 2024 {
+  2.         foreach g of local groups {
+  3.                 post H ("`y'") ("`nama`g''") ///
+>                         (th_`g'_`y') (va_`g'_`y') (rel_`g'_`y') (gap_`g'_`y')
+  4.         }
+  5. }
+
+. 
+. * shift-share titik ujung. Identitas: dP = within + between + dinamik
+. scalar dP = P_2024 - P_2017
+
+. 
+. program define _shift
+  1.         args skema g label
+  2.         scalar w = th_`g'_2017 * (p_`g'_2024 - p_`g'_2017)
+  3.         scalar b = p_`g'_2017 * (th_`g'_2024 - th_`g'_2017)
+  4.         scalar d = (th_`g'_2024 - th_`g'_2017) * (p_`g'_2024 - p_`g'_2017)
+  5.         post S ("`skema'") ("`label'") ///
+>                 (w) (b) (d) (w+b+d) ///
+>                 (w/dP) (b/dP) (d/dP) ((w+b+d)/dP)
+  6.         scalar wsum = wsum + w
+  7.         scalar bsum = bsum + b
+  8.         scalar dsum = dsum + d
+  9. end
+
+. 
+. scalar wsum = 0
+
+. scalar bsum = 0
+
+. scalar dsum = 0
+
+. foreach g in primer sekunder tersier {
+  2.         _shift "3" `g' "`nama`g''"
+  3. }
+
+. display as text _n "cek shift-share 3 kelompok, selisih terhadap dP: " ///
+>         as result %12.3e (wsum + bsum + dsum - dP)
+
+cek shift-share 3 kelompok, selisih terhadap dP:   -2.255e-17
+
+. 
+. scalar wsum = 0
+
+. scalar bsum = 0
+
+. scalar dsum = 0
+
+. foreach g in primer sekunder tva tlain {
+  2.         _shift "4" `g' "`nama`g''"
+  3. }
+
+. display as text "cek shift-share 4 kelompok, selisih terhadap dP: " ///
+>         as result %12.3e (wsum + bsum + dsum - dP)
+cek shift-share 4 kelompok, selisih terhadap dP:   -1.041e-17
+
+. 
+. scalar wsum = 0
+
+. scalar bsum = 0
+
+. scalar dsum = 0
+
+. foreach g in A B C D E F G H I J K L MN O P Q RSTU {
+  2.         _shift "17" `g' "`nama`g''"
+  3. }
+
+. display as text "cek shift-share 17 sektor, selisih terhadap dP: " ///
+>         as result %12.3e (wsum + bsum + dsum - dP)
+cek shift-share 17 sektor, selisih terhadap dP:   -3.469e-18
+
+. 
+. * Olley-Pakes. Referensi = rerata tak tertimbang produktivitas kelompok.
+. * Kovarian negatif: pekerja menumpuk di kelompok yang produktivitasnya di bawah rerata.
+. foreach y in 2017 2024 {
+  2.         scalar Pnow = P_`y'
+  3.         scalar pbar3 = (p_primer_`y' + p_sekunder_`y' + p_tersier_`y') / 3
+  4.         scalar cov3 = 0
+  5.         foreach g in primer sekunder tersier {
+  6.                 scalar covi = (th_`g'_`y' - 1/3) * (p_`g'_`y' - pbar3)
+  7.                 scalar cov3 = cov3 + covi
+  8.                 post O ("`y'") ("3 kelompok") ("`nama`g''") (pbar3) (covi) (covi/Pnow)
+  9.         }
+ 10.         post O ("`y'") ("3 kelompok") ("Jumlah alokasi") (pbar3) (cov3) (cov3/Pnow)
+ 11. 
+.         scalar pbar4 = (p_primer_`y' + p_sekunder_`y' + p_tva_`y' + p_tlain_`y') / 4
+ 12.         scalar cov4 = 0
+ 13.         foreach g in primer sekunder tva tlain {
+ 14.                 scalar covi = (th_`g'_`y' - 1/4) * (p_`g'_`y' - pbar4)
+ 15.                 scalar cov4 = cov4 + covi
+ 16.                 post O ("`y'") ("4 kelompok") ("`nama`g''") (pbar4) (covi) (covi/Pnow)
+ 17.         }
+ 18.         post O ("`y'") ("4 kelompok") ("Jumlah alokasi") (pbar4) (cov4) (cov4/Pnow)
+ 19. }
+
+. 
+. * kontrafaktual nasional 2024. 0,01 x selisih produk rata-rata.
+. * K dan L agregat tetap => d log Y = d log TFP.
+. program define _cf
+  1.         args label src dst
+  2.         scalar dPcf = 0.01 * (p_`dst'_2024 - p_`src'_2024)
+  3.         scalar dlog = ln( (P_2024 + dPcf) / P_2024 )
+  4.         post C ("`label'") (dlog) (100 * exp(dlog) - 100)
+  5. end
+
+. 
+. _cf "1pp pertanian ke industri (A ke C)" A C
+
+. _cf "1pp pertanian ke sekunder (A ke C-F)" A sekunder
+
+. _cf "1pp pertanian ke jasa nilai tambah (A ke HJKMN)" A tva
+
+. _cf "1pp pertanian ke jasa penghubung (A ke H+MN)" A hmn
+
+. _cf "1pp pertanian ke tersier lainnya (A ke basis)" A tlain
+
+. _cf "1pp jasa lapis bawah ke industri (GIR ke C)" low C
+
+. _cf "1pp jasa lapis bawah ke jasa nilai tambah" low tva
+
+. _cf "1pp tersier lainnya ke industri" tlain C
+
+. 
+. postclose H
+
+. postclose S
+
+. postclose C
+
+. postclose O
+
+. 
+. display as text _n "produktivitas agregat 2017 = " as result %8.5f P_2017 ///
+>         as text "   2024 = " as result %8.5f P_2024 ///
+>         as text "   dP = " as result %8.5f dP
+
+produktivitas agregat 2017 =  0.08590   2024 =  0.09711   dP =  0.01121
+
+. display as text "satuan: miliar rupiah ADHK per pekerja"
+satuan: miliar rupiah ADHK per pekerja
+
+. restore
+
+. 
+. * =============================================================================
+. * 3. MODEL PERTUMBUHAN RESIDUAL
+. * =============================================================================
+. * Basis yang dihilangkan: pangsa investasi tersier lainnya.
+. * Koefisien = selisih terhadap menggeser pangsa itu ke kelompok yang disebut.
+. * d_logK dan d_logL menahan saluran mekanis: residual sudah mengurangi b1 log K
+. * dan b2 log L, jadi volume investasi tahun yang sama tidak boleh ikut sebagai
+. * "dampak". Yang masuk adalah komposisi tahun lalu.
+. 
+. regress d_logtfp inv_primer_l1 inv_sekunder_l1 inv_tva_l1 ///
+>         d_logK d_logL i.Year if samp, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        238
+                                                F(11, 33)         =      50.13
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.3926
+                                                Root MSE          =     .02752
+
+                                (Std. err. adjusted for 34 clusters in Code_Prov)
+---------------------------------------------------------------------------------
+                |               Robust
+       d_logtfp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+  inv_primer_l1 |   .0117336   .0068095     1.72   0.094    -.0021203    .0255876
+inv_sekunder_l1 |   .0433651   .0160566     2.70   0.011     .0106976    .0760326
+     inv_tva_l1 |   .0264633   .0140525     1.88   0.069    -.0021268    .0550533
+         d_logK |  -.2657373    .029976    -8.87   0.000    -.3267239   -.2047507
+         d_logL |  -.0404207   .0545109    -0.74   0.464     -.151324    .0704827
+                |
+           Year |
+          2019  |  -.0076965   .0078009    -0.99   0.331    -.0235675    .0081745
+          2020  |  -.0504969   .0048878   -10.33   0.000    -.0604412   -.0405526
+          2021  |  -.0112117   .0058809    -1.91   0.065    -.0231764    .0007531
+          2022  |    .005589   .0052195     1.07   0.292    -.0050302    .0162081
+          2023  |   .0032913   .0052832     0.62   0.538    -.0074574      .01404
+          2024  |   .0031015   .0048709     0.64   0.529    -.0068084    .0130114
+                |
+          _cons |   .0149167   .0081346     1.83   0.076    -.0016334    .0314667
+---------------------------------------------------------------------------------
+
+. estimates store M1
+
+. 
+. regress d_logtfp inv_primer_l1 inv_sekunder_l1 inv_tva_l1 ///
+>         d_logK d_logL logtfp_it_l1 i.Year if samp, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        238
+                                                F(12, 33)         =      31.55
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.4147
+                                                Root MSE          =     .02708
+
+                                (Std. err. adjusted for 34 clusters in Code_Prov)
+---------------------------------------------------------------------------------
+                |               Robust
+       d_logtfp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+  inv_primer_l1 |   .0148555   .0073415     2.02   0.051    -.0000808    .0297919
+inv_sekunder_l1 |   .0494676   .0180759     2.74   0.010      .012692    .0862432
+     inv_tva_l1 |   .0564301    .019838     2.84   0.008     .0160693    .0967909
+         d_logK |  -.2704961   .0366543    -7.38   0.000    -.3450698   -.1959224
+         d_logL |  -.0505755   .0512068    -0.99   0.331    -.1547565    .0536055
+   logtfp_it_l1 |  -.0107135   .0058495    -1.83   0.076    -.0226143    .0011874
+                |
+           Year |
+          2019  |  -.0078931   .0077855    -1.01   0.318    -.0237328    .0079466
+          2020  |  -.0519281   .0052791    -9.84   0.000    -.0626684   -.0411878
+          2021  |  -.0129732   .0054926    -2.36   0.024    -.0241479   -.0017985
+          2022  |   .0049382   .0050126     0.99   0.332    -.0052599    .0151363
+          2023  |   .0034849   .0051636     0.67   0.504    -.0070204    .0139902
+          2024  |   .0035805   .0049792     0.72   0.477    -.0065497    .0137108
+                |
+          _cons |   .0627181   .0247752     2.53   0.016     .0123126    .1131235
+---------------------------------------------------------------------------------
+
+. estimates store M2
+
+. 
+. xtreg d_logtfp inv_primer_l1 inv_sekunder_l1 inv_tva_l1 ///
+>         d_logK d_logL i.Year if samp, fe vce(cluster Code_Prov)
+
+Fixed-effects (within) regression               Number of obs     =        238
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.5554                                         min =          7
+     Between = 0.1112                                         avg =        7.0
+     Overall = 0.3678                                         max =          7
+
+                                                F(11,33)          =      35.66
+corr(u_i, Xb) = -0.3295                         Prob > F          =     0.0000
+
+                                (Std. err. adjusted for 34 clusters in Code_Prov)
+---------------------------------------------------------------------------------
+                |               Robust
+       d_logtfp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+  inv_primer_l1 |   .0012265    .016148     0.08   0.940    -.0316268    .0340798
+inv_sekunder_l1 |   .0218576   .0130746     1.67   0.104    -.0047427     .048458
+     inv_tva_l1 |   .0062654   .0152086     0.41   0.683    -.0246767    .0372075
+         d_logK |  -.3677773   .0338764   -10.86   0.000    -.4366994   -.2988552
+         d_logL |  -.0658005    .055455    -1.19   0.244    -.1786244    .0470235
+                |
+           Year |
+          2019  |  -.0064802   .0076273    -0.85   0.402    -.0219981    .0090377
+          2020  |  -.0605602   .0059659   -10.15   0.000    -.0726979   -.0484225
+          2021  |  -.0119853   .0057348    -2.09   0.044    -.0236529   -.0003178
+          2022  |   .0034407   .0055403     0.62   0.539    -.0078311    .0147124
+          2023  |   .0000472   .0045067     0.01   0.992    -.0091218    .0092162
+          2024  |   .0002298   .0052311     0.04   0.965     -.010413    .0108726
+                |
+          _cons |   .0369272   .0111165     3.32   0.002     .0143105    .0595439
+----------------+----------------------------------------------------------------
+        sigma_u |  .01776508
+        sigma_e |  .02421845
+            rho |  .34983604   (fraction of variance due to u_i)
+---------------------------------------------------------------------------------
+
+. estimates store M3
+
+. 
+. regress d_logtfp inv_primer_l1 inv_sekunder_l1 inv_tva_l1 ///
+>         logtfp_it_l1 i.Year if samp, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        238
+                                                F(10, 33)         =      22.14
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.1600
+                                                Root MSE          =     .03229
+
+                                (Std. err. adjusted for 34 clusters in Code_Prov)
+---------------------------------------------------------------------------------
+                |               Robust
+       d_logtfp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+----------------+----------------------------------------------------------------
+  inv_primer_l1 |   .0106691   .0074436     1.43   0.161    -.0044751    .0258132
+inv_sekunder_l1 |   .0338273   .0118807     2.85   0.008     .0096558    .0579987
+     inv_tva_l1 |   .0548562    .019691     2.79   0.009     .0147945    .0949178
+   logtfp_it_l1 |   -.008448   .0028362    -2.98   0.005    -.0142183   -.0026777
+                |
+           Year |
+          2019  |  -.0124555   .0109501    -1.14   0.264    -.0347337    .0098227
+          2020  |  -.0296877   .0054135    -5.48   0.000    -.0407014   -.0186739
+          2021  |  -.0121046   .0066265    -1.83   0.077    -.0255864    .0013772
+          2022  |   .0066127   .0054409     1.22   0.233    -.0044569    .0176823
+          2023  |   .0070289   .0064381     1.09   0.283    -.0060696    .0201274
+          2024  |   .0043488   .0046381     0.94   0.355    -.0050875    .0137851
+                |
+          _cons |   .0455633   .0144758     3.15   0.003      .016112    .0750146
+---------------------------------------------------------------------------------
+
+. estimates store M4
+
+. 
+. regress d_logtfp inv_primer_l1 inv_C_l1 inv_def_l1 inv_tva_l1 ///
+>         d_logK d_logL logtfp_it_l1 i.Year if samp, vce(cluster Code_Prov)
+
+Linear regression                               Number of obs     =        238
+                                                F(13, 33)         =      27.20
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.4351
+                                                Root MSE          =     .02666
+
+                              (Std. err. adjusted for 34 clusters in Code_Prov)
+-------------------------------------------------------------------------------
+              |               Robust
+     d_logtfp | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+--------------+----------------------------------------------------------------
+inv_primer_l1 |   .0123478   .0069113     1.79   0.083    -.0017133    .0264088
+     inv_C_l1 |   .0571764   .0211212     2.71   0.011      .014205    .1001478
+   inv_def_l1 |   .0242434   .0078335     3.09   0.004     .0083059    .0401808
+   inv_tva_l1 |   .0519749   .0186808     2.78   0.009     .0139685    .0899814
+       d_logK |   -.283561   .0424118    -6.69   0.000    -.3698486   -.1972735
+       d_logL |  -.0625059    .051244    -1.22   0.231    -.1667625    .0417508
+ logtfp_it_l1 |  -.0110765   .0055312    -2.00   0.053    -.0223298    .0001769
+              |
+         Year |
+        2019  |  -.0066104   .0078568    -0.84   0.406    -.0225953    .0093744
+        2020  |  -.0523121   .0054862    -9.54   0.000    -.0634737   -.0411504
+        2021  |  -.0119585   .0057076    -2.10   0.044    -.0235707   -.0003463
+        2022  |   .0052486   .0051717     1.01   0.318    -.0052734    .0157705
+        2023  |   .0013041   .0045664     0.29   0.777    -.0079863    .0105945
+        2024  |     .00176   .0049977     0.35   0.727    -.0084079     .011928
+              |
+        _cons |   .0688884   .0247811     2.78   0.009     .0184707     .119306
+-------------------------------------------------------------------------------
+
+. estimates store M5
+
+. 
+. estimates table M1 M2 M3 M4 M5, ///
+>         keep(inv_primer_l1 inv_sekunder_l1 inv_C_l1 inv_def_l1 inv_tva_l1 ///
+>                 d_logK d_logL logtfp_it_l1) ///
+>         b(%9.4f) se(%9.4f) stats(N r2) ///
+>         title("Pertumbuhan residual pada pangsa investasi t-1")
+
+Pertumbuhan residual pada pangsa investasi t-1
+
+--------------------------------------------------------------------------
+    Variable |    M1          M2          M3          M4          M5      
+-------------+------------------------------------------------------------
+inv_primer~1 |    0.0117      0.0149      0.0012      0.0107      0.0123  
+             |    0.0068      0.0073      0.0161      0.0074      0.0069  
+inv_sekund~1 |    0.0434      0.0495      0.0219      0.0338              
+             |    0.0161      0.0181      0.0131      0.0119              
+    inv_C_l1 |                                                    0.0572  
+             |                                                    0.0211  
+  inv_def_l1 |                                                    0.0242  
+             |                                                    0.0078  
+  inv_tva_l1 |    0.0265      0.0564      0.0063      0.0549      0.0520  
+             |    0.0141      0.0198      0.0152      0.0197      0.0187  
+      d_logK |   -0.2657     -0.2705     -0.3678                 -0.2836  
+             |    0.0300      0.0367      0.0339                  0.0424  
+      d_logL |   -0.0404     -0.0506     -0.0658                 -0.0625  
+             |    0.0545      0.0512      0.0555                  0.0512  
+logtfp_it_l1 |               -0.0107                 -0.0084     -0.0111  
+             |                0.0058                  0.0028      0.0055  
+-------------+------------------------------------------------------------
+           N |       238         238         238         238         238  
+          r2 |    0.3926      0.4147      0.5554      0.1600      0.4351  
+--------------------------------------------------------------------------
+                                                              Legend: b/se
+
+. 
+. display as text _n "M2, terjemahan 10 poin pangsa (relatif terhadap tersier lainnya):"
+
+M2, terjemahan 10 poin pangsa (relatif terhadap tersier lainnya):
+
+. estimates restore M2
+(results M2 are active now)
+
+. foreach v in inv_primer_l1 inv_sekunder_l1 inv_tva_l1 {
+  2.         display as text "  `v'  " as result %8.4f (0.10 * _b[`v']) ///
+>                 as text " log poin / tahun   t = " as result %5.2f (_b[`v']/_se[`v'])
+  3. }
+  inv_primer_l1    0.0015 log poin / tahun   t =  2.02
+  inv_sekunder_l1    0.0049 log poin / tahun   t =  2.74
+  inv_tva_l1    0.0056 log poin / tahun   t =  2.84
+
+. 
+. * paparan eksternal. Reduced form pada level residual, FE dua arah.
+. * Bukan 2SLS: pangsa nilai tambah dan pangsa kerja hampir tidak bergerak
+. * dalam provinsi, dan first stage di bawah diuji dulu.
+. xtreg logtfp_it BY_primer_l1 BY_sekunder_l1 BY_tva_l1 BY_tlain_l1 ///
+>         i.Year if Year>=2018, fe vce(cluster Code_Prov)
+
+Fixed-effects (within) regression               Number of obs     =        238
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.6901                                         min =          7
+     Between = 0.0111                                         avg =        7.0
+     Overall = 0.0011                                         max =          7
+
+                                                F(10,33)          =      79.71
+corr(u_i, Xb) = -0.1687                         Prob > F          =     0.0000
+
+                               (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------
+               |               Robust
+     logtfp_it | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+  BY_primer_l1 |  -.1230252   .8811976    -0.14   0.890    -1.915835    1.669785
+BY_sekunder_l1 |  -.5556806   .8926369    -0.62   0.538    -2.371764    1.260403
+     BY_tva_l1 |   2.264299   1.572053     1.44   0.159    -.9340666    5.462664
+   BY_tlain_l1 |  -.9286663   1.029767    -0.90   0.374    -3.023743     1.16641
+               |
+          Year |
+         2019  |   .0346321    .036971     0.94   0.356     -.040586    .1098501
+         2020  |   .0521552   .0718819     0.73   0.473    -.0940896       .1984
+         2021  |   .0648037   .0586923     1.10   0.278    -.0546067    .1842141
+         2022  |   .1128834   .0823998     1.37   0.180    -.0547604    .2805272
+         2023  |    .157418   .1231528     1.28   0.210    -.0931382    .4079743
+         2024  |   .2003737   .1592373     1.26   0.217     -.123597    .5243443
+               |
+         _cons |   5.305797   .7251391     7.32   0.000     3.830491    6.781104
+---------------+----------------------------------------------------------------
+       sigma_u |  .56323113
+       sigma_e |  .03390476
+           rho |  .99638942   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------
+
+. estimates store Paparan
+
+. test BY_primer_l1 BY_sekunder_l1 BY_tva_l1 BY_tlain_l1
+
+ ( 1)  BY_primer_l1 = 0
+ ( 2)  BY_sekunder_l1 = 0
+ ( 3)  BY_tva_l1 = 0
+ ( 4)  BY_tlain_l1 = 0
+
+       F(  4,    33) =    0.79
+            Prob > F =    0.5371
+
+. 
+. display as text _n "first stage pangsa investasi pada paparan (FE dua arah)"
+
+first stage pangsa investasi pada paparan (FE dua arah)
+
+. foreach dep in inv_primer inv_sekunder inv_tva {
+  2.         xtreg `dep' BY_primer_l1 BY_sekunder_l1 BY_tva_l1 BY_tlain_l1 ///
+>                 i.Year if Year>=2018, fe vce(cluster Code_Prov)
+  3.         estimates store FS_`dep'
+  4.         local own = cond("`dep'"=="inv_primer", "BY_primer_l1", ///
+>                 cond("`dep'"=="inv_sekunder", "BY_sekunder_l1", "BY_tva_l1"))
+  5.         display as text "  `dep' pada `own': b = " as result %7.3f _b[`own'] ///
+>                 as text "  t = " as result %5.2f (_b[`own']/_se[`own'])
+  6. }
+
+Fixed-effects (within) regression               Number of obs     =        238
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.0787                                         min =          7
+     Between = 0.3565                                         avg =        7.0
+     Overall = 0.2431                                         max =          7
+
+                                                F(10,33)          =       2.03
+corr(u_i, Xb) = -0.8371                         Prob > F          =     0.0616
+
+                               (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------
+               |               Robust
+    inv_primer | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+  BY_primer_l1 |   .7668065    2.98028     0.26   0.799    -5.296618    6.830231
+BY_sekunder_l1 |   3.128387   3.736843     0.84   0.409    -4.474278    10.73105
+     BY_tva_l1 |   .6954896   4.760589     0.15   0.885    -8.990001    10.38098
+   BY_tlain_l1 |  -.0761273   1.913041    -0.04   0.968    -3.968239    3.815985
+               |
+          Year |
+         2019  |  -.0379185   .1072308    -0.35   0.726    -.2560811    .1802441
+         2020  |   -.153547   .2015069    -0.76   0.451    -.5635159    .2564219
+         2021  |  -.1255538   .1633306    -0.77   0.448    -.4578524    .2067449
+         2022  |  -.1278155    .238288    -0.54   0.595     -.612616     .356985
+         2023  |   -.151336   .3432117    -0.44   0.662    -.8496055    .5469336
+         2024  |  -.2169714   .4446071    -0.49   0.629    -1.121531    .6875886
+               |
+         _cons |  -.5199546   2.051473    -0.25   0.801    -4.693707    3.653798
+---------------+----------------------------------------------------------------
+       sigma_u |  .32971743
+       sigma_e |  .11673488
+           rho |    .888614   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------
+  inv_primer pada BY_primer_l1: b =   0.767  t =  0.26
+
+Fixed-effects (within) regression               Number of obs     =        238
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.0937                                         min =          7
+     Between = 0.1401                                         avg =        7.0
+     Overall = 0.0873                                         max =          7
+
+                                                F(10,33)          =       3.05
+corr(u_i, Xb) = -0.9228                         Prob > F          =     0.0077
+
+                               (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------
+               |               Robust
+  inv_sekunder | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+  BY_primer_l1 |  -1.392808   2.641291    -0.53   0.601    -6.766555     3.98094
+BY_sekunder_l1 |  -6.324501    3.19831    -1.98   0.056    -12.83151    .1825095
+     BY_tva_l1 |    -.52207   5.077464    -0.10   0.919    -10.85225    9.808108
+   BY_tlain_l1 |   3.171534   2.460153     1.29   0.206    -1.833685    8.176752
+               |
+          Year |
+         2019  |  -.0723976   .1134665    -0.64   0.528    -.3032469    .1584518
+         2020  |  -.0288527   .2109067    -0.14   0.892    -.4579456    .4002402
+         2021  |   -.028237   .1708225    -0.17   0.870     -.375778    .3193039
+         2022  |  -.0268317   .2437197    -0.11   0.913    -.5226832    .4690198
+         2023  |  -.0734339   .3545322    -0.21   0.837    -.7947352    .6478674
+         2024  |  -.0512138   .4579321    -0.11   0.912    -.9828837    .8804561
+               |
+         _cons |   .8741142   2.068088     0.42   0.675    -3.333441     5.08167
+---------------+----------------------------------------------------------------
+       sigma_u |  .50254676
+       sigma_e |  .13624938
+           rho |  .93152815   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------
+  inv_sekunder pada BY_sekunder_l1: b =  -6.325  t = -1.98
+
+Fixed-effects (within) regression               Number of obs     =        238
+Group variable: Code_Prov                       Number of groups  =         34
+
+R-squared:                                      Obs per group:
+     Within  = 0.0856                                         min =          7
+     Between = 0.2634                                         avg =        7.0
+     Overall = 0.1406                                         max =          7
+
+                                                F(10,33)          =       2.82
+corr(u_i, Xb) = -0.8118                         Prob > F          =     0.0121
+
+                               (Std. err. adjusted for 34 clusters in Code_Prov)
+--------------------------------------------------------------------------------
+               |               Robust
+       inv_tva | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+  BY_primer_l1 |   1.061795   1.286264     0.83   0.415     -1.55513    3.678719
+BY_sekunder_l1 |   1.728126   1.370618     1.26   0.216    -1.060417    4.516669
+     BY_tva_l1 |  -.9411161   2.407449    -0.39   0.698    -5.839108    3.956876
+   BY_tlain_l1 |   .7199348   1.050594     0.69   0.498    -1.417514    2.857384
+               |
+          Year |
+         2019  |   -.000558   .0438333    -0.01   0.990    -.0897376    .0886216
+         2020  |  -.0160705   .0862464    -0.19   0.853    -.1915401    .1593991
+         2021  |  -.0313074   .0747991    -0.42   0.678    -.1834874    .1208726
+         2022  |  -.0775526   .1060439    -0.73   0.470    -.2933005    .1381954
+         2023  |  -.1077331   .1552125    -0.69   0.492    -.4235154    .2080492
+         2024  |  -.1378362   .2056987    -0.67   0.507    -.5563333    .2806609
+               |
+         _cons |  -.8187529   .9839342    -0.83   0.411    -2.820582    1.183076
+---------------+----------------------------------------------------------------
+       sigma_u |  .15881095
+       sigma_e |  .07097481
+           rho |  .83351952   (fraction of variance due to u_i)
+--------------------------------------------------------------------------------
+  inv_tva pada BY_tva_l1: b =  -0.941  t = -0.39
+
+. display as text "2SLS tidak diestimasi. First stage tidak dipakai sebagai instrumen bila tanda berlawanan atau t kecil. Klaim komposisi berdiri di akuntansi dan di M2, bukan di IV."
+2SLS tidak diestimasi. First stage tidak dipakai sebagai instrumen bila tanda berlawanan atau t kecil. Klaim komposisi berdiri di akuntansi dan di M2, bukan di IV.
+
+. 
+. * pembanding: spesifikasi upah di Determinan TFP Provinsi.do. Bukan temuan di file ini.
+. * Upah diambil dari sheet yang sama (Analisis Luaran 2), bukan dari Sheet1.
+. preserve
+
+. import excel "${xlsx}", sheet("Analisis Luaran 2") firstrow clear
+(111 vars, 306 obs)
+
+. drop if missing(Code_Prov) | missing(Year)
+(0 observations deleted)
+
+. keep if inrange(Year, 2017, 2024)
+(34 observations deleted)
+
+. keep Code_Prov Year ///
+>         A_RataUpah B_RataUpah C_RataUpah D_RataUpah E_RataUpah F_RataUpah ///
+>         G_RataUpah H_RataUpah I_RataUpah J_RataUpah K_RataUpah L_RataUpah ///
+>         MN_RataUpah O_RataUpah P_RataUpah Q_RataUpah RSTU_RataUpah
+
+. foreach s of local secs {
+  2.         rename `s'_RataUpah upahsrc_`s'
+  3. }
+
+. tempfile upahsrc
+
+. save `upahsrc'
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000008 saved as .dta format
+
+. restore
+
+. merge 1:1 Code_Prov Year using `upahsrc', keep(match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               272  
+    -----------------------------------------
+
+. foreach s of local secs {
+  2.         replace W_`s' = upahsrc_`s'
+  3.         drop upahsrc_`s'
+  4.         gen double lnW_`s' = ln(W_`s' + 1) if W_`s' < .
+  5. }
+(266 real changes made)
+(266 real changes made)
+(268 real changes made)
+(265 real changes made)
+(257 real changes made)
+(270 real changes made)
+(263 real changes made)
+(271 real changes made)
+(261 real changes made)
+(269 real changes made)
+(268 real changes made)
+(246 real changes made)
+(267 real changes made)
+(268 real changes made)
+(269 real changes made)
+(271 real changes made)
+(269 real changes made)
+
+. egen double lnW_primer   = rowmean(lnW_A lnW_B)
+
+. egen double lnW_sekunder = rowmean(lnW_C lnW_D lnW_E lnW_F)
+
+. egen double lnW_tersier  = rowmean(lnW_G lnW_H lnW_I lnW_J lnW_K lnW_L lnW_MN lnW_O lnW_P lnW_Q lnW_RSTU)
+
+. egen double zW_primer   = std(lnW_primer)
+
+. egen double zW_sekunder = std(lnW_sekunder)
+
+. egen double zW_tersier  = std(lnW_tersier)
+
+. xtgls logtfp_it zW_primer zW_sekunder zW_tersier i.Code_Prov i.Year, ///
+>         panels(heteroskedastic) nolog
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   no autocorrelation
+
+Estimated covariances      =        34          Number of obs     =        272
+Estimated autocorrelations =         0          Number of groups  =         34
+Estimated coefficients     =        44          Time periods      =          8
+                                                Wald chi2(43)     =  405249.95
+                                                Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+   logtfp_it | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+   zW_primer |   .0115901   .0034057     3.40   0.001      .004915    .0182651
+ zW_sekunder |   .0022964   .0036654     0.63   0.531    -.0048877    .0094804
+  zW_tersier |  -.0080482   .0039376    -2.04   0.041    -.0157657   -.0003307
+             |
+   Code_Prov |
+         12  |    .706406   .0050813   139.02   0.000     .6964468    .7163652
+         13  |   .2126988   .0068713    30.95   0.000     .1992313    .2261662
+         14  |   .7891897   .0089909    87.78   0.000      .771568    .8068115
+         15  |   .2921279   .0076581    38.15   0.000     .2771182    .3071376
+         16  |   .4319353   .0115692    37.33   0.000       .40926    .4546106
+         17  |  -.5675531   .0054441  -104.25   0.000    -.5782233   -.5568829
+         18  |   .2853706   .0050955    56.00   0.000     .2753836    .2953576
+         19  |  -.1515945   .0070432   -21.52   0.000    -.1653988   -.1377901
+         21  |   .2700658   .0103629    26.06   0.000     .2497547    .2903768
+         31  |   1.403479   .0168993    83.05   0.000     1.370357    1.436601
+         32  |    1.18446   .0086836   136.40   0.000     1.167441     1.20148
+         33  |    .899056   .0057972   155.08   0.000     .8876937    .9104183
+         34  |  -.0206348   .0055516    -3.72   0.000    -.0315158   -.0097537
+         35  |   1.222483    .005125   238.53   0.000     1.212438    1.232527
+         36  |   .6144293   .0112291    54.72   0.000     .5924206     .636438
+         51  |   .1154511    .011567     9.98   0.000     .0927801     .138122
+         52  |  -.1927757    .013747   -14.02   0.000    -.2197194   -.1658321
+         53  |  -.5149433   .0111774   -46.07   0.000    -.5368506    -.493036
+         61  |   .0548368   .0087018     6.30   0.000     .0377817     .071892
+         62  |  -.1188361   .0088593   -13.41   0.000    -.1361999   -.1014722
+         63  |     .18739   .0050719    36.95   0.000     .1774493    .1973307
+         64  |   .9266141   .0159265    58.18   0.000     .8953988    .9578294
+         65  |  -.0612058   .0104271    -5.87   0.000    -.0816425   -.0407691
+         71  |  -.1098996   .0071575   -15.35   0.000     -.123928   -.0958712
+         72  |   .0653424    .025919     2.52   0.012      .014542    .1161427
+         73  |   .4135967   .0047652    86.80   0.000     .4042572    .4229362
+         74  |  -.1505589   .0060536   -24.87   0.000    -.1624237    -.138694
+         75  |   -.624998   .0072032   -86.77   0.000     -.639116   -.6108799
+         76  |  -.5452357   .0097429   -55.96   0.000    -.5643314     -.52614
+         81  |  -.6208569   .0045259  -137.18   0.000    -.6297275   -.6119863
+         82  |  -.7165161   .0409338   -17.50   0.000    -.7967448   -.6362873
+         91  |   .1134143   .0143096     7.93   0.000     .0853681    .1414605
+         94  |   .2136858   .0229269     9.32   0.000     .1687498    .2586217
+             |
+        Year |
+       2018  |   .0216235    .003305     6.54   0.000     .0151458    .0281011
+       2019  |   .0466488   .0036442    12.80   0.000     .0395062    .0537914
+       2020  |    .041475   .0033111    12.53   0.000     .0349854    .0479646
+       2021  |   .0563772   .0042541    13.25   0.000     .0480394    .0647151
+       2022  |   .0884296   .0056601    15.62   0.000      .077336    .0995232
+       2023  |   .1162283   .0065427    17.76   0.000     .1034049    .1290516
+       2024  |   .1412801   .0072974    19.36   0.000     .1269776    .1555827
+             |
+       _cons |   4.772511   .0060842   784.40   0.000     4.760587    4.784436
+------------------------------------------------------------------------------
+
+. estimates store Upah
+
+. display as text _n "pembanding upah (bukan temuan 13_Sectoral):"
+
+pembanding upah (bukan temuan 13_Sectoral):
+
+. display as text "  primer   " as result %8.4f _b[zW_primer]   as text "  t = " as result %5.2f (_b[zW_primer]/_se[zW_primer])
+  primer     0.0116  t =  3.40
+
+. display as text "  sekunder " as result %8.4f _b[zW_sekunder] as text "  t = " as result %5.2f (_b[zW_sekunder]/_se[zW_sekunder])
+  sekunder   0.0023  t =  0.63
+
+. display as text "  tersier  " as result %8.4f _b[zW_tersier]  as text "  t = " as result %5.2f (_b[zW_tersier]/_se[zW_tersier])
+  tersier   -0.0080  t = -2.04
+
+. 
+. tempfile panel prov24
+
+. save `panel', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000009 not found)
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.000009 saved as .dta format
+
+. 
+. * =============================================================================
+. * 4. LUARAN
+. * =============================================================================
+. 
+. tempfile model_d
+
+. postfile M str12 model str24 term double b se t p N using `model_d', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.00000b not found)
+
+. foreach mod in M1 M2 M3 M4 M5 Paparan Upah {
+  2.         estimates restore `mod'
+  3.         local n = e(N)
+  4.         foreach term in inv_primer_l1 inv_sekunder_l1 inv_C_l1 inv_def_l1 inv_tva_l1 ///
+>                 d_logK d_logL logtfp_it_l1 ///
+>                 BY_primer_l1 BY_sekunder_l1 BY_tva_l1 BY_tlain_l1 ///
+>                 zW_primer zW_sekunder zW_tersier {
+  5.                 capture local bb = _b[`term']
+  6.                 if _rc continue
+  7.                 local ss = _se[`term']
+  8.                 post M ("`mod'") ("`term'") (`bb') (`ss') (`bb'/`ss') ///
+>                         (2*normal(-abs(`bb'/`ss'))) (`n')
+  9.         }
+ 10. }
+(results M1 are active now)
+(results M2 are active now)
+(results M3 are active now)
+(results M4 are active now)
+(results M5 are active now)
+(results Paparan are active now)
+(results Upah are active now)
+
+. postclose M
+
+. 
+. use `level_long', clear
+
+. label variable tahun     "tahun"
+
+. label variable kelompok  "kelompok"
+
+. label variable pekerja   "pangsa tenaga kerja"
+
+. label variable va        "pangsa nilai tambah = komposisi level produktivitas"
+
+. label variable rel_lp    "produktivitas tenaga kerja relatif terhadap agregat"
+
+. label variable gap       "pangsa nilai tambah minus pangsa kerja"
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Level") firstrow(variables) replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. 
+. use `shift_d', clear
+
+. label variable skema "3 = mega, 4 = tersier dipecah, 17 = sektor"
+
+. label variable within_share  "pangsa kenaikan P dari dalam sektor"
+
+. label variable between_share "pangsa kenaikan P dari perpindahan kerja"
+
+. label variable dinamik_share "pangsa kenaikan P dari interaksi"
+
+. label variable total_share   "pangsa kenaikan P, jumlah tiga suku"
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Shiftshare") firstrow(variables) sheetreplace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. 
+. use `op_d', clear
+
+. label variable kovarians    "suku (pangsa - 1/G) x (produktivitas - rerata)"
+
+. label variable pangsa_dari_P "kovarians / produktivitas agregat"
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Alokasi") firstrow(variables) sheetreplace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. 
+. use `cf_d', clear
+
+. label variable dlog_tfp "perubahan log TFP bila K dan L agregat tetap"
+
+. label variable persen_P "persen terhadap produktivitas agregat 2024"
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Kontrafaktual") firstrow(variables) sheetreplace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. 
+. use `model_d', clear
+
+. label variable b "koefisien"
+
+. label variable se "SE cluster provinsi"
+
+. label variable p "p dua sisi, aproksimasi normal"
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Model") firstrow(variables) sheetreplace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. 
+. use `panel', clear
+
+. keep if Year == 2024
+(238 observations deleted)
+
+. keep Code_Prov Pre_Prov Pprov ///
+>         th_primer va_primer rel_primer gap_primer ///
+>         th_sekunder va_sekunder rel_sekunder gap_sekunder ///
+>         th_tersier va_tersier rel_tersier gap_tersier ///
+>         th_tva va_tva rel_tva gap_tva ///
+>         th_tlain va_tlain rel_tlain gap_tlain ///
+>         th_A va_A rel_A gap_A ///
+>         th_B va_B rel_B gap_B ///
+>         th_C va_C rel_C gap_C ///
+>         dlog_A_C dlog_A_tva
+
+. order Code_Prov Pre_Prov
+
+. export excel using "${outdir}/13_Sectoral.xlsx", sheet("Provinsi_2024") firstrow(variables) sheetreplace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.xlsx saved
+
+. save `prov24', replace
+(file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.00000a not found)
+file /var/folders/97/_t7418h90z7_plcs1h17z0vh0000gn/T//St81470.00000a saved as .dta format
+
+. 
+. use `panel', clear
+
+. keep Code_Prov Pre_Prov Year logtfp_it logtfp_it_crs log_Y log_K log_L ///
+>         Ytot Ltot Pprov ///
+>         th_primer va_primer rel_primer gap_primer ///
+>         th_sekunder va_sekunder rel_sekunder gap_sekunder ///
+>         th_tersier va_tersier rel_tersier ///
+>         th_tva va_tva rel_tva gap_tva ///
+>         th_tlain va_tlain rel_tlain gap_tlain ///
+>         inv_primer inv_sekunder inv_tva inv_tlain inv_C inv_def ///
+>         inv_primer_l1 inv_sekunder_l1 inv_tva_l1 inv_C_l1 inv_def_l1 ///
+>         d_logtfp d_logK d_logL logtfp_it_l1 ///
+>         BY_primer BY_sekunder BY_tva BY_tlain ///
+>         BY_primer_l1 BY_sekunder_l1 BY_tva_l1 BY_tlain_l1 ///
+>         dlog_A_C dlog_A_tva samp
+
+. order Code_Prov Pre_Prov Year
+
+. compress
+  variable Ytot was double now long
+  variable Ltot was double now long
+  (2,176 bytes saved)
+
+. save "${outdir}/13_Sectoral.dta", replace
+file /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.dta saved
+
+. 
+. display as text _n "saved: $outdir"
+
+saved: /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral
+
+. log close
+      name:  <unnamed>
+       log:  /Users/athamawardi/Desktop/Research-Projects/RDSI_Kemeninves/02 Code/TFP/../../01 Data/TFP/output/sectoral/13_Sectoral.log
+  log type:  text
+ closed on:  14 Oct 2026, 11:04:32
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
