@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Ruang skenario{% endblock %}
+{% block isi %}
+<div class="pilih-baris" style="justify-content:space-between;margin-bottom:12px">
+  <h1 style="margin:0">Ruang skenario</h1>
+  <div class="aksi">
+    <a class="btn" href="{% url 'simulasi:baru' %}">+ Skenario baru</a>
+    <form method="post" action="{% url 'simulasi:templat_semua' %}" onsubmit="return confirm('Bangun ulang semua paket bawaan dengan data aktif dan parameter bawaan?')">{% csrf_token %}<button class="btn garis">{% if ada_bawaan %}Perbarui{% else %}Buat{% endif %} paket bawaan</button></form>
+  </div>
+</div>
+
+<div class="alat-ruang" id="pil-kolom">
+  <span class="kecil abu">Tampilkan:</span>
+  {% for sk, f in kolom %}<label class="pil" data-pk="{{ sk.pk }}"><input type="checkbox" checked> {{ sk.label }}</label>{% endfor %}
+  <span class="kecil abu" style="margin-left:auto">Klik judul kelompok untuk melipat.</span>
+</div>
+
+<form method="post" id="form-ruang">
+  {% csrf_token %}
+  <input type="hidden" name="nama_kustom" id="nama-kustom">
+  <input type="hidden" name="next" value="{{ request.path }}">
+  <div class="ruang">
+  <table class="tabel" id="kisi">
+    <thead><tr><th>Asumsi</th>
+      {% for sk, f in kolom %}<th class="kol{% if sk_aktif and sk.pk == sk_aktif.pk %} aktif-kol{% endif %}" data-pk="{{ sk.pk }}">
+        <span class="nm">{{ sk.label }}</span>
+        <span class="lencana {{ sk.kelompok }}">{% if sk.bawaan %}Estimasi RDSI{% else %}Kustom{% endif %}</span>
+        <span class="lencana {{ sk.status }}" title="{{ sk.get_status_display }}">{% if sk.status == "selesai" %}terkini{% elif sk.status == "usang" %}usang{% elif sk.status == "gagal" %}gagal{% else %}baru{% endif %}</span>
+        {% if sk_aktif and sk.pk == sk_aktif.pk %}<div class="kecil">● aktif</div>{% endif %}
+      </th>{% endfor %}
+    </tr></thead>
+    <tbody>
+    {% for b in baris %}
+      {% if b.jenis == "grup" %}
+        <tr class="grup" data-grup="{{ b.grup }}" style="cursor:pointer"><td><span class="lipat">▾</span> {% if b.bantuan %}<span class="istilah" title="{{ b.bantuan }}">{{ b.label }}</span>{% else %}{{ b.label }}{% endif %}</td>{% for sk, f in kolom %}<td data-pk="{{ sk.pk }}"></td>{% endfor %}</tr>
+      {% else %}
+        <tr class="{% if b.jenis == 'tahun' %}baris-tahun{% endif %}" data-anggota="{{ b.grup }}">
+          <td class="label-baris">{{ b.label }}</td>
+          {% for pk, c, ubah in b.sel %}
+            {% if b.jenis == "hasil" %}
+              <td class="hasil" data-pk="{{ pk }}">{% if c %}{% if c.1 == "%" %}{{ c.0|persen }}{% else %}<span class="{% if c.0 < 0 %}negatif{% endif %}">{{ c.0|angka:c.1 }}</span>{% endif %}{% else %}–{% endif %}</td>
+            {% elif b.jenis == "teks" %}
+              <td class="kecil" data-pk="{{ pk }}">{{ c }}</td>
+            {% else %}
+              <td data-pk="{{ pk }}"{% if ubah %} class="disesuaikan" title="Disesuaikan dari nilai awal paket"{% endif %}>{% if c %}{{ c }}{% else %}<span class="abu">–</span>{% endif %}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endif %}
+    {% endfor %}
+      <tr class="total"><td>Aksi</td>
+        {% for sk, f in kolom %}<td class="aksi-kol" data-pk="{{ sk.pk }}">
+          {% if sk.hasil %}<a class="btn kecil garis" href="{% url 'simulasi:detail' sk.pk %}">Lihat hasil</a>
+          <button class="btn kecil garis" formaction="{% url 'simulasi:aktif' %}" name="pk" value="{{ sk.pk }}">Jadikan aktif</button>{% endif %}
+          <button class="btn kecil" formaction="{% url 'simulasi:jalankan' sk.pk %}">Jalankan</button>
+          <button class="btn kecil garis simpan-kustom" formaction="{% url 'simulasi:simpan_kustom' sk.pk %}" data-nama="{{ sk.nama }}">Simpan sbg kustom</button>
+          <a class="btn kecil garis" href="{% url 'simulasi:sunting' sk.pk %}">Shock &amp; lengkap</a>
+          {% if not sk.bawaan %}<button class="btn kecil merah" formaction="{% url 'simulasi:hapus' sk.pk %}" onclick="return confirm('Hapus {{ sk.nama|escapejs }}?')">Hapus</button>{% endif %}
+        </td>{% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="aksi" style="margin-top:12px">
+    <button class="btn" name="jalankan" value="1">Simpan perubahan dan jalankan</button>
+    <button class="btn garis" name="simpan" value="1">Simpan</button>
+    <span class="kecil abu" id="info-ubah"></span>
+  </div>
+</form>
+
+<div class="kartu" style="margin-top:16px">
+  <h2>Paket bawaan</h2>
+  <p class="kecil abu">Tangga kebijakan dari business as usual ke kebutuhan penuh 8%. Tiap paket mewarisi asumsi paket dasarnya lalu menambah satu kelompok kebijakan, sehingga selisih antarpaket terbaca sebagai efek kebijakan itu. Asumsi paket dapat diubah langsung di kisi; perubahan ikut diwariskan ke paket turunannya.</p>
+  <table class="tabel">
+    <thead><tr><th>Singkat</th><th>Paket</th><th>Basis</th><th>Isi</th><th>Disesuaikan</th><th></th></tr></thead>
+    <tbody>
+    {% for t, ubah in paket %}
+      <tr><td><b>{{ t.singkat }}</b></td><td style="white-space:nowrap">{{ t.nama }}</td>
+        <td class="kecil abu">{% if t.dasar %}{% for u, _ in paket %}{% if u.kode == t.dasar %}{{ u.singkat }}{% endif %}{% endfor %}{% else %}–{% endif %}</td>
+        <td class="kecil">{{ t.ringkas }}</td>
+        <td class="kecil">{% if ubah %}<span class="disesuaikan-teks">{{ ubah|join:", " }}</span>{% else %}<span class="abu">–</span>{% endif %}</td>
+        <td style="white-space:nowrap"><form method="post" action="{% url 'simulasi:templat_buat' t.kode %}" style="display:inline">{% csrf_token %}<button class="btn kecil garis">Bangun ulang</button></form>
+          {% if ubah %}<form method="post" action="{% url 'simulasi:templat_kembalikan' t.kode %}" style="display:inline" onsubmit="return confirm('Kembalikan {{ t.singkat|escapejs }} ke nilai awal? Paket turunannya ikut dibangun ulang.')">{% csrf_token %}<button class="btn kecil garis">Kembalikan</button></form>{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block skrip %}
+<script>
+(() => {
+  const form = document.getElementById("form-ruang");
+  const kisi = document.getElementById("kisi");
+  // Tandai sel yang berubah
+  const awal = new Map();
+  form.querySelectorAll("#kisi input, #kisi select").forEach((el) => awal.set(el, el.value));
+  const info = document.getElementById("info-ubah");
+  form.addEventListener("input", (e) => {
+    const el = e.target;
+    if (!awal.has(el)) return;
+    el.classList.toggle("ubah", el.value !== awal.get(el));
+    const n = new Set(Array.from(form.querySelectorAll(".ubah")).map((x) => x.closest("td").dataset.pk)).size;
+    info.textContent = n ? `${n} skenario berubah` : "";
+  });
+  // Lipat kelompok baris
+  kisi.querySelectorAll("tr.grup").forEach((tr) => {
+    const g = tr.dataset.grup;
+    const set = (tutup) => {
+      kisi.querySelectorAll(`tr[data-anggota="${g}"]`).forEach((r) => r.classList.toggle("tersembunyi", tutup));
+      tr.querySelector(".lipat").textContent = tutup ? "▸" : "▾";
+    };
+    if (g === "komposisi" || g.startsWith("jl_") || (g.startsWith("dt_") && g !== "dt_dz")) set(true);
+    tr.addEventListener("click", () => set(tr.querySelector(".lipat").textContent === "▾"));
+  });
+  // Kolom tampil (disimpan di peramban)
+  const KUNCI = "ruang-sembunyi";
+  const sembunyi = new Set(JSON.parse(localStorage.getItem(KUNCI) || "[]"));
+  const terapkan = () => {
+    kisi.querySelectorAll("[data-pk]").forEach((c) => { c.hidden = sembunyi.has(c.dataset.pk); });
+    document.querySelectorAll("#pil-kolom .pil").forEach((p) => {
+      p.classList.toggle("mati", sembunyi.has(p.dataset.pk));
+      p.querySelector("input").checked = !sembunyi.has(p.dataset.pk);
+    });
+    localStorage.setItem(KUNCI, JSON.stringify([...sembunyi]));
+  };
+  document.querySelectorAll("#pil-kolom .pil input").forEach((cb) => cb.addEventListener("change", () => {
+    const pk = cb.closest(".pil").dataset.pk;
+    cb.checked ? sembunyi.delete(pk) : sembunyi.add(pk);
+    terapkan();
+  }));
+  terapkan();
+  // Simpan sebagai kustom: minta nama
+  form.querySelectorAll(".simpan-kustom").forEach((b) => b.addEventListener("click", (e) => {
+    const nama = prompt("Nama skenario kustom:", b.dataset.nama + " (kustom)");
+    if (nama === null) { e.preventDefault(); return; }
+    document.getElementById("nama-kustom").value = nama;
+  }));
+})();
+</script>
+{% endblock %}

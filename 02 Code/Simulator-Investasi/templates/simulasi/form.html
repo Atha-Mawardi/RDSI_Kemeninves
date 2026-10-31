@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}{% if sk %}Ubah {{ sk.nama }}{% else %}Skenario baru{% endif %}{% endblock %}
+{% block isi %}
+<h1>{% if sk %}Ubah skenario: {{ sk.nama }}{% else %}Skenario baru{% endif %}</h1>
+<form method="post">
+  {% csrf_token %}
+  {% if form.errors %}<div class="pesan error">Periksa isian bertanda merah.{{ form.non_field_errors }}</div>{% endif %}
+  <div class="tab" data-grup="form">
+    {% for kode, judul, fs in form.bagian %}<button type="button" data-tab="b-{{ kode|slugify }}" class="{% if forloop.first %}aktif{% endif %}">{{ kode }}</button>{% endfor %}
+  </div>
+  {% for kode, judul, fs in form.bagian %}
+  <div class="panel-tab kartu {% if forloop.first %}aktif{% endif %}" id="b-{{ kode|slugify }}" data-grup="form">
+    <h2>{{ judul }}</h2>
+    {% if kode == "Investasi" %}
+      <p class="kecil abu">
+        <b>Investasi dasar</b>: rencana realisasi PMA+PMDN dasar (misalnya target RPJMN/BKPM). Kosong = tren historis.
+        <b>Investasi tambahan</b>: investasi yang ingin diuji, di atas investasi dasar. Skenario menghitung laju tanpa penambahan investasi dan laju dengan penambahan investasi, lalu membandingkannya dengan sasaran.
+      </p>
+      <table class="tabel neraca" style="max-width:560px">
+        <thead><tr><th>Tahun</th><th>Investasi Dasar (triliun Rp)</th><th>Investasi Tambahan (triliun Rp)</th></tr></thead>
+        <tbody>{% for th, a1, a2 in form.baris_investasi %}<tr><td>{{ th }}</td><td>{{ a1 }}{{ a1.errors }}</td><td>{{ a2 }}{{ a2.errors }}</td></tr>{% endfor %}</tbody>
+      </table>
+    {% elif kode == "Jalur & shock" %}
+      <div class="grid g-7-5">
+        <div>
+          <h3>Jalur per tahun</h3>
+          <p class="kecil abu">Isi tahun yang nilainya berbeda dari asumsi konstan skenario; tahun kosong memakai nilai konstan.
+            <b>Sasaran pertumbuhan</b> menggantikan sasaran nasional pada tahun itu (rata-ratanya menjadi sasaran periode). <b>Pengali laju TFP</b> mengalikan laju TFP
+            tahun itu (1 = tren, 0,5 = separuh). <b>Laju tren PMA+PMDN</b> menggantikan laju tren nominal realisasi tahun itu.</p>
+          <div class="gulir" style="max-height:none">
+          <table class="tabel neraca rapat" id="tabel-jalur">
+            <thead><tr><th>Jalur</th>{% for th in form.tahun %}<th class="n">{{ th }}</th>{% endfor %}<th>Isi bertahap</th></tr></thead>
+            <tbody>
+            {% for kunci, label, sel in form.baris_jalur %}
+              <tr data-kunci="{{ kunci }}"><td style="white-space:nowrap">{{ label }}</td>{% for f in sel %}<td>{{ f }}{{ f.errors }}</td>{% endfor %}
+                <td style="white-space:nowrap"><input type="number" step="any" class="sel-kecil awal" placeholder="awal" style="width:64px">
+                  <input type="number" step="any" class="sel-kecil akhir" placeholder="akhir" style="width:64px">
+                  <button type="button" class="btn kecil garis isi">Isi</button> <button type="button" class="btn kecil garis kosong">×</button></td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div>
+          <h3>Bagaimana shock bekerja</h3>
+          <p class="kecil abu">Shock adalah deviasi level yang mulai pada tahunnya lalu meluruh: besar × persistensi<sup>tahun ke-n</sup>.
+            Persistensi 1 = permanen, 0,5 = separuh hilang tiap tahun, 0 = hanya satu tahun. Berlaku pada laju tanpa dan dengan penambahan investasi
+            dan kebutuhan, sehingga kebutuhan investasi ikut naik bila shock negatif.</p>
+          <ul class="kecil abu" style="margin:0;padding-left:18px">
+            <li><b>TFP</b>: level produktivitas (mis. −1% = gangguan rantai pasok).</li>
+            <li><b>PDRB langsung</b>: output tanpa lewat TFP (mis. harga komoditas, bencana).</li>
+            <li><b>Tenaga kerja</b>: level tenaga kerja, dikalikan elastisitas b2.</li>
+            <li><b>Realisasi PMA+PMDN</b>: bagian investasi dasar dan tambahan yang terealisasi (mis. −15% = penundaan proyek).</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="margin-top:14px">Shock</h3>
+      <table class="tabel neraca rapat">
+        <thead><tr><th>Nama</th><th>Jenis</th><th>Tahun mulai</th><th>Besar (%)</th><th>Persistensi (0–1)</th><th>Cakupan</th></tr></thead>
+        <tbody>
+        {% for baris in form.baris_kejutan %}<tr>{% for f in baris %}<td>{{ f }}{{ f.errors }}</td>{% endfor %}</tr>{% endfor %}
+        </tbody>
+      </table>
+      <p class="kecil abu">Simpan untuk menambah baris shock (maksimal 8).</p>
+    {% elif kode == "Determinan" %}
+      <div class="grid g-7-5">
+        <div>
+          <div class="bidang" style="max-width:360px">
+            <label for="{{ form.set_determinan.id_for_label }}">{{ form.set_determinan.label|capfirst }}</label>{{ form.set_determinan }}{{ form.set_determinan.errors }}
+          </div>
+          <table class="tabel neraca rapat" style="margin-top:10px">
+            <thead><tr><th>Pilar</th>{% for k in form.kolom_determinan %}<th>{{ k }}</th>{% endfor %}</tr></thead>
+            <tbody>
+            {% for p, nama, sel in form.baris_determinan %}<tr><td><b>{{ nama }}</b></td>{% for f in sel %}<td>{{ f }}{{ f.errors }}</td>{% endfor %}</tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Cara kerja</h3>
+          <ul class="kecil abu" style="margin:0;padding-left:18px">
+            <li><b>Perubahan</b>: seberapa jauh indikator naik di atas tren historis, dalam simpangan baku antarprovinsi (1 = selisih khas antara satu provinsi dan rata-rata provinsi; artinya dalam satuan asli ada di kolom "1 simpangan baku ≈"). Berlaku untuk semua indikator pilar, kecuali yang diisi sendiri di tabel indikator.</li>
+            <li><b>Jeda</b> dan <b>lama menuju efek penuh</b>: efek ke TFP mulai setelah jeda, lalu naik bertahap. Kosong = asumsi awal (angka abu-abu).</li>
+            <li><b>Porsi</b> dan <b>biaya naik 1 simpangan baku</b>: bila keduanya diisi, perubahan dihitung dari dana (porsi × total investasi tambahan ÷ biaya). Dana ini bagian dari investasi tambahan, jadi langsung masuk modal pada tahun dibelanjakan, sedangkan efek TFP-nya menyusul.</li>
+            <li>Efek berlaku pada laju dengan penambahan investasi dan kebutuhan, tidak pada laju tanpa penambahan investasi.</li>
+          </ul>
+        </div>
+      </div>
+      <h3 style="margin-top:14px">Per indikator</h3>
+      <p class="kecil abu">Koefisien = perubahan log TFP bila indikator naik 1 simpangan baku. Kolom "1 simpangan baku ≈" menerjemahkannya ke satuan asli di sekitar rata-rata provinsi 2017–2024. Koefisien dapat diubah di halaman Estimasi.</p>
+      <div class="grid g2" style="align-items:start">
+      {% for kolom in form.indikator_kolom %}
+      <table class="tabel neraca rapat">
+        <thead><tr><th>Indikator</th><th>Satuan</th><th class="n">Koefisien</th><th class="n">Rata-rata</th><th class="n">1 simpangan baku ≈</th><th>Perubahan (× simpangan baku)</th></tr></thead>
+        <tbody>
+        {% for nama, isi in kolom %}
+          <tr class="kepala-grup"><td colspan="6">{{ nama }}</td></tr>
+          {% for ind, d, f in isi %}<tr><td>{{ ind.label }}</td><td class="abu">{{ ind.satuan }}</td><td class="n">{{ ind.koef|angka:3 }}</td>
+            <td class="n">{{ ind.rata|ringkas }}</td><td class="n">{% if d > 0 %}+{% endif %}{{ d|ringkas }}</td><td>{{ f }}{{ f.errors }}</td></tr>{% endfor %}
+        {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+      </div>
+    {% else %}
+      {% if kode == "Sektoral" %}<p class="kecil abu">Komposisi investasi tambahan (primer/sekunder/jasa bernilai tambah/tersier lain) bebas skala, dinormalkan. Kosongkan keempatnya untuk memakai komposisi historis tiap provinsi.</p>{% endif %}
+      <div class="grid g3">
+      {% for f in fs %}
+        <div class="bidang" {% if f.name == "deskripsi" %}style="grid-column:1/-1"{% endif %}>
+          {% if f.field.widget.input_type == "checkbox" %}<label>{{ f }} {{ f.label|capfirst }}</label>{% else %}<label for="{{ f.id_for_label }}">{{ f.label|capfirst }}</label>{{ f }}{% endif %}
+          {% if f.help_text %}<div class="bantuan">{{ f.help_text }}</div>{% endif %}
+          {{ f.errors }}
+        </div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <div class="aksi">
+    <button class="btn" name="jalankan" value="1">Simpan dan jalankan</button>
+    <button class="btn garis" name="simpan" value="1">Simpan</button>
+    {% if sk %}<a class="btn garis" href="{% url 'simulasi:asumsi_provinsi' sk.pk %}">Asumsi per provinsi</a>
+    <a class="btn garis" href="{% url 'simulasi:detail' sk.pk %}">Batal</a>{% else %}<a class="btn garis" href="{% url 'simulasi:daftar' %}">Batal</a>{% endif %}
+  </div>
+</form>
+{% endblock %}
+{% block skrip %}
+<script>
+  // Buka tab pertama yang berisi galat
+  const galat = document.querySelector(".panel-tab .errorlist");
+  if (galat) document.querySelector(`[data-tab="${galat.closest('.panel-tab').id}"]`).click();
+  // Isi bertahap: interpolasi linear dari nilai awal ke akhir pada semua tahun baris itu
+  document.querySelectorAll("#tabel-jalur tr[data-kunci]").forEach((tr) => {
+    const sel = Array.from(tr.querySelectorAll("td input[name^='jl_']"));
+    tr.querySelector(".isi").addEventListener("click", () => {
+      const a = parseFloat(tr.querySelector(".awal").value), b = parseFloat(tr.querySelector(".akhir").value);
+      if (Number.isNaN(a) || Number.isNaN(b)) return;
+      sel.forEach((inp, i) => { inp.value = +(a + (b - a) * (sel.length > 1 ? i / (sel.length - 1) : 1)).toFixed(3); });
+    });
+    tr.querySelector(".kosong").addEventListener("click", () => sel.forEach((inp) => { inp.value = ""; }));
+  });
+</script>
+{% endblock %}

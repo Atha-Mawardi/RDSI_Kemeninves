@@ -1,0 +1,522 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}{{ sk.nama }}{% endblock %}
+{% block isi %}
+<h1>{{ sk.nama }} {% if sk.singkat %}<span class="lencana {{ sk.kelompok }}">{{ sk.singkat }}</span> {% endif %}<span class="lencana {{ sk.kelompok }}">{{ sk.get_kelompok_display }}</span> <span class="lencana {{ sk.status }}">{{ sk.get_status_display }}</span>{% if sk_aktif and sk.pk == sk_aktif.pk %} <span class="lencana aktif">● skenario aktif</span>{% endif %}</h1>
+<p class="sub">{{ sk.tahun_dasar }}→{{ sk.tahun_target }} · sasaran {% if data.meta.jalur.sasaran %}bertahap, rata-rata {{ rg.g_rata_sasaran|angka:2 }}{% else %}{{ sk.sasaran|angka:1 }}{% endif %}%/thn ({{ sk.get_mode_sasaran_display|lower }}) · data #{{ sk.versi_data_id }}{% if versi_aktif and sk.versi_data_id != versi_aktif.pk %} <span class="lencana usang" title="Data aktif sekarang #{{ versi_aktif.pk }}. Perbarui paket bawaan atau ubah versi data skenario ini lalu jalankan ulang.">bukan data aktif (#{{ versi_aktif.pk }})</span>{% endif %}</p>
+{% if sk.deskripsi %}<p class="catatan">{{ sk.deskripsi }}</p>{% endif %}
+
+<div class="aksi" style="margin-bottom:14px">
+  <form method="post" action="{% url 'simulasi:jalankan' sk.pk %}">{% csrf_token %}<button class="btn">{% if data %}Jalankan ulang{% else %}Jalankan{% endif %}</button></form>
+  <a class="btn garis" href="{% url 'simulasi:sunting' sk.pk %}">Ubah asumsi</a>
+  <a class="btn garis" href="{% url 'simulasi:asumsi_provinsi' sk.pk %}">Asumsi per provinsi{% if sk.override_provinsi %} ({{ sk.override_provinsi|length }}){% endif %}</a>
+  {% if data %}<a class="btn hijau" href="{% url 'simulasi:unduh_hasil' sk.pk %}">Unduh Excel hasil + kalkulator</a>{% endif %}
+  {% if data and not sk_aktif or data and sk.pk != sk_aktif.pk %}<form method="post" action="{% url 'simulasi:aktif' %}">{% csrf_token %}<input type="hidden" name="pk" value="{{ sk.pk }}"><input type="hidden" name="next" value="{{ request.path }}"><button class="btn garis">Jadikan aktif</button></form>{% endif %}
+  <form method="post" action="{% url 'simulasi:simpan_kustom' sk.pk %}" id="f-kustom">{% csrf_token %}<input type="hidden" name="nama_kustom"><button class="btn garis">Simpan sebagai kustom</button></form>
+  {% if not sk.bawaan %}
+  <form method="post" action="{% url 'simulasi:ganti_nama' sk.pk %}" id="f-nama">{% csrf_token %}<input type="hidden" name="nama"><input type="hidden" name="singkat"><button class="btn garis">Ganti nama</button></form>
+  <form method="post" action="{% url 'simulasi:hapus' sk.pk %}" onsubmit="return confirm('Hapus skenario ini?')">{% csrf_token %}<button class="btn merah">Hapus</button></form>
+  {% endif %}
+</div>
+
+{% if sk.status == "usang" %}<div class="pesan warning">Asumsi berubah sejak hasil terakhir dihitung. Jalankan ulang untuk memperbarui.</div>{% endif %}
+
+{% if not data %}
+<div class="kartu sorot">Skenario belum dijalankan.</div>
+{% else %}
+{% with p80=u.kebutuhan_tambahan_kum.p80 %}
+<div class="grid g4">
+  <div class="kpi"><div class="label">Laju tanpa penambahan investasi</div><div class="nilai">{{ rg.g_rata_dasar|angka:2 }}%</div><div class="ket">rata-rata {{ sk.tahun_dasar|add:1 }}–{{ sk.tahun_target }}</div></div>
+  <div class="kpi {% if capai %}baik{% else %}buruk{% endif %}"><div class="label">Laju dengan penambahan investasi</div><div class="nilai">{{ rg.g_rata_skenario|angka:2 }}%</div><div class="ket">sasaran = {{ rg.g_rata_sasaran|angka:2 }}%</div></div>
+  <div class="kpi"><div class="label">Kebutuhan tambahan</div><div class="nilai">{{ rg.kebutuhan_tambahan_kumulatif|angka:0 }} T</div><div class="ket">di atas investasi dasar; batas aman {% if p80 %}{{ p80|angka:0 }}{% else %}–{% endif %} T</div></div>
+  <div class="kpi {% if u.prob_nasional >= 0.8 %}baik{% elif u.prob_nasional < 0.5 %}buruk{% endif %}"><div class="label">Peluang capai sasaran</div><div class="nilai">{% if u %}{{ u.prob_nasional|persen }}{% else %}–{% endif %}</div><div class="ket">{% if u %}{{ u.n_prov_yakin }} dari {{ prov|length }} provinsi ≥ 80% yakin · {{ u.n }} simulasi{% else %}Monte Carlo tidak dijalankan{% endif %}</div></div>
+</div>
+<div class="grid g4" style="margin-top:12px">
+  <div class="kpi"><div class="label">Total Investasi Tambahan</div><div class="nilai">{{ rg.a2_kumulatif|angka:0 }} T</div><div class="ket">kumulatif rencana; terealisasi {{ rg.a2_realisasi_kumulatif|angka:0 }} T</div></div>
+  <div class="kpi {% if rg.selisih_a2 > 0 %}buruk{% else %}baik{% endif %}"><div class="label">Selisih kebutuhan</div><div class="nilai">{{ rg.selisih_a2|angka:0 }} T</div><div class="ket">kebutuhan − investasi tambahan; {% if rg.selisih_a2 > 0 %}belum cukup{% else %}sudah cukup{% endif %}</div></div>
+  <div class="kpi"><div class="label">Laju PMTB riil dibutuhkan</div><div class="nilai">{{ rg.g_K_kebutuhan|angka:1 }}%</div><div class="ket">tren dasar {{ rg.g_K_tren|angka:1 }}%/thn</div></div>
+  <div class="kpi"><div class="label">Indeks TFP {{ sk.tahun_target }}</div><div class="nilai">{{ rg.tfp_T_skenario|angka:1 }}</div><div class="ket">{{ sk.tahun_dasar }} = 100; tanpa penambahan {{ rg.tfp_T_dasar|angka:1 }}</div></div>
+</div>
+{% endwith %}
+
+<div class="tab" data-grup="hasil" style="margin-top:18px">
+  <button data-tab="t-nas" class="aktif">Nasional</button>
+  <button data-tab="t-prov">Provinsi</button>
+  <button data-tab="t-sek">Sektoral &amp; TFP</button>
+  <button data-tab="t-u">Confidence</button>
+  <button data-tab="t-hitung">Hitung &amp; kumpulan</button>
+  <button data-tab="t-asumsi">Asumsi</button>
+</div>
+
+<!-- ============ Nasional -->
+<div class="panel-tab aktif" id="t-nas" data-grup="hasil">
+  <div class="grid g2">
+    <div class="kartu"><h2>Laju pertumbuhan dan sasaran (%/thn)</h2><div class="grafik"><canvas id="g-laju"></canvas></div></div>
+    <div class="kartu"><h2>Realisasi PMA+PMDN per tahun (triliun Rp)</h2><div class="grafik"><canvas id="g-inv"></canvas></div></div>
+    <div class="kartu"><h2>PDRB riil nasional (triliun Rp, harga 2010)</h2><div class="grafik"><canvas id="g-pdrb"></canvas></div></div>
+    <div class="kartu"><h2>Sumber pertumbuhan skenario (poin persen/thn)</h2><div class="grafik"><canvas id="g-kontrib"></canvas></div>
+      <p class="kecil abu">Modal = b1 × laju PMTB riil; TK = b2 × laju tenaga kerja; TFP tren = laju TFP asumsi; sektoral = bonus komposisi investasi (β); realokasi = perpindahan tenaga kerja dari pertanian; determinan = efek perubahan determinan TFP yang sudah terasa; shock = efek bersih shock TFP/PDRB/TK per tahun.</p></div>
+  </div>
+  {% if data.meta.kejutan or data.meta.jalur %}
+  <div class="grid g-7-5">
+    <div class="kartu"><h2>Shock dan jalur per tahun</h2><div class="grafik"><canvas id="g-kejutan"></canvas></div>
+      <p class="kecil abu">Batang: deviasi level PDRB nasional akibat shock TFP, PDRB, dan tenaga kerja (% terhadap tanpa shock). Garis: faktor realisasi PMA+PMDN (1 = tanpa shock investasi, sumbu kanan). Sasaran per tahun ada di grafik laju.</p></div>
+    <div class="kartu">
+      <h2>Daftar shock dan jalur</h2>
+      {% if data.meta.kejutan %}
+      <table class="tabel">
+        <thead><tr><th>Shock</th><th>Jenis</th><th class="n">Tahun</th><th class="n">Besar</th><th class="n">Persistensi</th><th>Cakupan</th></tr></thead>
+        <tbody>{% for k in data.meta.kejutan %}<tr><td>{{ k.nama|default:"–" }}</td><td>{{ jenis_kejutan|ambil:k.jenis }}</td><td class="n">{{ k.tahun }}</td><td class="n {% if k.besar < 0 %}buruk{% endif %}">{{ k.besar|angka:1 }}%</td><td class="n">{{ k.persistensi|angka:2 }}</td><td>{{ k.cakupan }}</td></tr>{% endfor %}</tbody>
+      </table>
+      {% endif %}
+      {% if data.meta.jalur %}
+      <table class="tabel" style="margin-top:10px">
+        <thead><tr><th>Jalur</th>{% for t in data.nasional.tahun|slice:"1:" %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for kunci, isi in data.meta.jalur.items %}<tr><td>{{ nama_jalur|ambil:kunci }}</td>{% for t in data.nasional.tahun|slice:"1:" %}<td class="n">{{ isi|ambil:t|angka:2 }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+      </table>
+      <p class="kecil abu">Tahun bertanda – memakai nilai konstan skenario.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+  <div class="kartu">
+    <h2>Tabel nasional</h2>
+    <div class="gulir"><table class="tabel">
+      <thead><tr><th>Tahun</th><th class="n">{% istilah "bn" %}</th><th class="n">{% istilah "xn" %}</th><th class="n">{% istilah "sasaran" %}</th><th class="n">{% istilah "tren_inv" %}</th><th class="n">{% istilah "a1" %}</th><th class="n">{% istilah "a2" %}</th><th class="n">{% istilah "keb_inv" %}</th><th class="n">{% istilah "keb" %}</th><th class="n">{% istilah "apbd_tambah" %}</th><th class="n">{% istilah "tfp_bn" %}</th><th class="n">{% istilah "tfp_xn" %}</th></tr></thead>
+      <tbody id="tabel-nas"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ============ Provinsi -->
+<div class="panel-tab" id="t-prov" data-grup="hasil">
+  <div class="grid g-7-5">
+    <div class="kartu">
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:8px">
+        <h2 style="margin:0">Peta provinsi</h2>
+        <select id="pilih-peta">
+          <option value="kebutuhan">Kebutuhan tambahan kumulatif (T Rp)</option>
+          <option value="rasio">Kebutuhan tambahan per tahun (% PDRB nominal)</option>
+          <option value="g_skenario">Laju dengan penambahan investasi (%/thn)</option>
+          <option value="gap">Selisih laju dengan penambahan − sasaran (pp)</option>
+          <option value="prob">Peluang capai sasaran</option>
+          <option value="g_K">Laju PMTB riil dibutuhkan (%/thn)</option>
+          <option value="tfp">Indeks TFP {{ sk.tahun_target }}</option>
+        </select>
+      </div>
+      <div id="peta-prov" class="peta"></div>
+      <div id="ringkas-prov" class="ringkas"></div>
+    </div>
+    <div class="kartu">
+      <h2 id="judul-prov">Klik provinsi di peta</h2>
+      <div class="grafik"><canvas id="g-prov-laju"></canvas></div>
+      <div class="grafik" style="margin-top:10px"><canvas id="g-prov-inv"></canvas></div>
+    </div>
+  </div>
+  {% if papua %}
+  <div class="kartu">
+    <h2>Enam provinsi Papua</h2>
+    <p class="catatan">Papua Barat dan Papua (34 provinsi) dirinci menurut pangsa data rincian
+      {% if pangsa_papua.tahun_pdrb %}{{ pangsa_papua.tahun_pdrb|first }}–{{ pangsa_papua.tahun_pdrb|last }}{% endif %}
+      (PDRB, PMTB{% if pangsa_papua.tahun_pmtb %} {{ pangsa_papua.tahun_pmtb|first }}–{{ pangsa_papua.tahun_pmtb|last }}{% endif %}, PMA/PMDN per sektor, APBD, penduduk untuk tenaga kerja).
+      Sebelum tahun itu pangsa tahun pertama dipakai mundur, sehingga laju historis tiap provinsi baru sama dengan induknya
+      sampai data rincian tersedia; perbedaannya datang dari level (PDRB, PMTB, investasi, APBD, komposisi sektor) dan laju yang teramati sejak pemekaran.
+      Elastisitas tetap dari estimasi 34 provinsi.</p>
+    <div class="gulir">
+    <table class="tabel rapat">
+      <thead><tr><th>Provinsi</th><th class="n">PDRB {{ sk.tahun_dasar }} (T, riil)</th><th class="n">PMA+PMDN {{ sk.tahun_dasar }} (T)</th><th class="n">{% istilah "g_tfp" %}</th><th class="n">{% istilah "sasaran" %}</th><th class="n">{% istilah "bn" %}</th><th class="n">{% istilah "xn" %}</th><th class="n">{% istilah "peluang" %}</th><th class="n">{% istilah "g_pmtb_keb" %}</th><th class="n">{% istilah "keb_kum" "Kebutuhan kumulatif (T)" %}</th><th class="n">{% istilah "pct_pdrb" %}</th><th class="n">{% istilah "a2_alok" "Investasi Tambahan (T)" %}</th></tr></thead>
+      <tbody>
+      {% for p in papua %}
+      <tr{% if p.induk %} class="acuan"{% endif %}>
+        <td style="white-space:nowrap">{% if not p.induk %}&nbsp;&nbsp;↳ {% endif %}{{ p.nama }}</td>
+        <td class="n">{{ p.pdrb0_T|angka:1 }}</td><td class="n">{{ p.inv0_T|angka:2 }}</td>
+        <td class="n">{{ p.g_tfp|angka:2 }}</td><td class="n">{{ p.g_sasaran|angka:2 }}</td><td class="n">{{ p.g_dasar|angka:2 }}</td>
+        <td class="n {% if p.g_skenario >= p.g_sasaran %}baik{% else %}buruk{% endif %}"><b>{{ p.g_skenario|angka:2 }}</b></td>
+        <td class="n">{% if p.prob is not None %}{{ p.prob|persen }}{% else %}–{% endif %}</td>
+        <td class="n">{{ p.g_K_kebutuhan|angka:1 }}</td>
+        <td class="n"><b>{{ p.keb_T|angka:1 }}</b></td><td class="n">{{ p.rasio_kebutuhan_pdrb|angka:1 }}</td><td class="n">{{ p.a2_T|angka:1 }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% for c in pangsa_papua.catatan %}<p class="kecil abu">Koreksi data: {{ c }}</p>{% endfor %}
+  </div>
+  {% endif %}
+  <div class="kartu">
+    <h2>Rincian {{ prov|length }} provinsi</h2>
+    <p class="kecil abu">Uang dalam miliar Rp kecuali disebut lain. Kebutuhan = PMA+PMDN di atas investasi dasar agar provinsi mencapai sasarannya. Klik judul kolom untuk mengurutkan.</p>
+    <div class="gulir" style="max-height:640px">
+    <table class="tabel urut" data-kelompok="1">
+      <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n" data-agregat="jumlah" data-digit="0">PMA+PMDN {{ sk.tahun_dasar }}</th><th class="n">(PMA+PMDN)/PMTB</th><th class="n" data-agregat="jumlah" data-digit="0">PAD</th><th class="n" data-agregat="jumlah" data-digit="0">Belanja APBD</th><th class="n" data-agregat="rata" data-digit="2">{% istilah "g_tfp" %}</th><th class="n" data-agregat="rata" data-digit="2">{% istilah "g_tk" %}</th><th class="n" data-agregat="rata" data-digit="2">{% istilah "sasaran" %}</th><th class="n" data-agregat="rata" data-digit="2">{% istilah "bn" %}</th><th class="n" data-agregat="rata" data-digit="2">{% istilah "xn" %}</th><th class="n">{% istilah "p10_p90" %}</th><th class="n">{% istilah "peluang" %}</th><th class="n" data-agregat="rata" data-digit="1">{% istilah "g_pmtb_keb" %}</th><th class="n" data-agregat="jumlah" data-digit="0">{% istilah "keb_kum" %}</th><th class="n">{% istilah "pct_pdrb" %}</th><th class="n">{% istilah "x_apbd" %}</th><th class="n" data-agregat="jumlah" data-digit="0">{% istilah "a2_alok" %}</th><th class="n" data-agregat="jumlah" data-digit="0">{% istilah "selisih_t" %}</th></tr></thead>
+      <tbody>
+      {% for p in prov %}
+      <tr>
+        <td>{{ p.nama }}</td><td>{{ p.pulau }}</td>
+        <td class="n" data-v="{{ p.inv0 }}">{{ p.inv0|angka:0 }}</td>
+        <td class="n" data-v="{{ p.rasio_inv_pmtb }}">{{ p.rasio_inv_pmtb|angka:2 }}</td>
+        <td class="n" data-v="{{ p.pad }}">{{ p.pad|angka:0 }}</td>
+        <td class="n" data-v="{{ p.belanja_apbd }}">{{ p.belanja_apbd|angka:0 }}</td>
+        <td class="n" data-v="{{ p.g_tfp }}">{{ p.g_tfp|angka:2 }}</td>
+        <td class="n" data-v="{{ p.g_tk }}">{{ p.g_tk|angka:2 }}</td>
+        <td class="n" data-v="{{ p.g_sasaran }}">{{ p.g_sasaran|angka:2 }}</td>
+        <td class="n" data-v="{{ p.g_dasar }}">{{ p.g_dasar|angka:2 }}</td>
+        <td class="n {% if p.g_skenario >= p.g_sasaran %}baik{% else %}buruk{% endif %}" data-v="{{ p.g_skenario }}"><b>{{ p.g_skenario|angka:2 }}</b></td>
+        <td class="n kecil">{% if p.p10 is not None %}{{ p.p10|angka:1 }}–{{ p.p90|angka:1 }}{% endif %}</td>
+        <td class="n" data-v="{{ p.prob|default_if_none:'' }}">{% if p.prob is not None %}{{ p.prob|persen }}{% else %}–{% endif %}</td>
+        <td class="n" data-v="{{ p.g_K_kebutuhan }}">{{ p.g_K_kebutuhan|angka:1 }}</td>
+        <td class="n" data-v="{{ p.kebutuhan_tambahan_kumulatif }}"><b>{{ p.kebutuhan_tambahan_kumulatif|angka:0 }}</b></td>
+        <td class="n" data-v="{{ p.rasio_kebutuhan_pdrb }}">{{ p.rasio_kebutuhan_pdrb|angka:1 }}</td>
+        <td class="n" data-v="{{ p.rasio_kebutuhan_belanja|default_if_none:'' }}">{{ p.rasio_kebutuhan_belanja|angka:2 }}</td>
+        <td class="n" data-v="{{ p.a2_kumulatif }}">{{ p.a2_kumulatif|angka:0 }}</td>
+        <td class="n" data-v="{{ p.selisih }}">{{ p.selisih|angka:0 }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Sektoral -->
+<div class="panel-tab" id="t-sek" data-grup="hasil">
+  <div class="grid g2">
+    <div class="kartu">
+      <h2>Kelompok sektor: efek komposisi ke TFP</h2>
+      <table class="tabel">
+        <thead><tr><th>Kelompok</th><th class="n">β (pp TFP)</th><th class="n">Pangsa historis</th><th class="n">Pangsa investasi tambahan</th><th class="n">Bonus TFP (pp/thn)</th></tr></thead>
+        <tbody>{% for k in kelompok %}<tr><td>{{ k.nama }}</td><td class="n">{{ k.beta|angka:4 }}{% if k.se %}<div class="kecil abu">({{ k.se|angka:4 }})</div>{% endif %}</td><td class="n">{{ k.pangsa_hist_nas|persen:1 }}</td><td class="n">{{ k.pangsa_a2_nas|persen:1 }}</td><td class="n">{{ k.bonus_pp|angka:3 }}</td></tr>{% endfor %}</tbody>
+      </table>
+      <p class="catatan">β dari regresi laju TFP pada pangsa PMA+PMDN kelompok (t−1), efek tetap tahun. Menunjukkan keterdahuluan, bukan kausalitas. Bonus = β × perubahan pangsa terhadap historis.</p>
+      <h2 style="margin-top:16px">Indeks TFP nasional ({{ sk.tahun_dasar }} = 100)</h2>
+      <div class="grafik"><canvas id="g-tfp"></canvas></div>
+    </div>
+    <div class="kartu">
+      <h2>Arah kebutuhan investasi per sektor (triliun Rp, kumulatif)</h2>
+      <div class="grafik" style="height:520px"><canvas id="g-sektor"></canvas></div>
+    </div>
+  </div>
+  {% if determinan %}
+  <div class="grid g-7-5">
+    <div class="kartu">
+      <h2>Determinan TFP: efek per pilar</h2>
+      <table class="tabel">
+        <thead><tr><th>Pilar</th><th class="n">Perubahan (× simpangan baku)</th><th class="n">Jeda / penuh (tahun)</th>
+          <th class="n"><span class="istilah">Efek penuh<small>% TFP</small></span></th>
+          <th class="n"><span class="istilah">Efek {{ sk.tahun_target }}<small>% TFP</small></span></th>
+          <th class="n"><span class="istilah">Kontribusi<small>pp/thn</small></span></th>
+          <th class="n"><span class="istilah">Dana<small>T Rp</small></span></th>
+          <th class="n"><span class="istilah">Efek per Rp 100 T<small>pp/thn</small></span></th></tr></thead>
+        <tbody>
+        {% for p in determinan.pilar %}<tr><td>{{ p.nama }}{% if p.terbaik %} <span class="lencana selesai">terbesar</span>{% endif %}</td>
+          <td class="n">{{ p.dz|angka:2 }}{% if p.didanai %}<div class="kecil abu">dari dana</div>{% endif %}</td>
+          <td class="n">{{ p.jeda }} / {{ p.penuh }}</td><td class="n">{{ p.efek_penuh|angka:2 }}</td>
+          <td class="n">{{ p.efek_T|angka:2 }}</td><td class="n">{{ p.pp_laju|angka:2 }}</td>
+          <td class="n">{% if p.didanai %}{{ p.dana_T|angka:0 }}{% else %}–{% endif %}</td>
+          <td class="n">{% if p.pp_per_100T is not None %}{{ p.pp_per_100T|angka:3 }}{% else %}–{% endif %}</td></tr>{% endfor %}
+        </tbody>
+        <tfoot><tr><td>Total</td><td></td><td></td><td></td><td class="n">{{ determinan.efek_T|angka:2 }}</td><td class="n">{{ determinan.pp_laju|angka:2 }}</td><td></td><td></td></tr></tfoot>
+      </table>
+      <p class="catatan">Efek penuh = kenaikan level TFP setelah seluruh jeda terlewati; efek {{ sk.tahun_target }} = bagian yang sudah terasa pada tahun target. Perubahan dibaca sebagai pergeseran di atas tren historis, sehingga faktor penyesuaian TFP sebaiknya tetap 1 agar tidak terhitung dua kali. Jeda dan masa menuju efek penuh adalah asumsi. Dana adalah bagian dari investasi tambahan, bukan tambahan dana baru.</p>
+    </div>
+    <div class="kartu"><h2>Efek determinan pada TFP nasional (% level)</h2><div class="grafik"><canvas id="g-determinan"></canvas></div></div>
+  </div>
+  {% endif %}
+  <div class="kartu">
+    <h2>Matriks provinsi × sektor: kebutuhan tambahan kumulatif (triliun Rp)</h2>
+    <p class="kecil abu">Kebutuhan positif tiap provinsi dibagi menurut komposisi kelompok investasi tambahan lalu pangsa sektor historis di dalam kelompok.</p>
+    <div class="gulir" style="max-height:600px">
+    <table class="tabel urut">
+      <thead><tr><th>Provinsi</th>{% for s in kode_sektor %}<th class="n" title="{{ nama_sektor|ambil:s }}">{{ s }}</th>{% endfor %}<th class="n">Total</th></tr></thead>
+      <tbody>
+      {% for nama, nilai, tot in matriks %}<tr><td>{{ nama }}</td>{% for v in nilai %}<td class="n" data-v="{{ v }}">{{ v|angka:1 }}</td>{% endfor %}<td class="n" data-v="{{ tot }}"><b>{{ tot|angka:1 }}</b></td></tr>{% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Confidence -->
+<div class="panel-tab" id="t-u" data-grup="hasil">
+  {% if u %}
+  <div class="grid g2">
+    <div class="kartu"><h2>Kipas laju pertumbuhan nasional (P10–P90)</h2><div class="grafik"><canvas id="g-kipas"></canvas></div></div>
+    <div class="kartu"><h2>Sebaran laju rata-rata {{ sk.tahun_dasar|add:1 }}–{{ sk.tahun_target }}</h2><div class="grafik"><canvas id="g-hist"></canvas></div>
+      <p class="kecil abu">P10 {{ u.g_rata.p10|angka:2 }}% · median {{ u.g_rata.p50|angka:2 }}% · P90 {{ u.g_rata.p90|angka:2 }}% · sasaran rata-rata {{ rg.g_rata_sasaran|angka:2 }}%</p></div>
+  </div>
+  <div class="grid g2">
+    <div class="kartu">
+      <h2>Kebutuhan tambahan nasional pada berbagai tingkat confidence</h2>
+      <table class="tabel">
+        <thead><tr><th></th><th class="n"><span class="istilah">Perkiraan tengah<small>P50</small></span></th><th class="n"><span class="istilah">Batas aman<small>P80</small></span></th><th class="n"><span class="istilah">Sangat aman<small>P90</small></span></th></tr></thead>
+        <tbody>
+          <tr><td>Kumulatif di atas investasi dasar (T Rp)</td><td class="n">{{ u.kebutuhan_tambahan_kum.p50|angka:0 }}</td><td class="n">{{ u.kebutuhan_tambahan_kum.p80|angka:0 }}</td><td class="n">{{ u.kebutuhan_tambahan_kum.p90|angka:0 }}</td></tr>
+          <tr><td>Total PMA+PMDN tahun {{ sk.tahun_target }} (T Rp)</td><td class="n">{{ u.kebutuhan_T.p50|angka:0 }}</td><td class="n">{{ u.kebutuhan_T.p80|angka:0 }}</td><td class="n">{{ u.kebutuhan_T.p90|angka:0 }}</td></tr>
+        </tbody>
+      </table>
+      <p class="catatan">Batas aman: dengan investasi sebesar ini, sasaran tercapai pada 8 dari 10 kemungkinan hasil simulasi; sangat aman = 9 dari 10. Simulasi mengambil acak b1, b2, rata-rata TFP, laju tenaga kerja, β sektoral, dan shock TFP tahunan.</p>
+      <h2 style="margin-top:10px">Jumlah provinsi menurut peluang capai sasaran</h2>
+      <div class="grafik" style="height:200px"><canvas id="g-prob-kelas"></canvas></div>
+    </div>
+    <div class="kartu"><h2>Peluang capai sasaran per provinsi</h2><div id="peta-prob" class="peta"></div></div>
+  </div>
+  {% else %}<div class="kartu sorot">Monte Carlo tidak dijalankan (jumlah simulasi = 0).</div>{% endif %}
+</div>
+
+<!-- ============ Hitung & kumpulan -->
+<div class="panel-tab" id="t-hitung" data-grup="hasil">
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between;margin-bottom:10px">
+      <div><h2 style="margin:0">Hitung &amp; kumpulan: provinsi × tahun</h2>
+        <p class="kecil abu" style="margin:2px 0 0">Langkah perhitungan mesin untuk setiap provinsi dan tahun proyeksi (miliar Rp; PDRB riil harga 2010). Subtotal menjumlahkan besaran uang dan merata-ratakan laju berbobot PDRB skenario.</p></div>
+      <div class="aksi"><button class="btn kecil garis" id="h-csv-tampil">CSV tampilan</button><a class="btn kecil hijau" href="{% url 'simulasi:unduh_hitung' sk.pk %}">CSV lengkap</a></div>
+    </div>
+    <div class="pilih-baris" style="margin-bottom:10px">
+      <div><label class="kecil">Kelompokkan</label><select id="h-grup">
+        <option value="tahun">Tahun → provinsi (kumpulan nasional per tahun)</option>
+        <option value="provinsi">Provinsi → tahun</option>
+        <option value="pulau">Pulau → provinsi (satu tahun)</option>
+        <option value="nasional">Nasional per tahun (ringkas)</option>
+      </select></div>
+      <div><label class="kecil">Tahun</label><select id="h-tahun"><option value="">Semua</option></select></div>
+      <div><label class="kecil">Pulau</label><select id="h-pulau"><option value="">Semua</option></select></div>
+      <div><label class="kecil">Provinsi</label><select id="h-prov"><option value="">Semua</option></select></div>
+      <div style="min-width:320px"><label class="kecil">Kolom</label><div id="h-kolom" class="alat-ruang" style="margin:0"></div></div>
+    </div>
+    <div class="gulir" id="h-tabel" style="max-height:640px"></div>
+  </div>
+</div>
+
+<!-- ============ Asumsi -->
+<div class="panel-tab" id="t-asumsi" data-grup="hasil">
+  <div class="grid g2">
+    <div class="kartu">
+      <h2>Parameter dan asumsi turunan</h2>
+      <table class="tabel">
+        <tr><td>Elastisitas modal b1</td><td class="n">{{ data.meta.parameter.b1|angka:4 }} (SE {{ data.meta.parameter.se_b1|angka:4 }})</td></tr>
+        <tr><td>Elastisitas tenaga kerja b2</td><td class="n">{{ data.meta.parameter.b2|angka:4 }} (SE {{ data.meta.parameter.se_b2|angka:4 }})</td></tr>
+        <tr><td>Laju PDRB riil historis nasional</td><td class="n">{{ data.meta.asumsi.g_pdrb_hist_nas|angka:2 }}%</td></tr>
+        <tr><td>Laju PMTB riil historis nasional</td><td class="n">{{ data.meta.asumsi.g_pmtb_hist_nas|angka:2 }}%</td></tr>
+        <tr><td>Laju tren PMA+PMDN nominal</td><td class="n">{{ data.meta.asumsi.g_investasi_tren|angka:2 }}%</td></tr>
+        <tr><td>Inflasi deflator PMTB</td><td class="n">{{ data.meta.asumsi.inflasi_pmtb|angka:2 }}%</td></tr>
+        <tr><td>Tahun data tenaga kerja terakhir</td><td class="n">{{ data.meta.tahun_tk }}</td></tr>
+        <tr><td>Tahun investasi dasar diisi pengguna</td><td class="n">{{ data.meta.asumsi.a1_diisi|join:", "|default:"tidak ada (tren)" }}</td></tr>
+      </table>
+    </div>
+    <div class="kartu">
+      <h2>Isian skenario</h2>
+      <table class="tabel">
+        <tr><td>Mode TFP</td><td>{{ sk.get_mode_tfp_display }}{% if sk.mode_tfp != "historis" %} ({{ sk.tfp_nasional|angka:2 }}%){% endif %} × {{ sk.faktor_tfp|angka:2 }}</td></tr>
+        <tr><td>Mode tenaga kerja</td><td>{{ sk.get_mode_tk_display }}</td></tr>
+        <tr><td>Tren PMTB</td><td>{{ sk.get_mode_pmtb_display }}</td></tr>
+        <tr><td>Pass-through / rasio realisasi</td><td>{{ sk.pass_through|angka:2 }} / {{ sk.rasio_realisasi|angka:2 }}</td></tr>
+        <tr><td>APBD tambahan</td><td>{{ sk.apbd_persen|angka:1 }}% belanja (pass-through {{ sk.pass_through_apbd|angka:2 }})</td></tr>
+        <tr><td>Alokasi investasi tambahan</td><td>{{ sk.get_alokasi_a2_display }}</td></tr>
+        <tr><td>Komposisi investasi tambahan</td><td>{% if sk.komposisi_a2 %}{% for k, v in sk.komposisi_a2.items %}{{ k }} {{ v|angka:0 }}{% if not forloop.last %} · {% endif %}{% endfor %}{% else %}historis per provinsi{% endif %}</td></tr>
+        <tr><td>Realokasi tenaga kerja</td><td>{{ sk.realokasi_pp|angka:1 }} pp ke {{ sk.get_tujuan_realokasi_display }}</td></tr>
+        <tr><td>Determinan TFP</td><td>{% if determinan %}{% for p in determinan.pilar %}{{ p.nama }} {{ p.dz|angka:2 }} simpangan baku (jeda {{ p.jeda }} tahun){% if not forloop.last %} · {% endif %}{% endfor %}{% else %}–{% endif %}</td></tr>
+        <tr><td>Override provinsi</td><td>{{ sk.override_provinsi|length }} provinsi</td></tr>
+      </table>
+      {% if data.meta.peringatan %}<h3 style="margin-top:12px">Peringatan</h3><ul class="kecil">{% for p in data.meta.peringatan %}<li>{{ p }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+  </div>
+</div>
+
+{{ data.nasional|json_script:"d-nas" }}
+{{ peta|json_script:"d-peta" }}
+{{ seri_prov|json_script:"d-seri" }}
+{{ sektor|json_script:"d-sektor" }}
+{{ u|json_script:"d-u" }}
+{{ data.hitung|json_script:"d-hitung" }}
+{% endif %}
+{% endblock %}
+
+{% block skrip %}{% if data %}
+<script>
+  const J = (id) => JSON.parse(document.getElementById(id).textContent);
+  const N = J("d-nas"), PETA = J("d-peta"), SERI = J("d-seri"), SEKTOR = J("d-sektor"), U = J("d-u");
+  const SASARAN = N.ringkasan.g_rata_sasaran ?? {{ sk.sasaran|stringformat:"f" }};
+  const th = N.tahun.slice(1);
+
+  grafik("g-laju", "line", th, [
+    { label: "Laju tanpa penambahan investasi", data: N.g_dasar },
+    { label: "Laju dengan penambahan investasi", data: N.g_skenario },
+    { label: "Sasaran", data: N.g_sasaran, borderDash: [5, 4], warna: "#c0392b" },
+  ], { digit: 2, satuan: "%" });
+  grafik("g-inv", "bar", th, [
+    { label: "Investasi dasar", data: N.inv_a1, warna: "#7f8c8d", stack: "s" },
+    { label: "Investasi tambahan terealisasi", data: N.inv_a2_realisasi, warna: "#2e8b57", stack: "s" },
+    { label: "Kebutuhan untuk sasaran", data: N.inv_kebutuhan, type: "line", warna: "#c0392b" },
+    { label: "Tren", data: N.inv_tren, type: "line", warna: "#1f3b57", borderDash: [4, 3] },
+  ], { digit: 0, satuan: "T", tumpuk: true });
+  grafik("g-pdrb", "line", N.tahun, [
+    { label: "Tanpa penambahan investasi", data: N.pdrb_dasar.map((v) => v / 1000) },
+    { label: "Dengan penambahan investasi", data: N.pdrb_skenario.map((v) => v / 1000) },
+    { label: "Jalur sasaran", data: N.pdrb_sasaran.map((v) => v / 1000), borderDash: [5, 4], warna: "#c0392b" },
+  ], { digit: 0, satuan: "T" });
+  const K = N.ringkasan.kontribusi;
+  const labK = ["Modal", "Tenaga kerja", "TFP tren", "Komposisi sektor", "Realokasi TK"], datK = [K.modal, K.tk, K.tfp_tren, K.sektoral, K.realokasi];
+  if (K.determinan) { labK.push("Determinan TFP"); datK.push(K.determinan); }
+  if (K.kejutan) { labK.push("Shock"); datK.push(K.kejutan); }
+  grafik("g-kontrib", "bar", labK, [
+    { label: "Skenario", data: datK, warna: "#2e6e9e", backgroundColor: datK.map((v) => (v < 0 ? "#c0392bcc" : "#2e6e9ecc")) },
+  ], { digit: 2, satuan: "pp", horizontal: true });
+  if (document.getElementById("g-kejutan")) {
+    const ds = [{ label: "Deviasi level PDRB (%)", data: (N.kejutan_level || []).slice(1), warna: "#c0392b",
+                  backgroundColor: (N.kejutan_level || []).slice(1).map((v) => (v < 0 ? "#c0392bcc" : "#2e8b57cc")) }];
+    if (N.realisasi_faktor) ds.push({ label: "Faktor realisasi PMA+PMDN", data: N.realisasi_faktor, type: "line", warna: "#1f3b57", yAxisID: "y2" });
+    grafik("g-kejutan", "bar", th, ds, { digit: 2, sumbuKanan: { judul: "faktor realisasi", min: 0, max: 1.5 } });
+  }
+
+  const tb = document.getElementById("tabel-nas");
+  th.forEach((t, i) => {
+    const c = [t, N.g_dasar[i], N.g_skenario[i], N.g_sasaran[i], N.inv_tren[i], N.inv_a1[i], N.inv_a2[i],
+               N.inv_kebutuhan[i], N.tambahan_kebutuhan[i], N.apbd_tambahan[i], N.tfp_dasar[i + 1], N.tfp_skenario[i + 1]];
+    const d = [0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 1, 1];
+    tb.insertAdjacentHTML("beforeend", "<tr>" + c.map((v, j) => j === 0 ? `<td>${v}</td>` : `<td class="n">${fmtID(v, d[j])}</td>`).join("") + "</tr>");
+  });
+
+  const pil = document.getElementById("pilih-peta");
+  const SK = { kebutuhan: ["merah", 0, "T Rp"], rasio: ["merah", 1, "% PDRB"], g_skenario: ["seq", 2, "%"],
+               gap: ["div", 2, "pp"], prob: ["peluang", 0, ""], g_K: ["merah", 1, "%"], tfp: ["hijau", 1, ""] };
+  function provinsi(k) {
+    const s = SERI[k];
+    if (!s) return;
+    document.getElementById("judul-prov").textContent = NAMA_PROV[k];
+    grafik("g-prov-laju", "line", th, [
+      { label: "Tanpa penambahan", data: s.g_dasar }, { label: "Dengan penambahan", data: s.g_skenario },
+      ...(s.g_sasaran ? [{ label: "Sasaran", data: s.g_sasaran, warna: "#c0392b", borderDash: [5, 4] }] : []),
+    ], { digit: 2, satuan: "%", judul: "Laju PDRB riil (%)" });
+    grafik("g-prov-inv", "bar", th, [
+      { label: "Tren PMA+PMDN", data: s.tren, warna: "#7f8c8d" },
+      { label: "Investasi tambahan", data: s.a2, warna: "#2e8b57" },
+      { label: "Kebutuhan total", data: s.kebutuhan, type: "line", warna: "#c0392b" },
+    ], { digit: 1, satuan: "T", judul: "Investasi (triliun Rp)" });
+  }
+  function petaProv() {
+    const k = pil.value, [skema, digit, satuan] = SK[k];
+    let nilai = PETA[k];
+    if (k === "prob") nilai = Object.fromEntries(Object.entries(nilai).map(([a, b]) => [a, b === null ? null : b * 100]));
+    petaChoropleth("peta-prov", nilai, { label: pil.selectedOptions[0].text.replace(/\s*\(.*\)$/, ""), satuan: k === "prob" ? "%" : satuan,
+      skema, digit, nama: NAMA_PROV, onClick: provinsi,
+      batas: k === "prob" ? [20, 40, 60, 80, 90] : undefined });
+    const nas = { kebutuhan: ["Jumlah nasional", N.ringkasan.kebutuhan_tambahan_kumulatif], g_skenario: ["Nasional", N.ringkasan.g_rata_skenario],
+                  gap: ["Nasional", N.ringkasan.g_rata_skenario - N.ringkasan.g_rata_sasaran], g_K: ["Nasional", N.ringkasan.g_K_kebutuhan],
+                  tfp: ["Nasional", N.ringkasan.tfp_T_skenario], prob: ["Nasional", U ? U.prob_nasional * 100 : null] }[k];
+    ringkasanSebaran("ringkas-prov", nilai, { digit, satuan: k === "prob" ? "%" : (satuan === "T Rp" ? "T" : satuan), onClick: provinsi,
+      agregat: nas ? [...nas, "{{ sk.tahun_dasar|add:1 }}–{{ sk.tahun_target }}"] : undefined });
+  }
+  pil.addEventListener("change", petaProv);
+  document.querySelector('[data-tab="t-prov"]').addEventListener("click", () => setTimeout(() => { petaProv(); provinsi("31"); }, 30), { once: true });
+
+  let sekDigambar = false;
+  document.querySelector('[data-tab="t-sek"]').addEventListener("click", () => setTimeout(() => {
+    if (sekDigambar) return; sekDigambar = true;
+    const urut = [...SEKTOR].sort((a, b) => b.kebutuhan - a.kebutuhan);
+    grafik("g-sektor", "bar", urut.map((s) => `${s.kode} ${s.nama}`.slice(0, 38)), [
+      { label: "Kebutuhan", data: urut.map((s) => s.kebutuhan / 1000), warna: "#c0392b" },
+      { label: "Investasi tambahan", data: urut.map((s) => s.a2 / 1000), warna: "#2e8b57" },
+    ], { horizontal: true, digit: 0, satuan: "T" });
+    const DT = N.determinan;
+    if (DT && document.getElementById("g-determinan")) {
+      const WARNA = { pendidikan: "#2e6e9e", equity: "#8e44ad", institusi: "#d68910", konektivitas: "#2e8b57",
+                      lingkungan: "#16a085", keamanan: "#7f8c8d" };
+      grafik("g-determinan", "bar", th, DT.pilar.map((p) => ({ label: p.nama, data: DT.seri[p.pilar], warna: WARNA[p.pilar], stack: "d" })),
+             { digit: 2, satuan: "%", tumpuk: true });
+    }
+    grafik("g-tfp", "line", N.tahun, [
+      { label: "Tanpa penambahan investasi", data: N.tfp_dasar }, { label: "Dengan penambahan investasi", data: N.tfp_skenario },
+      { label: "Jalur kebutuhan", data: N.tfp_kebutuhan, borderDash: [5, 4] },
+    ], { digit: 1 });
+  }, 30));
+
+  if (U && U.g_tahunan) {
+    document.querySelector('[data-tab="t-u"]').addEventListener("click", () => setTimeout(() => {
+      grafik("g-kipas", "line", th, [
+        { label: "P90", data: U.g_tahunan.p90, warna: "#9ecae1", fill: "+1", pointRadius: 0 },
+        { label: "P10", data: U.g_tahunan.p10, warna: "#9ecae1", pointRadius: 0 },
+        { label: "Median", data: U.g_tahunan.p50, warna: "#1f3b57" },
+        { label: "Sasaran", data: N.g_sasaran, warna: "#c0392b", borderDash: [5, 4], pointRadius: 0 },
+      ], { digit: 2, satuan: "%" });
+      const t = U.histogram.tepi;
+      grafik("g-hist", "bar", U.histogram.nilai.map((_, i) => fmtID((t[i] + t[i + 1]) / 2, 2)), [
+        { label: "Jumlah simulasi", data: U.histogram.nilai, warna: "#2e6e9e",
+          backgroundColor: U.histogram.nilai.map((_, i) => ((t[i] + t[i + 1]) / 2 >= SASARAN ? "#2e8b57cc" : "#2e6e9ecc")) },
+      ], { digit: 0, judulX: "laju rata-rata (%/thn); hijau = capai sasaran" });
+      petaChoropleth("peta-prob", Object.fromEntries(Object.entries(U.prob_provinsi).map(([a, b]) => [a, b * 100])),
+        { label: "Peluang capai", satuan: "%", skema: "peluang", digit: 0, nama: NAMA_PROV, batas: [20, 40, 60, 80, 90] });
+      const kelas = [["< 20%", 0, 0.2, "#d73027"], ["20–50%", 0.2, 0.5, "#fc8d59"], ["50–80%", 0.5, 0.8, "#d9ef8b"], ["≥ 80%", 0.8, 1.01, "#1a9850"]];
+      const pv = Object.values(U.prob_provinsi).filter((x) => x !== null);
+      grafik("g-prob-kelas", "bar", kelas.map((c) => c[0]), [{
+        label: "Provinsi", data: kelas.map(([, a, b]) => pv.filter((x) => x >= a && x < b).length),
+        backgroundColor: kelas.map((c) => c[3] + "dd"),
+      }], { digit: 0, satuan: "provinsi", legenda: false });
+    }, 30), { once: true });
+  }
+
+  // ---- Hitung & kumpulan
+  const HT = J("d-hitung");
+  if (HT) {
+    const rows = HT.baris.map((b) => Object.fromEntries(HT.kolom.map((k, i) => [k, b[i]])));
+    const W = { bobot: "PDRB_skenario" };
+    const SET = {
+      "Investasi": [["I_tren", "Tren PMA+PMDN", 0, "jumlah"], ["A1_real", "Investasi dasar terealisasi", 0, "jumlah"], ["A2_real", "Investasi tambahan terealisasi", 0, "jumlah"], ["I_kebutuhan", "Kebutuhan PMA+PMDN", 0, "jumlah"]],
+      "PMTB": [["PMTB_nominal", "PMTB nominal", 0, "jumlah"], ["PMTB_riil", "PMTB riil", 0, "jumlah"], ["PMTB_kebutuhan", "PMTB riil dibutuhkan", 0, "jumlah"]],
+      "Produktivitas": [["lnA_skenario", "ln A (skenario)", 4, W], ["bonus_sektor", "Bonus sektor (ln)", 4, W], ["determinan_ln", "Determinan TFP (ln)", 4, W], ["kejutan_ln", "Shock (ln)", 4, W], ["faktor_realisasi", "Faktor realisasi", 3, W]],
+      "PDRB": [["PDRB_dasar", "PDRB tanpa penambahan", 0, "jumlah"], ["PDRB_skenario", "PDRB dengan penambahan", 0, "jumlah"], ["PDRB_sasaran", "PDRB sasaran", 0, "jumlah"]],
+      "Laju": [["g_dasar", "Laju tanpa penambahan %", 2, W], ["g_skenario", "Laju dengan penambahan %", 2, W], ["g_sasaran", "g sasaran %", 2, W]],
+    };
+    const aktifSet = new Set(["Investasi", "PDRB", "Laju"]);
+    const wadahK = document.getElementById("h-kolom");
+    Object.keys(SET).forEach((k) => wadahK.insertAdjacentHTML("beforeend", `<label class="pil${aktifSet.has(k) ? "" : " mati"}"><input type="checkbox" value="${k}" ${aktifSet.has(k) ? "checked" : ""}> ${k}</label>`));
+    const isiPilih = (id, nilai) => { const el = document.getElementById(id); [...new Set(nilai)].forEach((v) => el.insertAdjacentHTML("beforeend", `<option>${v}</option>`)); return el; };
+    const pT = isiPilih("h-tahun", rows.map((r) => r.tahun)), pP = isiPilih("h-pulau", rows.map((r) => r.pulau));
+    const pV = isiPilih("h-prov", rows.map((r) => r.provinsi).sort()), pG = document.getElementById("h-grup");
+    let tampil = { kolom: [], baris: [] };
+    function gambar() {
+      const mode = pG.value;
+      if (mode === "pulau" && !pT.value) pT.value = String(rows[rows.length - 1].tahun);
+      let rs = rows.filter((r) => (!pT.value || String(r.tahun) === pT.value) && (!pP.value || r.pulau === pP.value) && (!pV.value || r.provinsi === pV.value));
+      const angka = [...wadahK.querySelectorAll("input:checked")].flatMap((c) => SET[c.value]).map(([kunci, label, digit, agregat]) => ({ kunci, label, digit, agregat }));
+      let kolom, opsi = {};
+      if (mode === "nasional") {
+        const per = new Map();
+        rs.forEach((r) => { if (!per.has(r.tahun)) per.set(r.tahun, []); per.get(r.tahun).push(r); });
+        rs = [...per].map(([t, g]) => Object.fromEntries([["label", String(t)], ...angka.map((k) => [k.kunci, agregasi(g, k.kunci, k.agregat)]), ["PDRB_skenario", agregasi(g, "PDRB_skenario", "jumlah")]]));
+        kolom = [{ kunci: "label", label: "Tahun", teks: true }, ...angka];
+      } else if (mode === "tahun") {
+        kolom = [{ kunci: "provinsi", label: "Tahun / provinsi", teks: true }, ...angka];
+        opsi = { grup: "tahun", labelGrup: (g) => `Tahun ${g}`, labelSubtotal: (g) => `Nasional ${g}`, lipat: true };
+      } else if (mode === "provinsi") {
+        kolom = [{ kunci: "tahun", label: "Provinsi / tahun", teks: true }, ...angka];
+        opsi = { grup: "provinsi", labelSubtotal: (g) => `Jumlah ${g} (semua tahun)`, lipat: true };
+      } else {
+        kolom = [{ kunci: "provinsi", label: "Pulau / provinsi", teks: true }, ...angka];
+        opsi = { grup: "pulau", labelGrup: (g) => `Pulau ${g}`, lipat: true };
+      }
+      tabelNeraca("h-tabel", kolom, rs, { ...opsi, rapat: true, total: mode === "provinsi" || (mode === "tahun" && !pT.value) ? "Total semua tahun" : "Total" });
+      tampil = { kolom, baris: rs };
+    }
+    [pG, pT, pP, pV].forEach((el) => el.addEventListener("change", gambar));
+    wadahK.addEventListener("change", (e) => { e.target.closest(".pil").classList.toggle("mati", !e.target.checked); gambar(); });
+    document.getElementById("h-csv-tampil").addEventListener("click", () =>
+      unduhCSV("hitung_{{ sk.pk }}.csv", tampil.kolom.map((k) => k.label), tampil.baris.map((r) => tampil.kolom.map((k) => r[k.kunci]))));
+    document.querySelector('[data-tab="t-hitung"]').addEventListener("click", gambar, { once: true });
+  }
+
+  // ---- Simpan sebagai kustom / ganti nama
+  const fK = document.getElementById("f-kustom");
+  fK && fK.addEventListener("submit", (e) => {
+    const n = prompt("Nama skenario kustom:", "{{ sk.nama|escapejs }} (kustom)");
+    if (n === null) { e.preventDefault(); return; }
+    fK.nama_kustom.value = n;
+  });
+  const fN = document.getElementById("f-nama");
+  fN && fN.addEventListener("submit", (e) => {
+    const n = prompt("Nama skenario:", "{{ sk.nama|escapejs }}");
+    if (!n) { e.preventDefault(); return; }
+    const s = prompt("Nama singkat (untuk grafik, maks 24 huruf):", "{{ sk.singkat|escapejs }}");
+    fN.nama.value = n; fN.singkat.value = s || "";
+  });
+</script>
+{% endif %}{% endblock %}

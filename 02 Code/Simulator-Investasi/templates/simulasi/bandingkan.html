@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Perbandingan skenario{% endblock %}
+{% block isi %}
+<h1>Perbandingan skenario</h1>
+<form method="get" class="kartu">
+  <div class="grid g2">
+  {% regroup semua by kelompok as grup %}
+  {% for g in grup %}
+    <div><h3>{% if g.grouper == "bawaan" %}Estimasi tim RDSI{% else %}Kustom{% endif %}</h3>
+      <div class="aksi">{% for s in g.list %}<label class="pil kecil" style="display:inline-flex;gap:4px;align-items:center;font-weight:400;border:1px solid var(--garis);border-radius:999px;padding:3px 9px;margin:0" title="{{ s.nama }}"><input type="checkbox" name="id" value="{{ s.pk }}" {% if s.pk in terpilih %}checked{% endif %}> {{ s.label }}{% if s.status == "usang" %} <span class="lencana usang">usang</span>{% endif %}</label>{% endfor %}</div>
+    </div>
+  {% empty %}<p>Belum ada skenario yang dijalankan.</p>{% endfor %}
+  </div>
+  <div class="aksi" style="margin-top:10px"><button class="btn">Bandingkan</button></div>
+</form>
+{% if seri %}
+<div class="kartu">
+  <div class="lebar-gulir">
+  <table class="tabel kepala-bungkus">
+    <thead>
+      <tr class="kepala-grup"><th class="kosong"></th><th colspan="4">Laju PDRB riil {{ seri.0.tahun.1 }}–{{ seri.0.tahun|last }} (%/thn)</th><th colspan="4">Investasi kumulatif {{ seri.0.tahun.1 }}–{{ seri.0.tahun|last }} (triliun Rp)</th><th colspan="2">Tahun {{ seri.0.tahun|last }}</th></tr>
+      <tr><th>Skenario</th><th class="n">{% istilah "bn" %}</th><th class="n">{% istilah "xn" %}</th><th class="n">{% istilah "sasaran" %}</th><th class="n">{% istilah "dt_pp" %}</th><th class="n">{% istilah "a2_kum" %}</th><th class="n">{% istilah "keb" %}</th><th class="n">{% istilah "p80" %}</th><th class="n">{% istilah "selisih_t" %}</th><th class="n">{% istilah "tfp_akhir" "Indeks TFP" %}</th><th class="n">{% istilah "peluang" %}</th></tr>
+    </thead>
+    <tbody>
+    {% for s in seri %}
+      <tr><td style="min-width:130px"><a href="{% url 'simulasi:detail' s.pk %}" title="{{ s.nama_lengkap }}" style="white-space:nowrap"><b>{{ s.nama }}</b></a><div class="kecil abu">{{ s.nama_lengkap }}</div></td>
+        <td class="n">{{ s.rg.g_rata_dasar|angka:2 }}%</td><td class="n"><b>{{ s.rg.g_rata_skenario|angka:2 }}%</b></td><td class="n">{{ s.rg.g_rata_sasaran|angka:2 }}%</td>
+        <td class="n">{% if s.rg.kontribusi.determinan %}{{ s.rg.kontribusi.determinan|angka:2 }}{% else %}–{% endif %}</td>
+        <td class="n">{{ s.rg.a2_kumulatif|angka:0 }}</td><td class="n">{{ s.rg.kebutuhan_tambahan_kumulatif|angka:0 }}</td>
+        <td class="n">{{ s.p80|angka:0 }}</td><td class="n">{{ s.rg.selisih_a2|angka:0 }}</td>
+        <td class="n">{{ s.rg.tfp_T_skenario|angka:1 }}</td><td class="n">{% if s.prob is not None %}{{ s.prob|persen }}{% else %}–{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+<div class="grid g2">
+  <div class="kartu"><h2>Laju PDRB riil skenario (%)</h2><div class="grafik"><canvas id="g-laju"></canvas></div></div>
+  <div class="kartu"><h2>Investasi tambahan vs kebutuhan tambahan (triliun Rp) <span class="abu kecil">batang = investasi tambahan, garis putus = kebutuhan</span></h2><div class="grafik"><canvas id="g-inv"></canvas></div></div>
+  <div class="kartu"><h2>Indeks TFP nasional</h2><div class="grafik"><canvas id="g-tfp"></canvas></div></div>
+  <div class="kartu"><h2>Laju rata-rata dan peluang per skenario</h2><div class="grafik"><canvas id="g-tangga"></canvas></div></div>
+</div>
+
+<div class="kartu">
+  <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px">
+    <h2 style="margin:0">Peta provinsi: historis lima tahun dan skenario</h2>
+    <select id="pilih-banding">
+      {% for i in peta_banding.indikator %}<option value="{{ forloop.counter0 }}">{{ i.label }}: {{ i.skenario }}</option>{% endfor %}
+    </select>
+  </div>
+  <p class="catatan">Peta pertama adalah capaian {{ peta_banding.hist.tahun.0 }}–{{ peta_banding.hist.tahun.1 }} dari versi data
+    <a href="{% url 'datapanel:detail_versi' versi_hist.pk %}">{{ versi_hist }}</a>, peta berikutnya hasil tiap skenario.
+    Semua peta memakai skala warna yang sama sehingga warna dapat dibandingkan langsung.
+    {% if beda_versi %}Skenario lain memakai versi data berbeda ({{ beda_versi|join:", " }}).{% endif %}
+    {% if rinci_hist %}Papua ditampilkan enam provinsi; laju historis provinsi baru sebelum {{ tahun_pangsa|first }} mengikuti induknya (pangsa dipakai mundur).{% endif %}</p>
+</div>
+<div class="grid g3" id="grid-peta">
+  <div class="kartu"><h3 style="margin:0 0 2px">Historis</h3><p class="kecil abu" id="sub-hist" style="margin:0 0 6px"></p><div id="pb-hist" class="peta kecil"></div></div>
+  {% for s in peta_banding.skenario %}
+  <div class="kartu"><h3 style="margin:0 0 2px"><a href="{% url 'simulasi:detail' s.pk %}">{{ s.nama }}</a></h3><p class="kecil abu sub-sk" style="margin:0 0 6px"></p><div id="pb-{{ forloop.counter0 }}" class="peta kecil"></div></div>
+  {% endfor %}
+  <div class="kartu isi-celah" id="celah-peta" hidden><h3 style="margin:0 0 2px">Ringkasan antarpeta</h3><p class="kecil abu" id="sub-celah" style="margin:0 0 6px"></p><div class="grafik"><canvas id="g-celah"></canvas></div></div>
+</div>
+<div class="kartu">
+  <h2 id="judul-tabel-banding">Per provinsi</h2>
+  <p class="kecil abu">Klik judul kolom untuk mengurutkan. Selisih = skenario pertama dikurangi historis.</p>
+  <div class="gulir" style="max-height:560px">
+  <table class="tabel urut rapat" id="tabel-banding">
+    <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n">Historis</th>{% for s in peta_banding.skenario %}<th class="n">{{ s.nama }}</th>{% endfor %}<th class="n">Selisih</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+</div>
+{{ seri|json_script:"d-seri" }}
+{{ peta_banding|json_script:"d-peta-banding" }}
+{{ pulau_prov|json_script:"d-pulau" }}
+{% endif %}
+{% endblock %}
+{% block skrip %}{% if seri %}
+<script>
+  const S = JSON.parse(document.getElementById("d-seri").textContent);
+  const th = S[0].tahun.slice(1);
+  grafik("g-laju", "line", th, S.map((s) => ({ label: s.nama, data: s.g })).concat(
+    [{ label: "Sasaran (" + S[0].nama + ")", data: S[0].g_sasaran, borderDash: [5, 4], warna: "#c0392b" }]), { digit: 2, satuan: "%" });
+  grafik("g-inv", "bar", th, S.flatMap((s, i) => [
+    { label: s.nama, data: s.a2, warna: PALET[i % PALET.length] },
+    { label: s.nama + ": kebutuhan", data: s.keb, type: "line", warna: PALET[i % PALET.length], borderDash: [4, 3], tanpaLegenda: true },
+  ]), { digit: 0, satuan: "T" });
+  grafik("g-tfp", "line", S[0].tahun, S.map((s) => ({ label: s.nama, data: s.tfp })), { digit: 1 });
+  const pendek = (t) => (t.length > 24 ? t.slice(0, 23) + "…" : t);
+  grafik("g-tangga", "bar", S.map((s) => pendek(s.nama)), [
+    { label: "Laju tanpa penambahan investasi", data: S.map((s) => s.rg.g_rata_dasar), warna: "#9ecae1" },
+    { label: "Laju dengan penambahan investasi", data: S.map((s) => s.rg.g_rata_skenario), warna: "#2e6e9e" },
+    { label: "Sasaran", data: S.map((s) => s.rg.g_rata_sasaran), type: "line", warna: "#c0392b", borderDash: [5, 4], pointRadius: 0 },
+    { label: "Peluang (%)", data: S.map((s) => (s.prob === null || s.prob === undefined ? null : s.prob * 100)),
+      type: "line", warna: "#2e8b57", yAxisID: "y2", showLine: false, pointRadius: 5, pointStyle: "rectRot" },
+  ], { digit: 2, judulY: "laju (%/thn)", sumbuKanan: { judul: "peluang (%)", min: 0, max: 100 } });
+
+  // jumlah kolom peta mengikuti jumlah peta; sel kosong di baris terakhir diisi ringkasan antarpeta
+  const gridPeta = document.getElementById("grid-peta"), celah = document.getElementById("celah-peta");
+  const nPeta = 1 + {{ peta_banding.skenario|length }};
+  const kolom = nPeta <= 3 ? Math.max(nPeta, 2) : nPeta === 4 ? 2 : 3;
+  const sisa = (kolom - (nPeta % kolom)) % kolom;
+  gridPeta.className = "grid g" + kolom;
+  if (sisa) { celah.hidden = false; celah.style.gridColumn = `span ${sisa}`; }
+
+  const PB = JSON.parse(document.getElementById("d-peta-banding").textContent);
+  const PULAU = JSON.parse(document.getElementById("d-pulau").textContent);
+  const pilB = document.getElementById("pilih-banding");
+  const skala = (k, x) => (x === null || x === undefined ? null : k === "peluang" ? x * 100 : x);
+  const ubah = (k, nilai) => Object.fromEntries(Object.entries(nilai || {}).map(([a, b]) => [a, skala(k, b)]));
+
+  function batasBersama(semua, skema) {
+    if (skema === "peluang") return [10, 25, 50, 75, 90];
+    const v = semua.filter((x) => x !== null && !Number.isNaN(x)).sort((a, b) => a - b);
+    if (!v.length) return undefined;
+    const q = (p) => v[Math.min(v.length - 1, Math.floor(p * v.length))];
+    return [q(1 / 6), q(2 / 6), q(3 / 6), q(4 / 6), q(5 / 6)];
+  }
+
+  function gambarBanding() {
+    const ind = PB.indikator[+pilB.value];
+    const k = ind.kode;
+    const hist = ubah(k, PB.hist[k]);
+    const sk = PB.skenario.map((s) => ubah(k, s.nilai[k]));
+    const batas = batasBersama([hist, ...sk].flatMap((o) => Object.values(o)), ind.skema);
+    const opsi = { label: ind.label, satuan: ind.satuan, digit: ind.digit, skema: ind.skema, batas };
+    document.getElementById("sub-hist").textContent = ind.hist;
+    document.querySelectorAll(".sub-sk").forEach((el) => (el.textContent = ind.skenario));
+    petaChoropleth("pb-hist", hist, opsi);
+    sk.forEach((nilai, i) => petaChoropleth("pb-" + i, nilai, opsi));
+    if (!celah.hidden) {
+      const rataP = (o) => { const v = Object.values(o).filter((x) => x !== null && x !== undefined); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+      const semuaPeta = [hist, ...sk], label = ["Historis", ...PB.skenario.map((s) => pendek(s.nama))];
+      document.getElementById("sub-celah").textContent = `${ind.label} (${ind.satuan}): rata-rata provinsi tiap peta`;
+      grafik("g-celah", "bar", label, [
+        { label: "Rata-rata provinsi", data: semuaPeta.map(rataP),
+          backgroundColor: semuaPeta.map((_, i) => (i === 0 ? "#7f8c8dcc" : PALET[(i - 1) % PALET.length] + "cc")) },
+      ], { horizontal: sisa === 1, digit: ind.digit, satuan: ind.satuan, legenda: false });
+    }
+
+    document.getElementById("judul-tabel-banding").textContent = `Per provinsi: ${ind.label} (${ind.satuan})`;
+    const kode = Array.from(new Set([...Object.keys(hist), ...sk.flatMap((o) => Object.keys(o))]));
+    const nama = (kd) => window.NAMA_PROV[kd] || kd;
+    kode.sort((a, b) => (sk[0][b] ?? -Infinity) - (sk[0][a] ?? -Infinity));
+    const sel = (x) => `<td class="n" data-v="${x ?? ""}">${fmtID(x, ind.digit)}</td>`;
+    // kebutuhan investasi yang lebih besar dari historis bukan "lebih baik"; hanya laju dan peluang diwarnai
+    const warnai = ["g", "g_dasar", "peluang"].includes(k);
+    document.querySelector("#tabel-banding tbody").innerHTML = kode.map((kd) => {
+      const h = hist[kd], s0 = sk[0][kd];
+      const sel_ = h !== null && h !== undefined && s0 !== null && s0 !== undefined ? s0 - h : null;
+      return `<tr><td>${nama(kd)}</td><td>${PULAU[kd] || ""}</td>${sel(h)}${sk.map((o) => sel(o[kd])).join("")}` +
+        `<td class="n ${sel_ === null || !warnai ? "" : sel_ >= 0 ? "baik" : "buruk"}" data-v="${sel_ ?? ""}">${fmtID(sel_, ind.digit)}</td></tr>`;
+    }).join("");
+  }
+  pilB.addEventListener("change", gambarBanding);
+  gambarBanding();
+</script>
+{% endif %}{% endblock %}

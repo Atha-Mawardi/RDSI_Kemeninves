@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Asumsi provinsi · {{ sk.nama }}{% endblock %}
+{% block isi %}
+<h1>Asumsi per provinsi</h1>
+<p class="sub"><a href="{% url 'simulasi:detail' sk.pk %}">{{ sk.nama }}</a></p>
+
+<div class="grid g2">
+  <div class="kartu">
+    <h2>Lewat Excel</h2>
+    <p class="kecil">Unduh lembar asumsi (sudah berisi nilai hasil terakhir sebagai acuan dan validasi data), sunting kolom kuning di Excel, lalu unggah kembali.</p>
+    <div class="aksi">
+      <a class="btn garis" href="{% url 'simulasi:unduh_asumsi' sk.pk %}">Unduh lembar asumsi</a>
+      <form method="post" enctype="multipart/form-data" action="{% url 'simulasi:unggah_asumsi' sk.pk %}" class="aksi">
+        {% csrf_token %}<input type="file" name="berkas" accept=".xlsx" required><button class="btn">Unggah</button>
+      </form>
+    </div>
+  </div>
+  <div class="kartu">
+    <h2>Arti kolom</h2>
+    <ul class="kecil">{% for k, ket, lo, hi in kolom %}<li><b>{{ k }}</b>: {{ ket }}</li>{% endfor %}</ul>
+    <p class="kecil abu">Isian per provinsi selalu menggantikan nilai skenario. Untuk sasaran pada mode seragam atau proporsional, provinsi yang diisi dikunci dan provinsi lain digeser bersama agar PDRB nasional tetap tumbuh sebesar sasaran. Bobot investasi tambahan hanya dipakai bila alokasinya manual. Komposisi investasi tambahan per provinsi harus diisi keempatnya; skalanya bebas (misalnya 10/60/25/5).</p>
+  </div>
+</div>
+
+<form method="post" class="kartu">
+  {% csrf_token %}
+  {% if form.errors %}<div class="pesan error">Ada isian di luar rentang. {{ form.non_field_errors }}</div>{% endif %}
+  <div class="gulir" style="max-height:70vh">
+  <table class="tabel rapat">
+    <thead><tr><th>Provinsi</th>{% for k, ket, lo, hi in kolom %}<th title="{{ ket }}">{{ k }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for kode, nama, fields in form.baris %}
+      {% with r=ref|ambil:kode %}
+      <tr>
+        <td>{{ nama }}</td>
+        {% for f in fields %}<td>{{ f }}{% if f.errors %}<div class="kecil teks-merah">{{ f.errors|striptags }}</div>{% endif %}</td>{% endfor %}
+      </tr>
+      {% if r %}<tr class="acuan kecil abu"><td></td>
+        <td>{{ r.g_sasaran|angka:2 }}</td><td>{{ r.g_tfp|angka:2 }}</td><td>{{ r.g_tk|angka:2 }}</td><td>{{ r.bobot_a2|persen:1 }}</td>
+        {% for k, nama_k in kelompok %}<td>{{ r.komposisi_a2|ambil:k|persen:0 }}</td>{% endfor %}
+      </tr>{% endif %}
+      {% endwith %}
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="aksi" style="margin-top:12px">
+    <button class="btn">Simpan asumsi</button>
+    <a class="btn garis" href="{% url 'simulasi:detail' sk.pk %}">Kembali</a>
+  </div>
+</form>
+{% endblock %}
