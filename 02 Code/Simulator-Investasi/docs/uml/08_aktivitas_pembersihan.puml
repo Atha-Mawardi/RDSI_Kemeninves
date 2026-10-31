@@ -1,0 +1,52 @@
+@startuml 08_aktivitas_pembersihan
+!include _gaya.iuml
+title Aktivitas: pipeline pembersihan data
+
+start
+:Terima berkas (.xlsx / .xls / .csv)\ndan opsi pembersihan;
+:Baca semua sheet;
+repeat :Ambil sheet berikutnya;
+  :Cari baris header (≤ 15 baris pertama)\nyang memuat kolom provinsi dan tahun;
+  if (Header ditemukan?) then (ya)
+    if (Format panjang\n(variabel, nilai)?) then (ya)
+      :Pivot ke format lebar;
+    endif
+    :Petakan nama kolom ke kode kanonik\n(alias dataset tim, prioritas alias);
+    :Kenali provinsi dari kode BPS,\nlalu dari nama (alias ejaan);
+    if (Provinsi pemekaran Papua?) then (ya)
+      :Tandai untuk dijumlahkan\nke Papua / Papua Barat;
+    endif
+    :Konversi teks ke angka\n(sel kosong teks, "-", 1.234,5);
+  else (tidak)
+    :Lewati sheet (catat info);
+  endif
+repeat while (Masih ada sheet?) is (ya)
+-> tidak;
+
+if (Ada tabel terbaca?) then (tidak)
+  :Temuan galat: tidak ada data;
+  stop
+endif
+:Satukan antar-sheet\n(sheet pertama menang per variabel);
+:Jumlahkan baris pemekaran,\nduplikat lain: ambil terakhir + peringatan;
+:Deteksi dan konversi satuan\n(PAD rupiah, PMA juta, PDRB/PMTB triliun,\nTK ribu) -> miliar Rp / jiwa;
+:Cek konsistensi:\njumlah 17 sektor vs total PDRB, PMA, PMDN;
+:Batasi tahun (tahun_min, tahun_max);
+switch (Opsi imputasi?)
+case (interpolasi)
+  :Interpolasi linier dalam provinsi\n(kecuali PMA/PMDN: arus tak rata);
+case (LOCF)
+  :Isi dengan nilai terakhir;
+case (tidak)
+  :Biarkan kosong;
+endswitch
+:Catat setiap sel yang diisi\n("imputasi: ...");
+:Tandai lonjakan tahunan > ambang %\n(nilai tidak diubah);
+:Hitung cakupan variabel wajib\nuntuk simulasi;
+:Kembalikan HasilPembersihan\n(df, catatan sel, temuan);
+if (Mode pembaruan?) then (ya)
+  :Gabungkan dengan versi induk\n(sel terisi menimpa, tandai "diperbarui");
+endif
+:Simpan VersiData (draf atau gagal)\n+ Observasi per provinsi-tahun;
+stop
+@enduml

@@ -1,0 +1,140 @@
+@startuml 12_erd
+!include _gaya.iuml
+title Diagram relasi entitas (skema fisik)
+hide circle
+skinparam linetype ortho
+
+entity "datapanel_provinsi" as provinsi {
+  * kode : smallint <<PK>>
+  --
+  nama : varchar(60)
+  pulau : varchar(30)
+}
+
+entity "datapanel_versidata" as versi {
+  * id : bigint <<PK>>
+  --
+  nama : varchar
+  keterangan : text
+  status : varchar(8)
+  sumber : varchar(10)
+  induk_id : bigint <<FK>> (nullable)
+  berkas : varchar (path)
+  nama_berkas : varchar
+  opsi_pembersihan : json
+  laporan : json
+  ringkasan : json
+  tahun_awal : smallint
+  tahun_akhir : smallint
+  n_baris : int
+  pangsa_pemekaran : json
+  dibuat : timestamp
+  dibuat_oleh_id : int <<FK>> (nullable)
+}
+
+entity "datapanel_observasi" as obs {
+  * id : bigint <<PK>>
+  --
+  * versi_id : bigint <<FK>>
+  * provinsi_id : smallint <<FK>>
+  * tahun : smallint
+  nilai : json
+  catatan : json
+  --
+  UNIQUE (versi_id, provinsi_id, tahun)
+}
+
+entity "estimasi_setparameter" as sp {
+  * id : bigint <<PK>>
+  --
+  nama : varchar
+  sumber : varchar
+  b1, se_b1, b2, se_b2 : real
+  crs : bool
+  n_obs : int
+  tahun_awal, tahun_akhir : smallint
+  versi_data_id : bigint <<FK>> (nullable)
+  catatan : text
+  spesifikasi : json
+  hasil : json
+  bawaan : bool
+  dibuat : timestamp
+}
+
+entity "estimasi_koefisiensektoral" as ks {
+  * id : bigint <<PK>>
+  --
+  nama : varchar
+  primer, se_primer : real
+  sekunder, se_sekunder : real
+  tva, se_tva : real
+  n_obs : int
+  catatan : text
+  bawaan : bool
+}
+
+entity "simulasi_skenario" as sk {
+  * id : bigint <<PK>>
+  --
+  nama, singkat, kelompok, templat
+  deskripsi, status
+  * versi_data_id : bigint <<FK>> PROTECT
+  * set_parameter_id : bigint <<FK>> PROTECT
+  koef_sektoral_id : bigint <<FK>> (nullable)
+  tahun_dasar, tahun_target, hist_awal, hist_akhir
+  sasaran, mode_sasaran, lambda_proporsional
+  mode_tfp, tfp_nasional, faktor_tfp
+  mode_tk, tk_nasional, mode_pmtb, g_pmtb_nasional
+  g_investasi, inflasi_pmtb, pass_through,
+  rasio_realisasi, apbd_persen, pass_through_apbd
+  a1 : json, a2 : json
+  alokasi_a2, komposisi_a2 : json
+  realokasi_pp, tujuan_realokasi
+  n_simulasi, skala_se, volatilitas_tfp, seed
+  pecah_papua : bool
+  override_provinsi : json
+  jalur : json, kejutan : json
+  dibuat, diubah : timestamp
+  dibuat_oleh_id : int <<FK>> (nullable)
+}
+
+entity "simulasi_hasilskenario" as hs {
+  * id : bigint <<PK>>
+  --
+  * skenario_id : bigint <<FK>> UNIQUE
+  dihitung : timestamp
+  durasi_detik : real
+  data : json
+}
+
+entity "io_irio_tabelio" as tio {
+  * id : bigint <<PK>>
+  --
+  jenis : varchar(10)
+  tahun : smallint
+  metode : varchar(16)
+  berkas : varchar (path .npz)
+  sumber : varchar
+  ringkasan : json
+  dimuat : timestamp
+  --
+  UNIQUE (jenis, tahun, metode)
+}
+
+entity "auth_user" as user {
+  * id : int <<PK>>
+  --
+  username, ...
+}
+
+versi ||--o{ obs : "CASCADE"
+provinsi ||--o{ obs
+versi |o--o{ versi : "induk"
+user |o--o{ versi
+versi |o--o{ sp
+versi ||--o{ sk : "PROTECT"
+sp ||--o{ sk : "PROTECT"
+ks |o--o{ sk
+sk ||--o| hs : "CASCADE"
+user |o--o{ sk
+@enduml

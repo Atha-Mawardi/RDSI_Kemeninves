@@ -1,0 +1,184 @@
+@startuml 03_kelas_domain
+!include _gaya.iuml
+title Diagram kelas: model domain (Django ORM)
+hide empty members
+
+package datapanel {
+  class Provinsi {
+    + kode : int <<PK>>  (kode BPS)
+    + nama : str
+    + pulau : str
+  }
+
+  enum "VersiData.Status" as StatusVersi {
+    draf
+    siap
+    aktif
+    arsip
+    gagal
+  }
+  enum "VersiData.Sumber" as SumberVersi {
+    awal
+    unggah
+    pembaruan
+    edit
+  }
+
+  class VersiData {
+    + nama : str
+    + keterangan : text
+    + status : Status
+    + sumber : Sumber
+    + berkas : File
+    + nama_berkas : str
+    + opsi_pembersihan : JSON
+    + laporan : JSON  (daftar Temuan)
+    + ringkasan : JSON
+    + tahun_awal, tahun_akhir : int
+    + n_baris : int
+    + pangsa_pemekaran : JSON  (pangsa 6 provinsi Papua)
+    + dibuat : datetime
+    --
+    + {static} aktif() : VersiData
+    + bisa_dipakai : bool
+    + lengkap_untuk_simulasi : bool
+    + aktifkan()  <<atomic>>
+    + ke_dataframe(dengan_catatan) : DataFrame
+    + bisa_rinci_papua : bool
+    + ke_dataframe_38() : DataFrame
+    + simpan_dataframe(df, catatan)
+  }
+
+  class Observasi {
+    + tahun : int
+    + nilai : JSON  {kode_variabel: angka}
+    + catatan : JSON  {kode_variabel: teks}
+    --
+    unik (versi, provinsi, tahun)
+  }
+}
+
+package estimasi {
+  class SetParameter {
+    + nama : str
+    + sumber : vintage | estimasi | manual
+    + b1, se_b1 : float  (modal)
+    + b2, se_b2 : float  (tenaga kerja)
+    + crs : bool
+    + n_obs : int
+    + tahun_awal, tahun_akhir : int
+    + catatan : text
+    + spesifikasi : JSON  (tahun dikecualikan, provinsi,\n  efek tahun, modal, δ)
+    + hasil : JSON  (koefisien, uji CRS, efek tahun,\n  efek provinsi, R²)
+    + bawaan : bool
+    --
+    + rts : float  (b1 + b2)
+  }
+  class KoefisienSektoral {
+    + nama : str
+    + primer, se_primer : float
+    + sekunder, se_sekunder : float
+    + tva, se_tva : float
+    + n_obs : int
+    + catatan : text
+    + bawaan : bool
+    --
+    + sebagai_dict() : dict
+    + se_dict() : dict
+  }
+}
+
+package simulasi {
+  class Skenario {
+    + nama, singkat, deskripsi
+    + kelompok : bawaan | kustom
+    + templat : str  (kunci paket, internal)
+    + status : baru | selesai | usang | gagal
+    .. horizon ..
+    + tahun_dasar, tahun_target : int
+    + hist_awal, hist_akhir : int
+    + kecualikan_2020 : bool
+    + pecah_papua : bool  (38 provinsi)
+    .. sasaran K ..
+    + sasaran : float (%/thn)
+    + mode_sasaran : seragam | proporsional | manual
+    + lambda_proporsional : float
+    .. faktor ..
+    + mode_tfp, tfp_nasional, faktor_tfp
+    + mode_tk, tk_nasional
+    + mode_pmtb, g_pmtb_nasional
+    .. investasi ..
+    + a1 : JSON {tahun: triliun}
+    + a2 : JSON {tahun: triliun}
+    + g_investasi, inflasi_pmtb
+    + pass_through, rasio_realisasi
+    + apbd_persen, pass_through_apbd
+    .. sektor ..
+    + alokasi_a2 : kebutuhan | pdrb | investasi | manual
+    + komposisi_a2 : JSON
+    + realokasi_pp : float
+    + tujuan_realokasi : C | tva
+    .. keyakinan ..
+    + n_simulasi, skala_se, volatilitas_tfp, seed
+    .. provinsi ..
+    + override_provinsi : JSON {kode: {sasaran, tfp, tk, bobot_a2, primer..tlain}}
+    .. lintasan ..
+    + jalur : JSON {sasaran | faktor_tfp | g_investasi: {tahun: nilai}}
+    + kejutan : JSON [{jenis, tahun, besar, persistensi, cakupan}]
+    --
+    + tahun_proyeksi : list[int]
+    + label : str  (singkat atau nama)
+    + bawaan : bool
+  }
+  class HasilSkenario {
+    + dihitung : datetime
+    + durasi_detik : float
+    + data : JSON
+    {meta, nasional, provinsi,
+     sektoral, ketidakpastian}
+  }
+}
+
+package io_irio {
+  class TabelIO {
+    + jenis : irio | nasional
+    + tahun : int
+    + metode : RAS | CE
+    + berkas : File  (.npz: Z, x, va, wil, sek)
+    + sumber : str
+    + ringkasan : JSON
+    + dimuat : datetime
+    --
+    + label : str
+    + simpan_larik(**larik)
+    + larik() : dict
+  }
+}
+
+class "auth.User" as User
+
+VersiData "1" *-- "0..*" Observasi : observasi
+Provinsi "1" -- "0..*" Observasi
+VersiData "0..1" <-- "0..*" VersiData : induk
+VersiData .. StatusVersi
+VersiData .. SumberVersi
+User "0..1" <-- "0..*" VersiData : dibuat_oleh
+
+SetParameter "0..*" --> "0..1" VersiData : versi_data\n(sumber estimasi)
+Skenario "0..*" --> "1" VersiData : versi_data\n<<PROTECT>>
+Skenario "0..*" --> "1" SetParameter : set_parameter\n<<PROTECT>>
+Skenario "0..*" --> "0..1" KoefisienSektoral : koef_sektoral
+Skenario "1" *-- "0..1" HasilSkenario : hasil
+User "0..1" <-- "0..*" Skenario : dibuat_oleh
+
+note bottom of Observasi
+  Panel disimpan "lebar dalam JSON": satu baris per
+  provinsi-tahun, semua variabel kanonik di kolom nilai.
+  Skema tetap walau variabel bertambah.
+end note
+note right of HasilSkenario
+  Hasil dihitung ulang, tidak disunting.
+  Skenario berstatus "usang" bila asumsinya
+  diubah setelah hasil dihitung.
+end note
+@enduml

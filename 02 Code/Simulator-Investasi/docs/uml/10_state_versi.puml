@@ -1,0 +1,41 @@
+@startuml 10_state_versi
+!include _gaya.iuml
+title State: siklus hidup versi data dan skenario
+
+state "VersiData" as V {
+  [*] --> Draf : unggah / pembaruan\n[tanpa galat]
+  [*] --> Gagal : unggah\n[galat pembersihan]
+  [*] --> Siap : sunting sel\n(versi turunan)
+  [*] --> Aktif : muat_data_awal
+  Draf --> Siap : konfirmasi
+  Draf --> Aktif : aktifkan
+  Siap --> Aktif : aktifkan
+  Arsip --> Aktif : aktifkan\n[punya observasi]
+  Aktif --> Siap : versi lain diaktifkan
+  Draf --> Arsip : arsipkan
+  Siap --> Arsip : arsipkan
+  Gagal --> Arsip : arsipkan
+  Draf --> [*] : hapus\n[tidak dipakai skenario]
+  Siap --> [*] : hapus\n[tidak dipakai skenario]
+  Arsip --> [*] : hapus\n[tidak dipakai skenario]
+  Gagal --> [*] : hapus
+
+  Aktif : tepat satu versi aktif
+  Aktif : bawaan untuk skenario baru
+  Gagal : hanya laporan, tanpa observasi
+}
+
+state "Skenario" as S {
+  state "Gagal" as GagalS
+  [*] --> Baru : simpan
+  Baru --> Selesai : jalankan [berhasil]
+  Baru --> GagalS : jalankan [GalatSimulasi]
+  Selesai --> Usang : ubah asumsi /\nasumsi provinsi / unggah lembar
+  Usang --> Selesai : jalankan ulang
+  GagalS --> Selesai : ubah lalu jalankan
+  Selesai --> Selesai : jalankan ulang
+  Selesai --> Baru : duplikat\n(salinan baru)
+  Selesai : HasilSkenario terkini
+  Usang : hasil lama masih ditampilkan\ndengan peringatan
+}
+@enduml

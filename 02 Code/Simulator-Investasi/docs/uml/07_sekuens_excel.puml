@@ -1,0 +1,45 @@
+@startuml 07_sekuens_excel
+!include _gaya.iuml
+title Sekuens: putaran Excel (lembar asumsi provinsi dan hasil + kalkulator)
+autonumber
+
+actor "Analis" as U
+participant "Browser" as B
+participant "simulasi.views" as V
+participant "excel_skenario" as X
+participant "Skenario" as S
+participant "layanan" as L
+participant "Microsoft Excel" as XL
+
+== Lembar asumsi per provinsi ==
+U -> B : "Unduh lembar asumsi"
+B -> V : GET /skenario/<pk>/asumsi.xlsx
+V -> X : lembar_asumsi(sk, hasil.data)
+X --> V : bytes: kolom kunci abu-abu,\nkolom isian kuning + validasi rentang,\nnilai acuan hasil terakhir
+V --> B : lampiran .xlsx
+U -> XL : sunting sasaran / TFP / TK /\nbobot A2 / komposisi per provinsi
+XL --> U : berkas tersimpan
+U -> B : unggah berkas
+B -> V : POST /skenario/<pk>/asumsi/unggah/
+V -> X : baca_lembar_asumsi(berkas)
+X -> X : cari baris header, cocokkan kode provinsi,\nperiksa rentang, abaikan sel kosong
+X --> V : (override, pesan peringatan)
+V -> S : override_provinsi = override;\nstatus = usang
+V --> B : pesan "jalankan ulang"
+U -> B : "Jalankan ulang"
+B -> V : POST /skenario/<pk>/jalankan/
+V -> L : jalankan(sk)
+L --> V : hasil baru
+
+== Hasil + kalkulator ==
+U -> B : "Unduh Excel hasil + kalkulator"
+B -> V : GET /skenario/<pk>/hasil.xlsx
+V -> X : ekspor_hasil(sk, data)
+X -> X : sheet Asumsi + nama terdefinisi\n(b1, b2, H_, inflasi, pass_through, ...)
+X -> X : sheet Kalkulator: rumus hidup per provinsi\n(laju K dibutuhkan, PMTB, PMA+PMDN di atas tren)
+X -> X : sheet Nasional, Provinsi, Sektoral,\nMatriks, Ketidakpastian + grafik
+X --> V : bytes
+V --> B : lampiran .xlsx
+U -> XL : ubah sel kuning (sasaran, TFP, b1, ...)
+XL -> XL : rumus menghitung ulang kebutuhan\ntanpa kembali ke aplikasi
+@enduml

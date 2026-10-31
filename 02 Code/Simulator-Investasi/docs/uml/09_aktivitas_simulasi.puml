@@ -1,0 +1,52 @@
+@startuml 09_aktivitas_simulasi
+!include _gaya.iuml
+title Aktivitas: algoritma mesin simulasi
+
+start
+partition "Persiapan (_siapkan)" {
+  :Ambil panel versi data; tambah variabel turunan;
+  :Kondisi tahun dasar per provinsi:\nY0 (PDRB riil), K0 (PMTB riil), PMTB nominal,\nI0 (PMA+PMDN), deflator PMTB;
+  :Laju historis (jendela hist_awal–hist_akhir):\ngY, gK, gL dan kovariansnya;
+  :Laju TFP: gA = gY − b1·gK − b2·gL\n(atau nilai nasional; × faktor;\nisian provinsi menggantikan);
+  :Tren: K_tren, I_tren (PMA+PMDN),\ninflasi PMTB, belanja & PAD;
+  :A1: isian nasional × pangsa provinsi 3 tahun\n× rasio realisasi (kosong = tren);
+  :Komposisi sektor historis dan komposisi A2;
+  :Jalur sasaran ln Y*:\nseragam | proporsional (bisection agar nasional = K)\n| manual; provinsi yang diisi dikunci;
+}
+
+partition "Jalur dasar Bn (_dasar)" {
+  :PMTB nominal = tren + π·(A1 − tren investasi);
+  :ln Y = gA·t + b1·ln(K/K0) + b2·gL·t;
+}
+
+partition "Kebutuhan (_mundur), per tahun h" {
+  repeat
+    :bonus sektor dari Δpangsa tahun lalu;
+    :ln A = gA·t + bonus kumulatif + realokasi;
+    :ln K perlu = (ln Y* − ln A − b2·gL·t) / b1;
+    :PMA+PMDN perlu = tren + (PMTB nominal perlu\n− PMTB nominal tren − π_g·APBD) / π;
+    :Pangsa baru = campuran A1 (historis)\ndan tambahan (komposisi A2);
+  repeat while (h < H?) is (ya)
+  :Kebutuhan tambahan = PMA+PMDN perlu − A1;
+}
+
+partition "Skenario Xn (_maju)" {
+  :Bagi A2 nasional ke provinsi\n(kebutuhan | PDRB | investasi | manual);
+  :PMTB nominal = tren + π·(A1 + A2 − tren) + π_g·APBD;
+  :Bonus TFP = Σ β_g · Δpangsa_g (t−1);
+  :ln Y = ln A + b1·ln(K/K0) + b2·gL·t;
+}
+
+:Kemas: nasional (Bn, Xn, K), provinsi,\nkontribusi sumber pertumbuhan,\nmatriks provinsi × sektor;
+
+if (n_simulasi > 0?) then (ya)
+  partition "Keyakinan (_monte_carlo)" {
+    :Tarik D kali: b1, b2 ~ N(b, SE·skala),\nrata-rata TFP, gL, β_g;
+    :Kejutan TFP tahunan (jalan acak, σ residual);
+    :Jalankan _maju dan _mundur tervektor (D × 34 × H);
+    :Peluang capai sasaran (nasional, per provinsi),\nkipas P10–P90, kebutuhan P50/P80/P90;
+  }
+endif
+:Kembalikan dict hasil + peringatan;
+stop
+@enduml

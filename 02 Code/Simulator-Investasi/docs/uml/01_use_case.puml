@@ -1,0 +1,110 @@
+@startuml 01_use_case
+!include _gaya.iuml
+title Diagram use case: Simulator Investasi dan TFP
+left to right direction
+
+actor "Analis BKPM\n(perencana investasi)" as Analis
+actor "Pengelola data" as Pengelola
+actor "Peneliti\n(PSE UGM)" as Peneliti
+Peneliti -|> Analis
+
+rectangle "Simulator Investasi & TFP" {
+  package "Data" {
+    usecase "Lihat beranda\n(KPI, peta, seri nasional)" as UC_Beranda
+    usecase "Jelajahi indikator\nper provinsi dan tahun" as UC_Jelajah
+    usecase "Unggah dataset baru" as UC_Unggah
+    usecase "Perbarui data\n(tahun/kolom baru)" as UC_Perbarui
+    usecase "Bersihkan data otomatis" as UC_Bersih
+    usecase "Tinjau laporan pembersihan" as UC_Laporan
+    usecase "Konfirmasi / aktifkan /\narsipkan versi" as UC_Versi
+    usecase "Sunting sel / grid\n(versi turunan beralasan)" as UC_Sunting
+    usecase "Periksa kelengkapan\n(17 pemeriksaan, matriks)" as UC_Lengkap
+    usecase "Unduh dataset Excel\nberformat" as UC_UnduhData
+    usecase "Unduh templat Excel" as UC_Templat
+  }
+  package "Estimasi" {
+    usecase "Estimasi ulang elastisitas\n(tahun, provinsi, spesifikasi bebas)" as UC_Estimasi
+    usecase "Kelola set elastisitas\n(b1, b2, SE)" as UC_Param
+    usecase "Kelola koefisien\nkomposisi sektor (β)" as UC_Beta
+    usecase "Lihat residual TFP\nper provinsi" as UC_TFP
+  }
+  package "Skenario" {
+    usecase "Susun skenario\n(sasaran K, A1, A2, asumsi)" as UC_Skenario
+    usecase "Jalankan simulasi" as UC_Jalankan
+    usecase "Hitung jalur dasar Bn\ndan skenario Xn" as UC_Maju
+    usecase "Hitung kebutuhan investasi\nuntuk sasaran" as UC_Mundur
+    usecase "Ukur keyakinan\n(Monte Carlo)" as UC_MC
+    usecase "Atur asumsi per provinsi" as UC_Asumsi
+    usecase "Putaran Excel\nlembar asumsi" as UC_AsumsiXL
+    usecase "Unduh hasil Excel\n+ kalkulator" as UC_Hasil
+    usecase "Bandingkan skenario" as UC_Banding
+    usecase "Simpan / hapus\nskenario kustom" as UC_Duplikat
+    usecase "Buat paket skenario\nbawaan (BAU … Bertahap)" as UC_Paket
+    usecase "Pilih skenario aktif\n(global)" as UC_Aktif
+    usecase "Atur kejutan dan\njalur per tahun" as UC_Kejutan
+  }
+  package "Analisis" {
+    usecase "Analisis IO-IRIO\n(aliran, keterkaitan, pengganda)" as UC_IO
+    usecase "Dampak investasi\nskenario lewat IRIO" as UC_Dampak
+    usecase "Pivot bebas\n+ unduh XLSX" as UC_Pivot
+  }
+}
+
+Analis --> UC_Beranda
+Analis --> UC_Jelajah
+Analis --> UC_Skenario
+Analis --> UC_Jalankan
+Analis --> UC_Asumsi
+Analis --> UC_Hasil
+Analis --> UC_Banding
+Analis --> UC_Duplikat
+Analis --> UC_TFP
+Analis --> UC_Paket
+Analis --> UC_Aktif
+Analis --> UC_Kejutan
+Analis --> UC_IO
+Analis --> UC_Pivot
+
+Pengelola --> UC_Unggah
+Pengelola --> UC_Perbarui
+Pengelola --> UC_Laporan
+Pengelola --> UC_Versi
+Pengelola --> UC_Sunting
+Pengelola --> UC_Lengkap
+UC_Lengkap ..> UC_Sunting : <<extend>>
+UC_Kejutan ..> UC_Skenario : <<extend>>
+UC_IO ..> UC_Dampak : <<extend>>
+UC_Dampak ..> UC_Aktif : <<include>>
+Pengelola --> UC_UnduhData
+Pengelola --> UC_Templat
+
+Peneliti --> UC_Estimasi
+Peneliti --> UC_Param
+Peneliti --> UC_Beta
+
+UC_Unggah ..> UC_Bersih : <<include>>
+UC_Perbarui ..> UC_Bersih : <<include>>
+UC_Perbarui ..> UC_Templat : <<extend>>
+UC_Bersih ..> UC_Laporan : <<include>>
+UC_Jalankan ..> UC_Maju : <<include>>
+UC_Jalankan ..> UC_Mundur : <<include>>
+UC_Jalankan ..> UC_MC : <<extend>>\n[n_simulasi > 0]
+UC_AsumsiXL ..> UC_Asumsi : <<extend>>
+UC_Estimasi ..> UC_Param : <<include>>
+UC_Paket ..> UC_Skenario : <<include>>
+UC_Paket ..> UC_Jalankan : <<include>>
+UC_Paket ..> UC_Banding : <<extend>>\n[buat semua]
+
+note right of UC_Paket
+  BAU, Perlambatan (dengan kejutan 2026),
+  Percepatan, Hilirisasi, Pemerataan,
+  Reformasi, Penuh 8%, Bertahap (jalur sasaran).
+  Tiap paket mewarisi asumsi paket dasarnya.
+end note
+
+note right of UC_Mundur
+  Dari sasaran K nasional (dibagi ke provinsi)
+  dihitung PMTB riil yang dibutuhkan, lalu
+  PMA+PMDN nominal di atas A1.
+end note
+@enduml

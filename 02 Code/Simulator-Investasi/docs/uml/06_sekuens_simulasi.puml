@@ -1,0 +1,55 @@
+@startuml 06_sekuens_simulasi
+!include _gaya.iuml
+title Sekuens: menyusun dan menjalankan skenario
+autonumber
+
+actor "Analis" as U
+participant "Browser" as B
+participant "simulasi.views\nsunting() / jalankan()" as V
+participant "FormSkenario" as F
+participant "layanan" as L
+participant "VersiData" as VD
+participant "MesinSimulasi" as M
+participant "HasilSkenario" as H
+database "Basis data" as DB
+
+U -> B : isi sasaran K, A1, A2 per tahun,\nasumsi TFP/TK/PMTB, komposisi sektor
+B -> V : POST /skenario/baru/ (jalankan=1)
+V -> F : is_valid(), save()
+F -> DB : INSERT/UPDATE skenario\n(a1, a2, komposisi_a2 sebagai JSON;\nstatus usang bila hasil lama ada)
+V -> L : jalankan(sk)
+activate L
+L -> L : konfigurasi_dari(sk)\n(set parameter + koefisien β + override)
+L -> VD : ke_dataframe()
+VD -> DB : SELECT observasi
+L -> M : MesinSimulasi(panel, cfg)
+activate M
+M -> M : _siapkan()\nkondisi dasar Y0, K0, I0,\nlaju historis, kovarians,\npangsa investasi & sektor,\nrencana A1, APBD, realokasi,\njalur sasaran (bisection bila proporsional)
+L -> M : jalankan(dengan_mc=True)
+M -> M : _dasar()  -> jalur Bn (A1 saja)
+M -> M : _mundur() -> PMTB & PMA+PMDN\nyang dibutuhkan untuk sasaran
+M -> M : _bobot_alokasi() -> bagi A2 ke provinsi
+M -> M : _maju()  -> jalur Xn (A1 + A2)
+M -> M : _kemas() -> nasional, provinsi,\nkontribusi, sektoral
+opt n_simulasi > 0
+  M -> M : _monte_carlo()\nD tarikan b1, b2, TFP, TK, β, kejutan TFP\n-> peluang capai, P50/P80/P90 kebutuhan
+end
+M --> L : dict hasil (+ peringatan)
+deactivate M
+alt GalatSimulasi
+  L -> DB : skenario.status = gagal
+  L --> V : (None, pesan)
+else berhasil
+  L -> H : update_or_create(data, durasi)
+  H -> DB : simpan JSON hasil
+  L -> DB : skenario.status = selesai
+  L --> V : (hasil, None)
+end
+deactivate L
+V --> B : 302 -> /skenario/<pk>/ + pesan
+B -> V : GET /skenario/<pk>/
+V -> DB : skenario + hasil
+V --> B : HTML (KPI Bn/Xn/K, tab nasional,\nprovinsi, sektoral, keyakinan)
+B -> B : app.js menggambar grafik\ndan peta choropleth
+B -> U : hasil
+@enduml

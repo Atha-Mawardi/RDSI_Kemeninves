@@ -1,0 +1,48 @@
+@startuml 11_deployment
+!include _gaya.iuml
+title Deployment: laptop analis dan server internal
+
+node "Laptop analis / peneliti\n(macOS / Windows)" as Laptop {
+  node "Python 3.12+ venv" as Venv {
+    component "Django runserver\n127.0.0.1:8000" as Dev
+    artifact "simulator (datapanel,\nestimasi, simulasi)" as App1
+  }
+  database "db.sqlite3" as Sqlite
+  folder "media/unggahan" as Media1
+  node "Browser" as Br1
+  node "Microsoft Excel" as Excel1
+  folder "Repo RDSI_Kemeninves\n01 Data/..." as Repo
+}
+Dev --> Sqlite
+Dev --> Media1
+Br1 --> Dev : HTTP
+Br1 ..> Excel1 : unduh .xlsx
+Dev ..> Repo : muat_data_awal\n(sekali)
+
+node "Server internal BKPM / PSE\n(Linux)" as Server {
+  node "nginx" as Nginx {
+    artifact "/static (collectstatic)\nLeaflet, Chart.js, geojson, CSS" as Static
+  }
+  node "gunicorn" as Gunicorn {
+    component "simulator.wsgi" as App2
+  }
+  database "PostgreSQL" as Pg
+  folder "MEDIA_ROOT" as Media2
+}
+node "Browser pengguna BKPM" as Br2
+node "Microsoft Excel" as Excel2
+
+Br2 --> Nginx : HTTPS
+Nginx --> Gunicorn : proxy
+Nginx --> Static
+App2 --> Pg
+App2 --> Media2
+Br2 ..> Excel2 : unduh / unggah .xlsx
+
+note bottom of Server
+  Variabel lingkungan: SIMULATOR_SECRET_KEY,
+  SIMULATOR_DEBUG=0, SIMULATOR_HOSTS.
+  Tidak ada panggilan internet: peta memakai
+  geojson lokal, pustaka JS disajikan sendiri.
+end note
+@enduml

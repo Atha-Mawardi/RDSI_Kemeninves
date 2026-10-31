@@ -1,0 +1,62 @@
+@startuml 05_sekuens_unggah
+!include _gaya.iuml
+title Sekuens: unggah, pembersihan, dan aktivasi versi data
+autonumber
+
+actor "Pengelola data" as U
+participant "Browser" as B
+participant "datapanel.views\nunggah()" as V
+participant "FormUnggah" as F
+participant "PipelinePembersihan" as P
+participant "gabungkan_pembaruan" as G
+participant "VersiData" as VD
+database "Basis data" as DB
+participant "excel_data" as X
+
+U -> B : pilih berkas .xlsx/.csv,\nmode (baru | pembaruan), opsi
+B -> V : POST /data/unggah/ (multipart)
+V -> F : is_valid()
+F --> V : cleaned_data
+V -> P : PipelinePembersihan(opsi).jalankan(berkas)
+activate P
+P -> P : _baca: semua sheet,\ncari baris header
+P -> P : _petakan kolom ke kode kanonik\n(alias dataset tim)
+P -> P : _kunci provinsi\n(kode BPS / nama, lipat pemekaran Papua)
+P -> P : ke_angka, _satuan\n(Rp/juta/triliun -> miliar)
+P -> P : _konsistensi, _batasi_tahun
+P -> P : _imputasi (catat tiap sel)
+P -> P : _lonjakan (tandai), _cakupan
+P --> V : HasilPembersihan(df, catatan, temuan)
+deactivate P
+
+alt mode pembaruan dan tanpa galat
+  V -> VD : induk.ke_dataframe(dengan_catatan=True)
+  VD -> DB : SELECT observasi
+  V -> G : gabungkan_pembaruan(induk, baru)
+  G --> V : df gabungan,\nsel berubah ditandai "diperbarui"
+end
+
+V -> VD : create(status = draf | gagal,\nlaporan, ringkasan, berkas)
+VD -> DB : INSERT versi
+opt tanpa galat
+  V -> VD : simpan_dataframe(df, catatan)
+  VD -> DB : bulk INSERT observasi\n(1 baris per provinsi-tahun)
+end
+V --> B : 302 -> /data/<pk>/
+B -> U : laporan pembersihan + pratinjau berwarna
+
+U -> B : "Konfirmasi dan simpan"
+B -> V : POST /data/<pk>/konfirmasi/
+V -> VD : status = siap
+U -> B : "Jadikan versi aktif"
+B -> V : POST /data/<pk>/aktifkan/
+V -> VD : aktifkan()
+VD -> DB : transaksi: versi aktif lama -> siap,\nversi ini -> aktif
+
+U -> B : "Unduh Excel hasil pembersihan"
+B -> V : GET /data/<pk>/unduh.xlsx
+V -> VD : ke_dataframe(dengan_catatan=True)
+V -> X : tulis_dataset(df, catatan, laporan)
+X --> V : bytes (Petunjuk, Data berwarna\n+ komentar sel, Kamus, Laporan)
+V --> B : lampiran .xlsx
+@enduml

@@ -1,0 +1,226 @@
+@startuml 04_kelas_layanan
+!include _gaya.iuml
+title Diagram kelas: layanan (pembersihan, estimasi, simulasi, IO, pivot, Excel)
+hide empty members
+
+package "datapanel.pembersihan" {
+  class PipelinePembersihan {
+    + OPSI_BAWAAN : dict
+    - opsi : dict
+    - temuan : list[Temuan]
+    - catatan : dict[(kode, tahun)] -> {var: teks}
+    --
+    + jalankan(berkas, nama_berkas) : HasilPembersihan
+    - _baca(berkas) : dict[sheet, DataFrame]
+    - _cari_header(mentah) : int
+    - _sheet_ke_tabel(nama, mentah)
+    - _dari_panjang(df)
+    - _petakan(tabel)  : alias -> kode kanonik
+    - _kunci(tabel, sheet)  : kode BPS / nama, lipat Papua
+    - _satukan(bagian)
+    - _satuan(df)  : Rp, juta, triliun -> miliar
+    - _konsistensi(df)  : jumlah sektor vs total
+    - _batasi_tahun(df)
+    - _imputasi(df)  : interpolasi | LOCF | tidak
+    - _lonjakan(df)  : tandai > ambang
+    - _cakupan(df)
+  }
+  class HasilPembersihan {
+    + df : DataFrame  (kode, tahun) x variabel
+    + catatan : dict
+    + temuan : list[Temuan]
+    + pemetaan : dict
+    + kolom_tak_dikenal : list
+    + rincian : DataFrame  (baris 6 provinsi Papua)
+    --
+    + ada_galat : bool
+    + pangsa_pemekaran(sumber) : dict
+    + ringkasan() : dict
+  }
+  class Temuan {
+    + tingkat : info | peringatan | galat
+    + langkah : str
+    + pesan : str
+    + detail : list
+    --
+    + ke_dict()
+  }
+  class "<<fungsi>>" as FPembersihan {
+    + ke_angka(seri) : (Series, int)
+    + gabungkan_pembaruan(induk_df, induk_cat, baru_df, baru_cat)
+  }
+  PipelinePembersihan ..> HasilPembersihan : membuat
+  HasilPembersihan o-- "0..*" Temuan
+}
+
+package "datapanel (pendukung)" {
+  class "variabel" as Variabel <<modul>> {
+    + DAFTAR : list[Variabel]
+    + WAJIB : list[str]
+    + INDIKATOR_TURUNAN
+    + peta_alias() : dict
+    + label(kode), satuan(kode)
+  }
+  class "referensi" as Referensi <<modul>> {
+    + PROVINSI (34), SEKTOR (17), KELOMPOK (4)
+    + PROVINSI_PEMEKARAN (4), KODE_PROVINSI_38
+    + PEMEKARAN_PAPUA, kode_pemekaran(nama)
+    + cari_kode_provinsi(nama) : (kode, catatan)
+  }
+  class "panel" as Panel <<modul>> {
+    + tambah_turunan(df)
+    + seri_nasional(df)
+    + pangsa_kelompok_investasi(df, tahun)
+    + pangsa_sektor_investasi(df, tahun)
+    + tabel_provinsi(df, tahun, kolom)
+    + historis_lima_tahun(df, akhir, sasaran)
+  }
+  class "papua" as Papua <<modul>> {
+    + KELUARGA {91: (91, 92), 94: (94, 95, 96, 97)}
+    + koreksi_geser(rincian, catatan)
+    + hitung_pangsa(rincian, sumber) : dict
+    + gabung_pangsa(lama, baru) : dict
+    + pecah(df34, pangsa) : df38
+    + rincian_dari_berkas(bkpm, panel)
+  }
+  class "excel_data" as ExcelData <<modul>> {
+    + tulis_dataset(df, catatan, temuan, judul) : bytes
+    + templat(tahun, kolom) : bytes
+  }
+  class "diagnosa" as Diagnosa <<modul>> {
+    + periksa(versi) : list  {label, status, nilai, rincian, saran}
+    + matriks(versi) : dict  (kelompok/pulau × tahun)
+  }
+  class "pivot" as Pivot <<modul>> {
+    + SUMBER : panel | sektoral | skenario | io_sektor | io_aliran
+    + data(request) : JSON  {dimensi, ukuran, data}
+    + xlsx(request) : berkas bergaya neraca
+  }
+}
+PipelinePembersihan ..> Variabel
+PipelinePembersihan ..> Referensi
+PipelinePembersihan ..> Papua : koreksi_geser
+HasilPembersihan ..> Papua : hitung_pangsa
+
+package "estimasi.twfe" {
+  class "twfe" as TWFE <<modul>> {
+    + stok_pim(I, delta)
+    + siapkan_log(df, modal, delta)
+    - _demean_dua_arah(d, kolom, tahun)  : proyeksi bergantian
+    + estimasi_lengkap(df, awal, akhir, crs, kecuali_tahun,
+      provinsi, efek_tahun, modal, delta) : dict
+      {koefisien[b, se, t, p, CI], uji_crs, efek_tahun,
+       efek_provinsi, residual, r2_within, r2_total}
+    + estimasi(df, awal, akhir, crs) : dict  (pembungkus)
+    + residual_tfp(df, b1, b2) : DataFrame
+      {lnA, gY, gK, gL, gA}
+  }
+}
+
+package "estimasi.statistik" {
+  class "statistik" as Statistik <<modul>> {
+    + p_dua_sisi(t, df)
+    + t_kritis(df, alfa)
+    + bintang(p)
+  }
+}
+TWFE ..> Statistik
+
+package "io_irio.analisis" {
+  class Tabel {
+    + Z, x, va : array
+    + A, L (Leontief), B, G (Ghosh), v
+    + wil, sek, R, S
+    + blok(M) : (R, S, R, S)
+  }
+  class "analisis" as Analisis <<modul>> {
+    + tabel(t : TabelIO) : Tabel  <<lru_cache>>
+    + keterkaitan(Z, x, va) : BL, FL, pengganda
+    + keterkaitan_wilayah(tb, kode)
+    + aliran(tb, asal, tujuan)
+    + indikator_wilayah(tb, sektor)
+    + dampak(tb, investasi, jembatan) : ΔOutput, ΔNTB, limpahan
+    + investasi_skenario(sk, sumber, tahun)
+  }
+  Analisis ..> Tabel : membuat
+}
+Pivot ..> Analisis
+
+package "simulasi" {
+  class Konfigurasi <<dataclass>> {
+    + tahun_dasar, tahun_target, hist_awal, hist_akhir
+    + b1, b2, se_b1, se_b2 : float
+    + beta, se_beta : dict[kelompok]
+    + sasaran, mode_sasaran, lambda_proporsional
+    + mode_tfp, tfp_nasional, faktor_tfp
+    + mode_tk, tk_nasional, mode_pmtb, g_pmtb_nasional
+    + g_investasi, inflasi_pmtb
+    + pass_through, rasio_realisasi, apbd_persen, pass_through_apbd
+    + a1, a2 : dict[tahun -> triliun]
+    + alokasi_a2, komposisi_a2, realokasi_pp, tujuan_realokasi
+    + override : dict[kode -> dict]
+    + n_simulasi, skala_se, volatilitas_tfp, seed
+    + jalur : dict[kunci -> {tahun: nilai}]
+    + kejutan : list[{jenis, tahun, besar, persistensi, cakupan}]
+  }
+  class MesinSimulasi {
+    + cfg : Konfigurasi
+    + kode : array[34]
+    + Y0, K0, Kn0, I0 : array  (kondisi tahun dasar)
+    + gA, gL, gK_tren : array  (laju log)
+    + K_tren, I_tren, A1_plan, A1_real, apbd, R
+    + lnYstar, g_sasaran  (jalur sasaran)
+    + peringatan : list[str]
+    --
+    + jalankan(dengan_mc) : dict
+    - _siapkan()
+    - _laju_tfp(b1, b2)
+    - _rencana_a1()
+    - _a2_nasional()
+    - _jalur_tahunan(kunci)  : nilai per tahun dari jalur
+    - _kejutan()  : deviasi level meluruh ρ^(h−h0)
+    - _jalur_sasaran()  : seragam | proporsional | manual
+    - _bonus(beta, dshare)
+    - _maju(...)  : Bn / Xn
+    - _dasar(...)
+    - _mundur(...)  : kebutuhan
+    - _bobot_alokasi(kebutuhan)
+    - _monte_carlo(A2_real, hasil)
+    - _kemas(...)
+    - _sektoral(...)
+  }
+  class GalatSimulasi <<exception>>
+  class "layanan" as Layanan <<modul>> {
+    + konfigurasi_dari(sk : Skenario) : Konfigurasi
+    + jalankan(sk : Skenario) : (HasilSkenario, galat)
+  }
+  class "excel_skenario" as ExcelSk <<modul>> {
+    + KOLOM_ASUMSI
+    + ekspor_hasil(sk, data) : bytes
+      Petunjuk, Asumsi, Kalkulator (rumus hidup),
+      Nasional, Provinsi, Provinsi tahunan,
+      Sektoral, Matriks sektor, Ketidakpastian
+    + lembar_asumsi(sk, data) : bytes
+    + baca_lembar_asumsi(berkas) : (override, pesan)
+  }
+  MesinSimulasi *-- Konfigurasi
+  MesinSimulasi ..> GalatSimulasi : melempar
+  MesinSimulasi ..> Panel
+  Layanan ..> MesinSimulasi : membuat
+  Layanan ..> Konfigurasi : membuat
+}
+
+class "VersiData" as VD <<model>>
+class "Skenario" as SK <<model>>
+class "HasilSkenario" as HS <<model>>
+Layanan ..> SK
+Layanan ..> HS : update_or_create
+Layanan ..> VD : ke_dataframe() /\nke_dataframe_38()
+VD ..> Papua : pecah
+ExcelSk ..> SK
+ExcelData ..> VD
+
+Temuan -[hidden]down-> Layanan
+FPembersihan -[hidden]down-> Konfigurasi
+Panel -[hidden]down-> TWFE
+@enduml

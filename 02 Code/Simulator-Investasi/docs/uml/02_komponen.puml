@@ -1,0 +1,136 @@
+@startuml 02_komponen
+!include _gaya.iuml
+title Diagram komponen dan paket
+
+actor Pengguna
+component "Browser\n(HTML + CSS)" as Browser {
+  [app.js\npetaChoropleth, grafik,\ntab, urutkanTabel] as AppJS
+  [Leaflet 1.9\n(tanpa ubin daring)] as Leaflet
+  [Chart.js 4.4] as ChartJS
+  artifact "provinsi34.geojson\nprovinsi38.geojson" as Geo
+}
+Pengguna --> Browser
+
+package "simulator (proyek Django)" {
+  [settings.py] as Settings
+  [urls.py] as RootUrls
+  [templates/base.html] as Base
+}
+
+package "datapanel" as DP {
+  [views\nberanda, unggah, versi, jelajah,\nsunting, grid, kelengkapan] as DPViews
+  [diagnosa\nperiksa, matriks] as Diagnosa
+  [pivot\nlima sumber, data JSON,\nXLSX bergaya neraca] as Pivot
+  [forms\nFormUnggah, FormObservasi] as DPForms
+  [models\nProvinsi, VersiData, Observasi] as DPModels
+  [pembersihan\nPipelinePembersihan,\ngabungkan_pembaruan] as Pipeline
+  [panel\nturunan, seri nasional,\npangsa investasi,\nhistoris 5 tahun] as Panel
+  [papua\nhitung_pangsa, koreksi_geser,\npecah 34 -> 38] as Papua
+  [excel_data + gaya_excel\ntulis_dataset, templat] as ExcelData
+  [referensi + variabel\n34 (+4 pemekaran) provinsi,\n17 sektor, kamus variabel] as Ref
+  [muat_data_awal,\nmuat_pangsa_papua\n(perintah manajemen)] as Seed
+}
+
+package "estimasi" as ES {
+  [views\nmeja kerja, api_hitung,\nsimpan, hapus, bawaan] as ESViews
+  [statistik\ndistribusi t, p, t kritis] as Statistik
+  [models\nSetParameter,\nKoefisienSektoral] as ESModels
+  [twfe\nestimasi_lengkap, stok_pim,\nresidual_tfp] as TWFE
+}
+
+package "simulasi" as SM {
+  [views\nruang skenario, hasil, asumsi,\nbandingkan, paket, kustom] as SMViews
+  [aktif\nskenario aktif (sesi)] as Aktif
+  [templat\n8 paket bawaan, isian,\nbuat, buat_semua] as Templat
+  [forms\nFormSkenario,\nFormAsumsiProvinsi] as SMForms
+  [models\nSkenario, HasilSkenario] as SMModels
+  [layanan\nkonfigurasi_dari, jalankan] as Layanan
+  [mesin\nKonfigurasi, MesinSimulasi,\nkejutan, jalur] as Mesin
+  [excel_skenario\nekspor_hasil, lembar_asumsi,\nbaca_lembar_asumsi] as ExcelSk
+}
+
+package "io_irio" as IO {
+  [views\nberanda, API aliran,\nketerkaitan, dampak] as IOViews
+  [models\nTabelIO (larik .npz)] as IOModels
+  [analisis\nLeontief, Ghosh,\nketerkaitan, dampak] as Analisis
+  [muat + muat_io\nIRIO, IO nasional,\njembatan PMTB] as MuatIO
+}
+
+database "SQLite / PostgreSQL" as DB
+folder "media/unggahan" as Media
+folder "01 Data (repo)\nDataset agregasi, Hasil TFP,\n13_Sectoral, BKPM 38 provinsi" as RepoData
+
+component "pandas / numpy" as Pandas
+component "openpyxl" as Openpyxl
+
+Browser --> RootUrls : HTTP
+RootUrls --> DPViews
+RootUrls --> ESViews
+RootUrls --> SMViews
+RootUrls --> IOViews
+RootUrls --> Pivot
+IOViews --> Analisis
+Analisis --> IOModels
+MuatIO --> IOModels
+MuatIO --> RepoData : baca
+Analisis --> SMModels : investasi\nskenario
+Pivot --> DPModels
+Pivot --> SMModels
+Pivot --> Analisis
+Pivot --> Openpyxl
+DPViews --> Diagnosa
+ESViews --> Statistik
+TWFE --> Statistik
+SMViews --> Aktif
+IOViews --> Aktif
+IOModels --> DB
+AppJS --> Leaflet
+AppJS --> ChartJS
+AppJS ..> Geo : fetch
+
+DPViews --> DPForms
+DPViews --> Pipeline
+DPViews --> ExcelData
+DPViews --> Panel
+DPViews --> DPModels
+Pipeline --> Ref
+Pipeline --> Papua : rincian baris\npemekaran
+Papua --> Ref
+Pipeline --> Pandas
+ExcelData --> Openpyxl
+Panel --> Ref
+
+ESViews --> TWFE
+ESViews --> ESModels
+TWFE --> Pandas
+ESModels --> DPModels : versi_data
+
+SMViews --> SMForms
+SMViews --> Layanan
+SMViews --> ExcelSk
+SMViews --> Templat
+Templat --> Layanan
+Templat --> Mesin : kalibrasi A2\n(Penuh 8%, Bertahap)
+Layanan --> Mesin
+Layanan --> Papua : pecah\n(rinci_papua)
+SMViews --> Panel : historis\n5 tahun
+Layanan --> SMModels
+Mesin --> Panel
+Mesin --> Pandas
+ExcelSk --> Openpyxl
+SMModels --> DPModels : versi_data
+SMModels --> ESModels : set_parameter,\nkoef_sektoral
+
+Seed --> RepoData : baca
+Seed --> Pipeline
+Seed --> Papua
+Seed --> DPModels
+Seed --> ESModels
+Seed --> SMModels
+Seed --> Templat
+
+DPModels --> DB
+ESModels --> DB
+SMModels --> DB
+DPModels --> Media : berkas asli
+@enduml
