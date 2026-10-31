@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}{{ versi.nama }}{% endblock %}
+{% block isi %}
+<h1>{{ versi.nama }} <span class="lencana {{ versi.status }}">{{ versi.get_status_display }}</span></h1>
+<p class="sub">Versi #{{ versi.pk }} · {{ versi.get_sumber_display }}{% if versi.induk %} · turunan dari <a href="{% url 'datapanel:detail_versi' versi.induk_id %}">#{{ versi.induk_id }}</a>{% endif %} · {{ versi.nama_berkas }} · dipakai {{ dipakai }} skenario</p>
+
+<div class="aksi" style="margin-bottom:14px">
+  {% if versi.status == "draf" %}
+  <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'konfirmasi' %}">{% csrf_token %}<button class="btn hijau">Konfirmasi dan simpan</button></form>
+  {% endif %}
+  {% if versi.status != "aktif" and versi.status != "gagal" %}
+  <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'aktifkan' %}">{% csrf_token %}<button class="btn">Jadikan versi aktif</button></form>
+  {% endif %}
+  {% if versi.status != "gagal" %}<a class="btn garis" href="{% url 'datapanel:kelengkapan' versi.pk %}">Kelengkapan &amp; pemeriksaan</a>
+  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi.pk %}">Sunting di grid</a>
+  <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi.pk %}">Unduh Excel hasil pembersihan</a>{% endif %}
+  {% if versi.status != "aktif" %}
+  <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'arsipkan' %}">{% csrf_token %}<button class="btn garis">Arsipkan</button></form>
+  <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'hapus' %}" onsubmit="return confirm('Hapus versi ini?')">{% csrf_token %}<button class="btn merah">Hapus</button></form>
+  {% endif %}
+</div>
+
+<div class="grid g5">
+  <div class="kpi"><div class="label">Baris</div><div class="nilai">{{ versi.n_baris }}</div><div class="ket">{{ versi.ringkasan.n_provinsi }} provinsi</div></div>
+  <div class="kpi"><div class="label">Tahun</div><div class="nilai">{{ versi.tahun_awal }}–{{ versi.tahun_akhir }}</div></div>
+  <div class="kpi"><div class="label">Variabel</div><div class="nilai">{{ versi.ringkasan.n_variabel }}</div></div>
+  <div class="kpi {% if versi.ringkasan.n_imputasi %}buruk{% endif %}"><div class="label">Sel diimputasi</div><div class="nilai">{{ versi.ringkasan.n_imputasi|default:0 }}</div><div class="ket">lonjakan ditandai: {{ versi.ringkasan.n_lonjakan|default:0 }}</div></div>
+  <div class="kpi {% if versi.lengkap_untuk_simulasi %}baik{% else %}buruk{% endif %}"><div class="label">Siap simulasi</div><div class="nilai">{% if versi.lengkap_untuk_simulasi %}Ya{% else %}Tidak{% endif %}</div>{% if versi.ringkasan.wajib_hilang %}<div class="ket">hilang: {{ versi.ringkasan.wajib_hilang|join:", "|truncatechars:60 }}</div>{% endif %}</div>
+</div>
+
+<div class="grid g2" style="margin-top:16px">
+  <div class="kartu">
+    <h2>Laporan pembersihan</h2>
+    <table class="tabel">
+      <thead><tr><th>Tingkat</th><th>Langkah</th><th>Pesan</th></tr></thead>
+      <tbody>
+      {% for t in versi.laporan %}
+        <tr>
+          <td><span class="lencana {% if t.tingkat == 'galat' %}gagal{% elif t.tingkat == 'peringatan' %}draf{% else %}siap{% endif %}">{{ t.tingkat }}</span></td>
+          <td class="kecil">{{ t.langkah }}</td>
+          <td>{{ t.pesan }}{% if t.detail %}<details class="kecil abu"><summary>{{ t.detail|length }} rincian</summary>{{ t.detail|join:"; " }}</details>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="kartu">
+    <h2>Pratinjau (68 baris pertama)</h2>
+    <p class="kecil abu"><span class="sel-imputasi">&nbsp;oranye&nbsp;</span> imputasi · <span class="sel-lonjakan">&nbsp;kuning&nbsp;</span> lonjakan · <span class="sel-diperbarui">&nbsp;hijau&nbsp;</span> diperbarui/disunting. Klik tahun untuk menyunting satu baris, atau buka grid untuk menyunting banyak sel sekaligus.</p>
+    <div class="gulir">
+    <table class="tabel">
+      <thead><tr><th>Provinsi</th><th>Tahun</th>{% for k, l in kolom %}<th class="n" title="{{ l }}">{{ k }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for r in pratinjau %}
+        <tr><td>{{ r.nama }}</td>
+          <td>{% if versi.status != "gagal" %}<a href="{% url 'datapanel:sunting_observasi' versi.pk r.kode r.tahun %}">{{ r.tahun }}</a>{% else %}{{ r.tahun }}{% endif %}</td>
+          {% for v, c in r.sel %}<td class="n {% if 'imputasi' in c %}sel-imputasi{% elif 'lonjakan' in c %}sel-lonjakan{% elif c %}sel-diperbarui{% endif %}" title="{{ c }}">{{ v|angka:0 }}</td>{% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+<div class="kartu">
+  <h2>Rincian enam provinsi Papua</h2>
+  {% if pangsa %}
+  <table class="tabel rapat">
+    <thead><tr><th>Provinsi</th>{% for k in pangsa.kolom %}<th class="n">{{ k }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for b in pangsa.baris %}
+      <tr{% if not b.induk %} class="acuan"{% endif %}><td>{% if b.induk %}&nbsp;&nbsp;↳ {% endif %}{{ b.nama }}</td>
+        {% for v, t in b.nilai %}<td class="n">{% if v is not None %}{{ v|persen:1 }} <span class="kecil abu">{{ t }}</span>{% else %}–{% endif %}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% for c in versi.pangsa_pemekaran.catatan %}<p class="kecil abu">Koreksi data: {{ c }}</p>{% endfor %}
+  {% else %}
+  <p class="kecil abu">Belum ada pangsa pemekaran. Unggah data yang memuat baris Papua Barat Daya, Papua Selatan, Papua Tengah,
+    dan Papua Pegunungan, atau jalankan <code>python manage.py muat_pangsa_papua --versi {{ versi.pk }}</code>.</p>
+  {% endif %}
+</div>
+{% endblock %}

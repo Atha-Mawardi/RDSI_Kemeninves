@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Kelola data{% endblock %}
+{% block isi %}
+<h1>Kelola data</h1>
+<div class="aksi" style="margin-bottom:14px">
+  <a class="btn" href="{% url 'datapanel:unggah' %}">Unggah / perbarui data</a>
+  <a class="btn garis" href="{% url 'datapanel:templat' %}">Unduh templat Excel</a>
+  {% if versi_aktif %}<a class="btn garis" href="{% url 'datapanel:kelengkapan' versi_aktif.pk %}">Kelengkapan &amp; pemeriksaan</a>
+  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi_aktif.pk %}">Sunting data aktif di grid</a>
+  <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi_aktif.pk %}">Unduh versi aktif (Excel)</a>{% endif %}
+</div>
+<div class="grid g4" style="margin-bottom:16px">
+  <div class="kpi"><div class="label">Versi siap dipakai</div><div class="nilai">{{ n_pakai }}</div><div class="ket">dari {{ versi_list|length }} versi tersimpan</div></div>
+  <div class="kpi"><div class="label">Menunggu konfirmasi</div><div class="nilai">{{ n_draf }}</div><div class="ket">draf hasil unggahan</div></div>
+  <div class="kpi"><div class="label">Arsip / gagal validasi</div><div class="nilai">{{ n_arsip }}</div><div class="ket">tidak dipakai skenario baru</div></div>
+  <div class="kpi"><div class="label">Data aktif</div><div class="nilai">{% if versi_aktif %}{{ versi_aktif.tahun_awal }}–{{ versi_aktif.tahun_akhir }}{% else %}–{% endif %}</div>
+    <div class="ket">{% if lengkap %}{{ lengkap.n_prov }} provinsi · {{ lengkap.n_var }} variabel{% if versi_aktif.bisa_rinci_papua %} · rincian Papua tersedia{% endif %}{% else %}belum ada versi aktif{% endif %}</div></div>
+</div>
+<div class="kartu">
+<table class="tabel">
+  <thead><tr><th>#</th><th>Nama</th><th>Status</th><th>Sumber</th><th>Tahun</th><th class="n">Baris</th><th class="n">Imputasi</th><th class="n">Peringatan</th><th>Siap simulasi</th><th>Dibuat</th><th></th></tr></thead>
+  <tbody>
+  {% for v in versi_list %}
+  <tr>
+    <td>{{ v.pk }}</td>
+    <td><a href="{% url 'datapanel:detail_versi' v.pk %}">{{ v.nama }}</a>{% if v.induk %}<div class="kecil abu">turunan dari #{{ v.induk_id }}</div>{% endif %}</td>
+    <td><span class="lencana {{ v.status }}">{{ v.get_status_display }}</span></td>
+    <td>{{ v.get_sumber_display }}</td>
+    <td>{{ v.tahun_awal }}–{{ v.tahun_akhir }}</td>
+    <td class="n">{{ v.n_baris }}</td>
+    <td class="n">{{ v.ringkasan.n_imputasi|default:0 }}</td>
+    <td class="n">{{ v.ringkasan.n_peringatan|default:0 }}</td>
+    <td>{% if v.lengkap_untuk_simulasi %}ya{% else %}<span class="abu">tidak</span>{% endif %}</td>
+    <td class="kecil">{{ v.dibuat|date:"d M Y H:i" }}</td>
+    <td class="aksi-sel">{% if v.status != "gagal" %}<a class="btn kecil garis" href="{% url 'datapanel:kelengkapan' v.pk %}">Periksa</a> <a class="btn kecil garis" href="{% url 'datapanel:sunting_grid' v.pk %}">Grid</a> {% endif %}<a class="btn kecil garis" href="{% url 'datapanel:unduh_versi' v.pk %}">Excel</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="11">Belum ada versi data.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{% if lengkap %}
+<div class="kartu">
+  <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px">
+    <h2 style="margin:0">Kelengkapan data aktif: persen sel terisi per tahun <a class="kecil" href="{% url 'datapanel:kelengkapan' versi_aktif.pk %}">pemeriksaan lengkap →</a></h2>
+    <div class="kecil abu lengkap-legenda"><span class="p100">100%</span><span class="p50">50–99%</span><span class="p1">1–49%</span><span class="p0">kosong</span></div>
+  </div>
+  <div class="gulir">
+  <table class="tabel lengkap">
+    <thead><tr><th>Variabel</th>{% for t in lengkap.tahun %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for nama, nilai in lengkap.baris %}
+      <tr><td>{{ nama }}</td>{% for v in nilai %}<td class="n {% if v >= 99.95 %}p100{% elif v >= 50 %}p50{% elif v > 0 %}p1{% else %}p0{% endif %}">{{ v|angka:0 }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

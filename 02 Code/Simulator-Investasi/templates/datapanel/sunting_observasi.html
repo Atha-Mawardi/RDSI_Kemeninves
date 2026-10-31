@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block judul %}Sunting {{ nama }} {{ tahun }}{% endblock %}
+{% block isi %}
+<h1>Sunting {{ nama }} {{ tahun }}</h1>
+<form method="post">
+  {% csrf_token %}
+  <div class="kartu">
+    <div class="bidang"><label>{{ form.alasan.label }}</label>{{ form.alasan }}{{ form.alasan.errors }}</div>
+    <button class="btn" type="submit">Simpan sebagai versi turunan</button>
+    <a class="btn garis" href="{% url 'datapanel:detail_versi' versi.pk %}">Batal</a>
+  </div>
+  {% for grup, fields in form.kelompok %}
+  <fieldset>
+    <legend>{{ grup }}</legend>
+    <div class="grid g4">
+      {% for f in fields %}
+      <div class="bidang"><label class="kecil" for="{{ f.id_for_label }}">{{ f.name }}</label>{{ f }}<div class="bantuan">{{ f.label }} ({{ f.help_text }})</div>{{ f.errors }}</div>
+      {% endfor %}
+    </div>
+  </fieldset>
+  {% endfor %}
+</form>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block judul %}Unggah data{% endblock %}
+{% block isi %}
+<h1>Unggah atau perbarui data</h1>
+<div class="grid g-7-5">
+  <form method="post" enctype="multipart/form-data" class="kartu">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for f in form %}
+      <div class="bidang">
+        <label for="{{ f.id_for_label }}">{{ f.label }}</label>
+        {% if f.name == "mode" %}<ul class="radio">{% for r in f %}<li>{{ r.tag }} <label for="{{ r.id_for_label }}" style="display:inline;font-weight:400">{{ r.choice_label }}</label></li>{% endfor %}</ul>{% else %}{{ f }}{% endif %}
+        {% if f.help_text %}<div class="bantuan">{{ f.help_text }}</div>{% endif %}
+        {{ f.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn" type="submit">Bersihkan dan pratinjau</button>
+  </form>
+  <div class="kartu">
+    <h2>Yang dikerjakan pipeline</h2>
+    <ol class="kecil">
+      <li><b>Baca</b> semua sheet; sheet tanpa kolom provinsi dan tahun dilewati. Baris header dicari otomatis sampai baris ke-15.</li>
+      <li><b>Petakan kolom</b> ke kode kanonik. Nama kolom dataset tim (<code>9_ADHK</code>, <code>A_PMA</code>, <code>PAD_Prov2</code>, …) dikenali.</li>
+      <li><b>Kunci</b> provinsi dari kode BPS atau nama (Sumatra/Sumatera, Kep. Riau, DIY, dll.). Provinsi pemekaran Papua dijumlahkan ke induknya dan barisnya dipakai sebagai pangsa rincian enam provinsi.</li>
+      <li><b>Konversi angka</b>: sel teks kosong, tanda “-”, dan format 1.234,5.</li>
+      <li><b>Satuan</b>: rupiah penuh, juta, atau triliun dikenali dan dikonversi ke miliar Rp.</li>
+      <li><b>Konsistensi</b>: jumlah sektoral dibanding total PDRB, PMA, PMDN.</li>
+      <li><b>Imputasi</b> sesuai pilihan; setiap sel yang diisi dicatat dan diwarnai di Excel.</li>
+      <li><b>Lonjakan</b> tahunan ditandai, tidak diubah.</li>
+    </ol>
+    <p class="catatan">Mode <b>pembaruan</b> cocok untuk menambah satu tahun rilis baru: unggah hanya kolom/tahun yang baru, sisanya diwarisi dari versi induk.</p>
+    <div><a class="btn garis" href="{% url 'datapanel:templat' %}">Unduh templat Excel</a></div>
+    <h3 style="margin:16px 0 6px">Kolom yang dikenali</h3>
+    <div class="isi-sisa gulir">
+      <table class="tabel rapat kecil">
+        <thead><tr><th>Kode</th><th>Label</th><th>Alias di berkas</th></tr></thead>
+        <tbody>
+        {% for grup, daftar in grup_variabel.items %}
+          <tr class="acuan"><td colspan="3" class="abu" style="padding-top:6px"><b>{{ grup }}</b></td></tr>
+          {% for v in daftar %}<tr><td class="mono">{% if v.wajib %}<b>{{ v.kode }}</b>{% else %}{{ v.kode }}{% endif %}</td><td>{{ v.label }}</td><td class="mono abu">{{ v.alias|join:", " }}</td></tr>{% endfor %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

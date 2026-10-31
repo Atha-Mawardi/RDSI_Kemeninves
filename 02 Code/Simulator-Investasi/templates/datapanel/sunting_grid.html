@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% load static %}
+{% block judul %}Sunting grid · {{ versi.nama }}{% endblock %}
+{% block isi %}
+<h1>Sunting data di grid <span class="lencana {{ versi.status }}">{{ versi.get_status_display }}</span></h1>
+<p class="sub">Versi #{{ versi.pk }} · {{ versi.nama }}</p>
+
+<div class="aksi" style="margin-bottom:14px">
+  <a class="btn garis" href="{% url 'datapanel:kelengkapan' versi.pk %}">Kelengkapan versi ini</a>
+  <a class="btn garis" href="{% url 'datapanel:detail_versi' versi.pk %}">Detail versi</a>
+</div>
+
+<div class="kartu" style="padding:10px 16px">
+  <div class="kontrol">
+    <div><label class="kecil">Tata grid</label><select id="g-mode">
+      <option value="var">Satu variabel: provinsi × tahun</option><option value="tahun">Satu tahun: provinsi × variabel</option></select></div>
+    <div data-mode="var"><label class="kecil">Variabel</label><select id="g-var"></select></div>
+    <div data-mode="tahun"><label class="kecil">Tahun</label><select id="g-tahun"></select></div>
+    <div data-mode="tahun"><label class="kecil">Grup variabel</label><select id="g-grup"><option value="">Semua grup</option>{% for g in grup %}<option>{{ g }}</option>{% endfor %}</select></div>
+    <div><label class="kecil">Tahun baru</label><div class="pv-tata-baris"><input type="number" id="g-th-baru" min="1990" max="2100" step="1"><button type="button" class="btn garis kecil" id="g-tambah-th">＋ Tambah</button></div></div>
+    <div data-mode="var"><label class="kecil">Bantu isi</label><button type="button" class="btn garis kecil" id="g-ekstra" title="Sel kosong di kolom tahun terakhir diisi dengan laju rata-rata 3 tahun sebelumnya">Ekstrapolasi sel kosong tahun terakhir</button></div>
+  </div>
+  <div class="kecil abu g-legenda">
+    <span class="sel-imputasi">imputasi</span><span class="sel-lonjakan">lonjakan</span><span class="sel-diperbarui">diperbarui</span><span class="sel-disunting">disunting sebelumnya</span><span class="sel-ubah">berubah, belum disimpan</span>
+    <span>· Panah/Enter untuk pindah sel, tempel blok dari Excel (Ctrl/⌘+V) mulai dari sel aktif, Delete mengosongkan. Format angka 1.234,5 atau 1234.5 diterima.</span>
+  </div>
+</div>
+
+<div class="kartu">
+  <div class="pilih-baris" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+    <h2 style="margin:0" id="g-judul">Grid</h2><span class="kecil abu" id="g-info"></span>
+  </div>
+  <div class="g-wadah" id="g-wadah"><p class="abu kecil">Memuat data…</p></div>
+</div>
+
+<div class="kartu g-simpan">
+  <div class="kontrol">
+    <div><label class="kecil">Sel berubah</label><div class="g-jumlah"><b id="g-n">0</b> <button type="button" class="btn garis kecil" id="g-lihat">Lihat</button> <button type="button" class="btn garis kecil" id="g-batal">Batalkan semua</button></div></div>
+    <div style="grid-column:span 2"><label class="kecil">Nama versi baru</label><input type="text" id="g-nama" value="{{ versi.nama }} (suntingan grid)"></div>
+    <div style="grid-column:span 2"><label class="kecil">Alasan / sumber suntingan (wajib)</label><input type="text" id="g-alasan" placeholder="mis. PDRB 2025 rilis BPS Feb 2026"></div>
+    <div><label class="kecil"><input type="checkbox" id="g-aktifkan"> Langsung aktifkan</label><button type="button" class="btn" id="g-simpan" disabled>Simpan sebagai versi baru</button></div>
+  </div>
+  <div id="g-daftar" hidden></div>
+</div>
+
+<script>
+  window.GRID = { data: "{% url 'datapanel:grid_json' versi.pk %}", simpan: "{% url 'datapanel:sunting_grid' versi.pk %}", csrf: "{{ csrf_token }}" };
+</script>
+<script src="{% static 'js/grid_data.js' %}"></script>
+{% endblock %}

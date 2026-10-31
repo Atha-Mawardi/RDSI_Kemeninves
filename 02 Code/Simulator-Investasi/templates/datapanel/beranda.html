@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block isi %}
+<h1>Beranda</h1>
+
+{% if not versi %}
+<div class="kartu sorot">
+  Belum ada versi data aktif. Jalankan <code>python manage.py muat_data_awal</code> atau
+  <a href="{% url 'datapanel:unggah' %}">unggah dataset</a>.
+</div>
+{% else %}
+<div class="grid g5">
+  <div class="kpi"><div class="label">Pertumbuhan PDRB riil {{ tahun_akhir }}</div><div class="nilai">{{ kpi.g_pdrb|angka:2 }}%</div><div class="ket">{{ n_prov }} provinsi, harga konstan 2010</div></div>
+  <div class="kpi"><div class="label">PDRB riil {{ tahun_akhir }}</div><div class="nilai">{{ kpi.pdrb|triliun:0 }} T</div><div class="ket">Rp, harga 2010</div></div>
+  <div class="kpi"><div class="label">Realisasi PMA+PMDN</div><div class="nilai">{{ kpi.inv|triliun:0 }} T</div><div class="ket">Rp nominal, {{ tahun_akhir }}</div></div>
+  <div class="kpi"><div class="label">PMTB nominal</div><div class="nilai">{{ kpi.pmtb|triliun:0 }} T</div><div class="ket">Rp, {{ tahun_akhir }}</div></div>
+  <div class="kpi"><div class="label">(PMA+PMDN) / PMTB</div><div class="nilai">{{ kpi.rasio|persen:1 }}</div><div class="ket">cakupan realisasi BKPM</div></div>
+</div>
+
+{% if ska %}
+<div class="kartu" style="margin-top:16px;margin-bottom:0;padding:12px 16px">
+  <div class="pilih-baris" style="justify-content:space-between;align-items:center">
+    <div><span class="kecil abu">SKENARIO AKTIF</span>
+      <h2 style="margin:0"><a href="{% url 'simulasi:detail' ska.pk %}">{{ ska.label }}</a> <span class="lencana {{ ska.kelompok }}">{{ ska.get_kelompok_display }}</span>{% if ska.status == "usang" %} <span class="lencana usang">usang</span>{% endif %}</h2>
+      <span class="kecil abu">{{ ska.nama }} · {{ ska.tahun_dasar|add:1 }}–{{ ska.tahun_target }}</span></div>
+    <div class="ringkas-stat bungkus" style="grid-template-columns:repeat(5,minmax(120px,1fr));margin:0;flex:1;max-width:880px">
+      <div><span>Laju tanpa penambahan investasi</span><b>{{ rg_aktif.g_rata_dasar|angka:2 }}<small class="sat">%</small></b></div>
+      <div><span>Laju dengan penambahan investasi</span><b>{{ rg_aktif.g_rata_skenario|angka:2 }}<small class="sat">%</small></b></div>
+      <div><span>Sasaran rata-rata</span><b>{{ rg_aktif.g_rata_sasaran|angka:2 }}<small class="sat">%</small></b></div>
+      <div><span>Kebutuhan tambahan</span><b>{{ rg_aktif.kebutuhan_tambahan_kumulatif|angka:0 }}<small class="sat"> T</small></b></div>
+      <div><span>Peluang capai</span><b>{{ prob_aktif|persen }}</b></div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<div class="grid g-7-5" style="margin-top:16px">
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between;margin-bottom:8px">
+      <h2 style="margin:0">Peta provinsi, {{ tahun_akhir }}</h2>
+      <div><select id="pilih-indikator">{% for k, l, s in indikator %}<option value="{{ k }}" data-satuan="{{ s }}">{{ l }}</option>{% endfor %}</select></div>
+    </div>
+    <div id="peta-beranda" class="peta"></div>
+    <div id="ringkas-beranda" class="ringkas"></div>
+    {% if rinci %}<p class="kecil abu" style="margin:8px 0 0">Papua ditampilkan enam provinsi menurut pangsa data rincian {{ tahun_pangsa|first }}–{{ tahun_pangsa|last }}; total Papua dan nasional tidak berubah.</p>{% endif %}
+  </div>
+  <div class="kartu">
+    <h2>Seri nasional{% if ska %} dan proyeksi {{ ska.label }}{% endif %}</h2>
+    <div class="grafik"><canvas id="g-laju"></canvas></div>
+    <div class="grafik" style="margin-top:12px"><canvas id="g-inv"></canvas></div>
+  </div>
+</div>
+
+<div class="kartu">
+  <div class="aksi" style="justify-content:space-between">
+    <h2 style="margin:0">Skenario</h2>
+    <div class="aksi"><a class="btn garis" href="{% url 'simulasi:daftar' %}">Ruang skenario</a><a class="btn" href="{% url 'simulasi:baru' %}">+ Skenario baru</a></div>
+  </div>
+  <table class="tabel" style="margin-top:10px">
+    <thead><tr><th>Skenario</th><th>Status</th><th class="n">{% istilah "sasaran" %}</th><th class="n">{% istilah "bn" %}</th><th class="n">{% istilah "xn" %}</th><th class="n">{% istilah "selisih_pp" %}</th><th class="n">{% istilah "keb" %}</th><th class="n">{% istilah "peluang" %}</th></tr></thead>
+    <tbody>
+    {% regroup skenario by kelompok as grup %}
+    {% for g in grup %}
+      <tr class="grup"><td colspan="8">{% if g.grouper == "bawaan" %}Estimasi tim RDSI{% else %}Kustom (disimpan pengguna){% endif %}</td></tr>
+      {% for s in g.list %}
+      <tr>
+        <td class="inden"><a href="{% url 'simulasi:detail' s.pk %}"><b>{{ s.label }}</b></a>{% if s.singkat %} <span class="kecil abu">{{ s.nama }}</span>{% endif %}{% if ska and s.pk == ska.pk %} <span class="lencana aktif">aktif</span>{% endif %}</td>
+        <td><span class="lencana {{ s.status }}">{{ s.get_status_display }}</span></td>
+        {% if s.hasil %}{% with r=s.hasil.data.nasional.ringkasan %}
+        <td class="n">{{ r.g_rata_sasaran|angka:2 }}%</td>
+        <td class="n">{{ r.g_rata_dasar|angka:2 }}%</td><td class="n"><b>{{ r.g_rata_skenario|angka:2 }}%</b></td>
+        <td class="n {% if s.selisih < -0.005 %}buruk{% else %}baik{% endif %}">{{ s.selisih|angka:2 }}</td>
+        <td class="n">{{ r.kebutuhan_tambahan_kumulatif|angka:0 }}</td>
+        <td class="n">{{ s.hasil.data.ketidakpastian.prob_nasional|persen }}</td>
+        {% endwith %}{% else %}<td class="n abu" colspan="6">belum dijalankan</td>{% endif %}
+      </tr>
+      {% endfor %}
+    {% empty %}<tr><td colspan="8">Belum ada skenario.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ peta|json_script:"data-peta" }}
+{{ seri|json_script:"data-seri" }}
+{{ nasional|json_script:"data-nasional" }}
+{{ proyeksi|json_script:"data-proyeksi" }}
+{% endif %}
+{% endblock %}
+{% block skrip %}
+{% if versi %}
+<script>
+  const PETA = JSON.parse(document.getElementById("data-peta").textContent);
+  const SERI = JSON.parse(document.getElementById("data-seri").textContent);
+  const NAS = JSON.parse(document.getElementById("data-nasional").textContent);
+  const sel = document.getElementById("pilih-indikator");
+  const TRILIUN = ["PDRB_ADHK", "PMAPMDN", "PMTB_ADHK", "PAD", "APBD_BELANJA"];
+  function gambar() {
+    const k = sel.value, opt = sel.selectedOptions[0];
+    const skema = k.startsWith("G_") ? "div" : (k.startsWith("RASIO") ? "hijau" : "seq");
+    const digit = (k.startsWith("RASIO")) ? 2 : (k.startsWith("G_") ? 2 : 0);
+    const t = TRILIUN.includes(k);
+    const nilai = t ? Object.fromEntries(Object.entries(PETA[k]).map(([a, b]) => [a, b === null ? null : b / 1000])) : PETA[k];
+    const nas = NAS[k] === null || NAS[k] === undefined ? null : (t ? NAS[k] / 1000 : NAS[k]);
+    const satuan = t ? "triliun Rp" : opt.dataset.satuan;
+    petaChoropleth("peta-beranda", nilai, { label: opt.text, satuan, skema, digit, nama: window.NAMA_PROV });
+    ringkasanSebaran("ringkas-beranda", nilai, { digit, satuan: t ? "T" : (satuan === "%" ? "%" : ""),
+      agregat: [k.startsWith("G_") || k.startsWith("RASIO") || k === "PDRB_PER_TK" ? "Nasional" : "Jumlah nasional", nas, "{{ tahun_akhir }}"] });
+  }
+  sel.addEventListener("change", gambar);
+  gambar();
+  const PRY = JSON.parse(document.getElementById("data-proyeksi").textContent);
+  const baru = PRY ? PRY.tahun.filter((t) => !SERI.tahun.includes(t)) : [];
+  const sumbu = [...SERI.tahun, ...baru], pad = (a) => [...a, ...baru.map(() => null)];
+  const proy = (v) => sumbu.map((t) => { const i = PRY.tahun.indexOf(t); return i >= 0 ? v[i] : null; });
+  const dsLaju = [{ label: "PDRB riil", data: pad(SERI.g_pdrb) }, { label: "PMTB riil", data: pad(SERI.g_pmtb) }];
+  const dsInv = [{ label: "PMA", data: pad(SERI.pma), warna: "#2e6e9e", stack: "h" }, { label: "PMDN", data: pad(SERI.pmdn), warna: "#e07b39", stack: "h" }];
+  if (PRY) {
+    dsLaju.push({ label: `${PRY.nama}: dengan penambahan`, data: proy(PRY.g_s), warna: "#c0392b" },
+                { label: `${PRY.nama}: tanpa penambahan`, data: proy(PRY.g_d), warna: "#7f8c8d", borderDash: [4, 3] },
+                { label: "Sasaran", data: proy(PRY.g_k), warna: "#c0392b", borderDash: [5, 4], pointRadius: 0 });
+    dsInv.push({ label: `${PRY.nama}: investasi dasar + tambahan`, data: proy(PRY.inv), warna: "#9fb6cc", stack: "h" },
+               { label: "Kebutuhan", data: proy(PRY.keb), type: "line", warna: "#c0392b", borderDash: [4, 3] });
+  }
+  grafik("g-laju", "line", sumbu, dsLaju, { judul: "Laju pertumbuhan (%)", digit: 2, satuan: "%" });
+  grafik("g-inv", "bar", sumbu, dsInv, { judul: "Realisasi PMA dan PMDN (triliun Rp)", tumpuk: true, digit: 0, satuan: "T" });
+</script>
+{% endif %}
+{% endblock %}

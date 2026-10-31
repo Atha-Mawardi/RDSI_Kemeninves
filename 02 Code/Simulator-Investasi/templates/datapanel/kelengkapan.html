@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Kelengkapan · {{ versi.nama }}{% endblock %}
+{% block isi %}
+<h1>Kelengkapan dan pemeriksaan data <span class="lencana {{ versi.status }}">{{ versi.get_status_display }}</span></h1>
+<p class="sub">Versi #{{ versi.pk }} · {{ versi.nama }} · {{ versi.tahun_awal }}–{{ versi.tahun_akhir }} · {{ versi.n_baris }} baris provinsi × tahun.</p>
+
+<div class="aksi" style="margin-bottom:14px">
+  <a class="btn" href="{% url 'datapanel:sunting_grid' versi.pk %}">Sunting di grid</a>
+  <a class="btn garis" href="{% url 'datapanel:detail_versi' versi.pk %}">Detail versi</a>
+  <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi.pk %}">Unduh Excel</a>
+  {% if versi_lain %}<form method="get" onchange="location.href='/data/'+this.v.value+'/kelengkapan/'" style="margin-left:auto">
+    <select name="v" class="kecil"><option>Periksa versi lain…</option>{% for v in versi_lain %}<option value="{{ v.pk }}">#{{ v.pk }} {{ v.nama }}</option>{% endfor %}</select></form>{% endif %}
+</div>
+
+<div class="grid g5">
+  <div class="kpi baik"><div class="label">Lolos</div><div class="nilai">{{ n_ok }}</div><div class="ket">dari {{ cek|length }} pemeriksaan</div></div>
+  <div class="kpi {% if n_periksa %}buruk{% else %}baik{% endif %}"><div class="label">Perlu diperiksa</div><div class="nilai">{{ n_periksa }}</div><div class="ket">klik baris untuk rincian sel</div></div>
+  <div class="kpi"><div class="label">Catatan</div><div class="nilai">{{ n_info }}</div><div class="ket">informasi, tidak menghalangi simulasi</div></div>
+  <div class="kpi"><div class="label">Sel terisi (semua variabel)</div><div class="nilai">{{ matriks.total_rata|angka:0 }}%</div><div class="ket">{{ matriks.grup|length }} grup variabel · {{ matriks.tahun|length }} tahun</div></div>
+  <div class="kpi {% if versi.lengkap_untuk_simulasi %}baik{% else %}buruk{% endif %}"><div class="label">Siap simulasi</div><div class="nilai">{% if versi.lengkap_untuk_simulasi %}Ya{% else %}Tidak{% endif %}</div><div class="ket">{{ matriks.n_wajib }} variabel wajib</div></div>
+</div>
+
+<div class="kartu" style="margin-top:16px">
+  <h2>Pemeriksaan otomatis</h2>
+  <table class="tabel cek-tabel">
+    <thead><tr><th style="width:110px">Status</th><th>Pemeriksaan</th><th class="n" style="width:150px">Nilai</th><th style="width:120px">Rincian</th></tr></thead>
+    <tbody>
+    {% for c in cek %}
+      <tr class="cek-{{ c.status }}{% if c.n_rinci %} cek-bisa{% endif %}" {% if c.n_rinci %}data-buka="r{{ forloop.counter }}"{% endif %}>
+        <td><span class="cek-lencana {{ c.status }}">{% if c.status == "ok" %}✔ OK{% elif c.status == "periksa" %}⚠ Periksa{% else %}ℹ Catatan{% endif %}</span></td>
+        <td>{{ c.label }}{% if c.saran %}<div class="kecil abu">{{ c.saran }}</div>{% endif %}</td>
+        <td class="n"><b>{{ c.nilai }}</b></td>
+        <td>{% if c.n_rinci %}<span class="tautan-kecil">▸ {{ c.n_rinci }} sel</span>{% endif %}</td>
+      </tr>
+      {% if c.n_rinci %}
+      <tr class="cek-rinci" id="r{{ forloop.counter }}" hidden><td></td><td colspan="3">
+        <div class="gulir" style="max-height:260px">
+        <table class="tabel rapat">
+          <thead><tr><th>Provinsi</th><th>Tahun</th><th>Variabel</th><th class="n">Nilai</th><th>Keterangan</th><th></th></tr></thead>
+          <tbody>{% for r in c.rincian %}<tr><td>{{ r.prov|default:"–" }}</td><td>{{ r.tahun|default:"–" }}</td><td class="kecil">{{ r.var }}</td><td class="n">{{ r.nilai|angka:1 }}</td><td class="kecil">{{ r.ket }}</td>
+            <td>{% if r.kode and r.tahun %}<a class="kecil" href="{% url 'datapanel:sunting_grid' versi.pk %}#k={{ r.kode }}&t={{ r.tahun }}&v={{ r.var|cut:' ' }}">sunting</a>{% endif %}</td></tr>{% endfor %}</tbody>
+        </table></div>
+        {% if c.n_rinci > c.rincian|length %}<p class="kecil abu">Menampilkan {{ c.rincian|length }} dari {{ c.n_rinci }}.</p>{% endif %}
+      </td></tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="grid g2" style="margin-top:16px">
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px;align-items:center">
+      <h2 style="margin:0">Per grup variabel × tahun</h2>
+      <div class="kecil abu lengkap-legenda"><span class="p100">100%</span><span class="p50">50–99%</span><span class="p1">1–49%</span><span class="p0">kosong</span></div>
+    </div>
+    <p class="kecil abu" style="margin-top:0">Persen provinsi berdata. Baris grup = rata-rata variabelnya; klik grup untuk membuka rincian variabel (★ = wajib simulasi).</p>
+    <div class="gulir" style="max-height:640px">
+    <table class="tabel lengkap rapat">
+      <thead><tr><th>Grup / variabel</th><th class="n">Rata</th>{% for t in matriks.tahun %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for g in matriks.grup %}
+        <tr class="grup lipat-grup" data-grup="g{{ forloop.counter }}"><td><span class="pv-togel">▸</span>{{ g.nama }} <span class="abu kecil">({{ g.isi|length }})</span></td>
+          <td class="n {{ g.rata|kelas_lengkap }}"><b>{{ g.rata|angka:0 }}</b></td>{% for v in g.nilai %}<td class="n {{ v|kelas_lengkap }}">{{ v|angka:0 }}</td>{% endfor %}</tr>
+        {% for v in g.isi %}
+        <tr class="anak-g{{ forloop.parentloop.counter }}" hidden><td class="inden kecil" title="{{ v.kode }} · {{ v.satuan }}">{{ v.label|truncatechars:48 }}{% if v.wajib %} ★{% endif %}</td>
+          <td class="n {{ v.rata|kelas_lengkap }}">{{ v.rata|angka:0 }}</td>{% for x in v.nilai %}<td class="n {{ x|kelas_lengkap }}">{{ x|angka:0 }}</td>{% endfor %}</tr>
+        {% endfor %}
+      {% endfor %}
+      </tbody>
+      <tfoot><tr class="total"><td>Semua variabel</td><td class="n">{{ matriks.total_rata|angka:0 }}</td>{% for v in matriks.total %}<td class="n">{{ v|angka:0 }}</td>{% endfor %}</tr></tfoot>
+    </table>
+    </div>
+    <h3 style="margin-top:14px">Sel terisi per tahun</h3>
+    <div class="grafik"><canvas id="g-lengkap"></canvas></div>
+    <p class="kecil abu" style="margin:6px 0 0">Batang = rata-rata grup variabel; garis = variabel wajib simulasi. Tahun terakhir biasanya belum lengkap untuk tenaga kerja dan investasi sektoral.</p>
+  </div>
+  <div class="kartu">
+    <h2>Per provinsi × tahun: variabel wajib terisi</h2>
+    <p class="kecil abu" style="margin-top:0">Persen dari {{ matriks.n_wajib }} variabel wajib simulasi yang terisi di provinsi dan tahun itu. Klik sel untuk menyunting baris tersebut di grid.</p>
+    <div class="isi-sisa">
+    <table class="tabel lengkap rapat">
+      <thead><tr><th>Pulau / provinsi</th><th class="n">Rata</th>{% for t in matriks.tahun %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for p in matriks.pulau %}
+        <tr class="grup"><td>{{ p.nama }} <span class="abu kecil">({{ p.isi|length }})</span></td><td class="n {{ p.rata|kelas_lengkap }}"><b>{{ p.rata|angka:0 }}</b></td>{% for v in p.nilai %}<td class="n {{ v|kelas_lengkap }}"><b>{{ v|angka:0 }}</b></td>{% endfor %}</tr>
+        {% for r in p.isi %}
+        <tr><td class="inden">{{ r.nama }}</td><td class="n {{ r.rata|kelas_lengkap }}">{{ r.rata|angka:0 }}</td>
+          {% for v in r.nilai %}<td class="n {{ v|kelas_lengkap }} sel-tautan" data-k="{{ r.kode }}" data-i="{{ forloop.counter0 }}">{{ v|angka:0 }}</td>{% endfor %}</tr>
+        {% endfor %}
+      {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll("tr[data-buka]").forEach((tr) => tr.addEventListener("click", () => {
+    const r = document.getElementById(tr.dataset.buka); r.hidden = !r.hidden;
+    const s = tr.querySelector(".tautan-kecil"); if (s) s.textContent = s.textContent.replace(/^[▸▾]/, r.hidden ? "▸" : "▾");
+  }));
+  document.querySelectorAll("tr.lipat-grup").forEach((tr) => tr.addEventListener("click", () => {
+    const anak = document.querySelectorAll(".anak-" + tr.dataset.grup), buka = anak[0]?.hidden;
+    anak.forEach((a) => (a.hidden = !buka));
+    tr.querySelector(".pv-togel").textContent = buka ? "▾" : "▸";
+  }));
+  const TAHUN = {{ matriks.tahun|safe }};
+  grafik("g-lengkap", "bar", TAHUN, [
+    {% for g in matriks.grup %}{ label: "{{ g.nama }}", data: {{ g.nilai|safe }} },{% endfor %}
+    { label: "Variabel wajib", type: "line", data: {{ matriks.wajib_th|safe }}, warna: "#c0392b", borderWidth: 2.5 },
+  ], { digit: 0, satuan: "%" });
+  document.querySelectorAll("td.sel-tautan").forEach((td) => td.addEventListener("click", () => {
+    location.href = "{% url 'datapanel:sunting_grid' versi.pk %}#mode=tahun&k=" + td.dataset.k + "&t=" + TAHUN[+td.dataset.i];
+  }));
+</script>
+{% endblock %}

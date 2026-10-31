@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}Jelajah data{% endblock %}
+{% block isi %}
+<h1>Jelajah data</h1>
+{% if not versi %}<div class="kartu sorot">Belum ada versi data.</div>{% else %}
+<form method="get" class="kartu pilih-baris">
+  <div><label>Versi</label><select name="versi">{% for v in versi_list %}<option value="{{ v.pk }}" {% if v.pk == versi.pk %}selected{% endif %}>#{{ v.pk }} {{ v.nama|truncatechars:40 }}</option>{% endfor %}</select></div>
+  <div style="min-width:320px"><label>Indikator</label><select name="var">{% for g, isi in pilihan.items %}<optgroup label="{{ g }}">{% for k, l in isi %}<option value="{{ k }}" {% if k == var %}selected{% endif %}>{{ l }} [{{ k }}]</option>{% endfor %}</optgroup>{% endfor %}</select></div>
+  <div><label>Tahun</label><select name="tahun">{% for t in tahun_list %}<option {% if t == tahun %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  {% if bisa_rinci %}<div><label>&nbsp;</label><input type="hidden" name="rinci" value="0"><label class="kecil"><input type="checkbox" name="rinci" value="1" {% if rinci %}checked{% endif %}> Papua 6 provinsi</label></div>{% endif %}
+  <div><button class="btn">Tampilkan</button></div>
+</form>
+{% if rinci %}<p class="catatan">Papua Barat dan Papua dirinci menurut pangsa data {{ tahun_pangsa|first }}–{{ tahun_pangsa|last }}. Angka provinsi baru sebelum {{ tahun_pangsa|first }} adalah estimasi (pangsa tahun pertama dipakai mundur), bukan data terbit.</p>{% endif %}
+
+<div class="grid g-7-5">
+  <div class="kartu">
+    <h2>{{ label }}, {{ tahun }} <span class="abu kecil">({{ satuan }})</span></h2>
+    <div id="peta" class="peta"></div>
+    <div id="ringkas" class="ringkas"></div>
+  </div>
+  <div class="kartu">
+    <h2 id="judul-seri">Profil provinsi</h2>
+    <div id="profil" class="ringkas-stat dua"></div>
+    <div class="grafik"><canvas id="g-seri"></canvas></div>
+    <div class="grafik" style="margin-top:12px"><canvas id="g-sepulau"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="kartu">
+    <h2>Peringkat {{ baris|length }} provinsi, {{ tahun }}</h2>
+    <div id="legenda-pulau" class="kecil abu" style="display:flex;gap:12px;flex-wrap:wrap;margin:-4px 0 8px"></div>
+    <div class="grafik" id="wadah-peringkat"><canvas id="g-peringkat"></canvas></div>
+  </div>
+  <div class="kartu">
+    <h2>Per pulau</h2>
+    <div class="grafik"><canvas id="g-pulau-seri"></canvas></div>
+    <div class="grafik" style="margin-top:12px"><canvas id="g-pulau-sebaran"></canvas></div>
+  </div>
+</div>
+
+<div class="kartu">
+  <h2>Tabel: {{ label }} <span class="abu kecil">({{ satuan }}) · klik judul kolom untuk mengurutkan</span></h2>
+  <div class="gulir">
+  <table class="tabel urut">
+    <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n">{{ tahun }}</th>{% for t in tahun_list %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>
+    <tbody>
+    {% for b in baris %}
+      <tr><td>{{ b.nama }}</td><td>{{ b.pulau }}</td><td class="n" data-v="{{ b|ambil:var|default_if_none:'' }}"><b>{{ b|ambil:var|angka:2 }}</b></td>
+      {% for v in b.seri %}<td class="n" data-v="{{ v|default_if_none:'' }}">{{ v|angka:2 }}</td>{% endfor %}</tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{{ peta|json_script:"d-peta" }}{{ seri_prov|json_script:"d-seri" }}{{ tahun_list|json_script:"d-tahun" }}
+{{ pulau_prov|json_script:"d-pulau" }}{{ info|json_script:"d-info" }}{{ proyeksi|json_script:"d-proyeksi" }}
+{% endif %}
+{% endblock %}
+{% block skrip %}{% if versi %}
+<script>
+  const J = (id) => JSON.parse(document.getElementById(id).textContent);
+  const PETA = J("d-peta"), SERI = J("d-seri"), TAHUN = J("d-tahun"), PULAU = J("d-pulau"), INFO = J("d-info"), PRY = J("d-proyeksi");
+  const VAR = "{{ var|escapejs }}", LABEL = "{{ label|escapejs }}", SAT = "{{ satuan|escapejs }}", TH = {{ tahun }};
+  const it = TAHUN.indexOf(TH);
+  const laju = VAR.startsWith("G_");
+  const skema = laju ? "div" : (VAR.startsWith("RASIO") ? "hijau" : "seq");
+  const digit = VAR.startsWith("RASIO") ? 3 : 2;
+  const satPendek = SAT === "%" ? "%" : "";
+  const nm = (k) => NAMA_PROV[k] || k;
+  const ada = (x) => x !== null && x !== undefined && !Number.isNaN(x);
+  const rata = (a) => { const v = a.filter(ada); return v.length ? v.reduce((x, y) => x + y, 0) / v.length : null; };
+  const WARNA = Object.fromEntries(INFO.pulau.map((p, i) => [p, PALET[i % PALET.length]]));
+
+  const urut = Object.entries(PETA).filter(([, v]) => ada(v)).sort((a, b) => b[1] - a[1]);
+  const peringkat = Object.fromEntries(urut.map(([k], i) => [k, i + 1]));
+  const rataProv = TAHUN.map((_, i) => rata(Object.values(SERI).map((s) => s[i])));
+
+  function profil(k) {
+    const s = SERI[k] || [], v = s[it], lalu = it > 0 ? s[it - 1] : null;
+    const i0 = s.findIndex(ada), n = it - i0;
+    let ubah = "–", ket = "";
+    if (ada(v) && ada(lalu)) {
+      ubah = laju ? `${fmtID(v - lalu, 2)} pp` : `${fmtID((v / lalu - 1) * 100, 1)}%`;
+      ket = `dibanding ${TAHUN[it - 1]}`;
+    }
+    if (!laju && i0 >= 0 && n > 0 && ada(v) && s[i0] > 0 && v > 0) ket += `${ket ? " · " : ""}majemuk ${fmtID(((v / s[i0]) ** (1 / n) - 1) * 100, 1)}%/thn sejak ${TAHUN[i0]}`;
+    else if (laju && i0 >= 0 && n > 0) ket += `${ket ? " · " : ""}rata-rata ${fmtID(rata(s.slice(i0, it + 1)), 2)}% sejak ${TAHUN[i0]}`;
+    const keempat = INFO.aditif && ada(INFO.nasional) && ada(v)
+      ? ["Pangsa nasional", `${fmtID((v / INFO.nasional) * 100, 1)}%`, `dari ${fmtID(INFO.nasional, 0)} ${SAT}`]
+      : ["Selisih dari rata-rata", ada(v) && ada(rataProv[it]) ? fmtID(v - rataProv[it], digit) : "–", `rata-rata provinsi ${fmtID(rataProv[it], digit)}`];
+    const ubin = [
+      [`Nilai ${TH}`, `${fmtID(v, digit)} <small class="sat">${satPendek || SAT}</small>`, PULAU[k] || ""],
+      ["Peringkat", peringkat[k] ? `${peringkat[k]} <small class="sat">dari ${urut.length}</small>` : "–", peringkat[k] <= urut.length / 3 ? "sepertiga teratas" : peringkat[k] > (2 * urut.length) / 3 ? "sepertiga terbawah" : "sepertiga tengah"],
+      ["Perubahan", ubah, ket],
+      keempat,
+    ];
+    document.getElementById("profil").innerHTML = ubin.map(([a, b, c]) => `<div><span>${a}</span><b>${b}</b><small title="${c}">${c}</small></div>`).join("");
+  }
+
+  function pilih(k) {
+    if (!SERI[k]) return;
+    document.getElementById("judul-seri").textContent = "Profil: " + nm(k);
+    profil(k);
+    const ds = [{ label: nm(k), data: SERI[k] }, { label: "Rata-rata provinsi", data: rataProv, borderDash: [4, 3] }];
+    if (INFO.seri_nasional.some(ada) && !INFO.aditif) ds.push({ label: "Nasional", data: INFO.seri_nasional, borderDash: [2, 2], warna: "#7f8c8d" });
+    let sumbu = TAHUN;
+    if (PRY && Object.values(PRY.seri)[0][k]) {
+      // proyeksi skenario aktif disambung dari tahun historis terakhir
+      const baru = PRY.tahun.filter((t) => !TAHUN.includes(t));
+      sumbu = [...TAHUN, ...baru];
+      ds.forEach((d) => { d.data = [...d.data, ...baru.map(() => null)]; });
+      const iDasar = sumbu.indexOf(PRY.tahun[0] - 1), WP = ["#c0392b", "#2e8b57", "#8e44ad"];
+      Object.entries(PRY.seri).forEach(([lbl, per], j) => {
+        const d = sumbu.map(() => null);
+        if (iDasar >= 0 && !laju) d[iDasar] = SERI[k][iDasar] ?? null;
+        PRY.tahun.forEach((t, i) => { d[sumbu.indexOf(t)] = per[k][i]; });
+        ds.push({ label: `${PRY.nama}: ${lbl}`, data: d, warna: WP[j % WP.length], borderDash: j ? [5, 4] : [], spanGaps: true });
+      });
+    }
+    grafik("g-seri", "line", sumbu, ds, { digit, satuan: SAT, judul: `${LABEL} (${SAT})${PRY && sumbu.length > TAHUN.length ? " · proyeksi " + PRY.nama : ""}` });
+    const p = PULAU[k];
+    const se = urut.filter(([kd]) => PULAU[kd] === p);
+    grafik("g-sepulau", "bar", se.map(([kd]) => nm(kd)), [{
+      label: `${LABEL} ${TH}`, data: se.map(([, x]) => x),
+      backgroundColor: se.map(([kd]) => (kd === k ? "#e07b39" : "#9fb6cc")),
+    }], { digit, satuan: SAT, legenda: false, judul: `Dibanding provinsi lain di ${p}, ${TH}` });
+  }
+
+  petaChoropleth("peta", PETA, { label: LABEL, satuan: SAT, skema, digit, nama: NAMA_PROV, onClick: pilih });
+  ringkasanSebaran("ringkas", PETA, { digit, satuan: satPendek, onClick: pilih,
+    agregat: [INFO.aditif ? "Jumlah nasional" : "Nasional", INFO.nasional, String(TH)] });
+  pilih(SERI["31"] ? "31" : (urut[0] || [])[0]);
+
+  document.getElementById("legenda-pulau").innerHTML = INFO.pulau.map((p) =>
+    `<span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${WARNA[p]};margin-right:4px"></i>${p}</span>`).join("");
+  document.getElementById("wadah-peringkat").style.height = urut.length * 17 + 30 + "px";
+  grafik("g-peringkat", "bar", urut.map(([k]) => nm(k)), [{
+    label: `${LABEL} ${TH}`, data: urut.map(([, v]) => v), backgroundColor: urut.map(([k]) => WARNA[PULAU[k]] + "cc"),
+  }], { horizontal: true, digit, satuan: SAT, legenda: false });
+
+  // per pulau: jumlah untuk variabel aditif (bila semua provinsi pulau terisi), rata-rata untuk laju dan rasio
+  const anggota = (p) => Object.keys(SERI).filter((k) => PULAU[k] === p);
+  const agregat = (p, i) => {
+    const v = anggota(p).map((k) => SERI[k][i]);
+    if (!INFO.aditif) return rata(v);
+    return v.every(ada) ? v.reduce((a, b) => a + b, 0) : null;
+  };
+  grafik("g-pulau-seri", "line", TAHUN, INFO.pulau.map((p) => ({ label: p, data: TAHUN.map((_, i) => agregat(p, i)), warna: WARNA[p] })),
+    { digit, satuan: SAT, judul: `${INFO.aditif ? "Jumlah" : "Rata-rata provinsi"} per pulau (${SAT})` });
+  const sebaran = INFO.pulau.map((p) => anggota(p).map((k) => PETA[k]).filter(ada));
+  grafik("g-pulau-sebaran", "bar", INFO.pulau, [
+    { label: "Terendah", data: sebaran.map((v) => (v.length ? Math.min(...v) : null)), warna: "#9ecae1" },
+    { label: "Rata-rata", data: sebaran.map(rata), warna: "#2e6e9e" },
+    { label: "Tertinggi", data: sebaran.map((v) => (v.length ? Math.max(...v) : null)), warna: "#1f3b57" },
+  ], { digit, satuan: SAT, judul: `Sebaran antarprovinsi per pulau, ${TH}` });
+</script>
+{% endif %}{% endblock %}

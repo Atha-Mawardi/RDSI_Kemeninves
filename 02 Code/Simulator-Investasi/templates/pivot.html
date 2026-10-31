@@ -1,0 +1,123 @@
+{% extends "base.html" %}{% load static %}
+{% block judul %}Pivot{% endblock %}
+{% block isi %}
+<h1>Pivot</h1>
+<p class="kecil abu" style="margin:0 0 10px">Seret bidang ke Baris, Kolom, atau Filter; pilih ukuran dan cara agregasinya. Tabel bergaya neraca dengan subtotal, persentase, perubahan antarkolom, pewarnaan, grafik, dan unduhan CSV/XLSX. Tata letak bisa disimpan dan dibagikan sebagai tautan.</p>
+
+<div class="kartu pv-sumber">
+  <div class="kontrol">
+    <div><label class="kecil">Sumber data</label>
+      <select id="pv-sumber">{% for k, n in sumber %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></div>
+    <div data-untuk="panel sektoral"><label class="kecil">Versi data</label>
+      <select id="pv-versi">{% for v in versi %}<option value="{{ v.pk }}" {% if v.pk == versi_aktif.pk %}selected{% endif %}>#{{ v.pk }} {{ v.nama }}{% if v.pk == versi_aktif.pk %} (aktif){% endif %}</option>{% endfor %}</select></div>
+    <div data-untuk="skenario" class="pv-sk-wadah"><label class="kecil">Skenario</label>
+      <details class="pv-sk" id="pv-sk">
+        <summary id="pv-sk-ringkas">Skenario aktif</summary>
+        <div class="pv-sk-isi">
+          <div class="pv-sk-alat"><button type="button" class="btn garis kecil" data-sk="aktif">Aktif</button><button type="button" class="btn garis kecil" data-sk="bawaan">Semua bawaan</button><button type="button" class="btn garis kecil" data-sk="semua">Semua</button></div>
+          {% for nama_grup, isi in grup_sk %}{% if isi %}<div class="pv-sk-grup">{{ nama_grup }}</div>
+            {% for s in isi %}<label><input type="checkbox" value="{{ s.pk }}" data-grup="{{ nama_grup }}" {% if s.pk == sk_awal %}checked{% endif %} {% if s.status == 'baru' or s.status == 'gagal' %}disabled{% endif %}> {{ s.label }}</label>{% endfor %}{% endif %}{% endfor %}
+        </div>
+      </details></div>
+    <div data-untuk="io_sektor io_aliran"><label class="kecil">Tahun IRIO</label>
+      <select id="pv-io-tahun">{% for t in io_tahun %}<option>{{ t }}</option>{% endfor %}</select></div>
+    <div data-untuk="io_sektor io_aliran"><label class="kecil">Metode</label>
+      <select id="pv-io-metode">{% for m in io_metode %}<option>{{ m }}</option>{% endfor %}</select></div>
+    <div class="pv-tata"><label class="kecil">Tata letak</label>
+      <div class="pv-tata-baris">
+        <select id="pv-tata"></select>
+        <button type="button" class="btn garis kecil" id="pv-simpan" title="Simpan tata letak sekarang">Simpan</button>
+        <button type="button" class="btn garis kecil" id="pv-hapus-tata" title="Hapus tata letak tersimpan">Hapus</button>
+        <button type="button" class="btn garis kecil" id="pv-tautan" title="Salin tautan berisi tata letak ini">Tautan</button>
+      </div></div>
+  </div>
+</div>
+
+<div class="pv-kerja">
+  <aside class="kartu pv-bidang">
+    <h3>Bidang</h3>
+    <div class="pv-zona pv-sumber-bidang" data-zona="bidang" id="pv-z-bidang"></div>
+    <p class="kecil abu pv-petunjuk">Klik bidang untuk menambah ke Baris; seret untuk memindah; klik ⛉ untuk menyaring nilainya.</p>
+    <h3>Filter</h3>
+    <div class="pv-zona" data-zona="filter" id="pv-z-filter"></div>
+    <h3>Baris</h3>
+    <div class="pv-zona" data-zona="baris" id="pv-z-baris"></div>
+    <h3>Kolom <button type="button" class="btn garis kecil pv-tukar" id="pv-tukar" title="Tukar baris dan kolom">⇅ tukar</button></h3>
+    <div class="pv-zona" data-zona="kolom" id="pv-z-kolom"></div>
+    <h3>Nilai</h3>
+    <div id="pv-z-nilai" class="pv-nilai"></div>
+    <select id="pv-tambah-ukuran" class="kecil"></select>
+    <details class="pv-rumus">
+      <summary class="kecil">＋ Ukuran hitung (rumus antar-ukuran)</summary>
+      <div class="kontrol rapat" style="margin-top:6px">
+        <div><label class="kecil">A</label><select id="pv-r-a"></select></div>
+        <div><label class="kecil">Operasi</label><select id="pv-r-op"><option value="/">A ÷ B</option><option value="-">A − B</option><option value="+">A + B</option><option value="*">A × B</option></select></div>
+        <div><label class="kecil">B</label><select id="pv-r-b"></select></div>
+        <div><label class="kecil">Kali</label><input type="number" id="pv-r-k" value="100" step="any"></div>
+      </div>
+      <div class="pv-tata-baris" style="margin-top:6px"><input type="text" id="pv-r-nama" placeholder="Nama, mis. Rasio laju/sasaran (%)"><button type="button" class="btn kecil" id="pv-r-tambah">Tambah</button></div>
+      <p class="kecil abu" style="margin:4px 0 0">Dihitung dari jumlah A dan B di tiap sel, jadi rasio tetap benar di subtotal dan total.</p>
+    </details>
+  </aside>
+
+  <section class="pv-kanan">
+    <div class="kartu pv-alat">
+      <div class="kontrol rapat">
+        <div><label class="kecil">Tampilkan sebagai</label><select id="pv-tampil">
+          <option value="nilai">Nilai</option><option value="pct_total">% dari total keseluruhan</option>
+          <option value="pct_kolom">% dari total kolom</option><option value="pct_baris">% dari total baris</option>
+          <option value="pct_induk">% dari kelompok induk</option><option value="selisih">Selisih dari kolom sebelumnya</option>
+          <option value="tumbuh">Perubahan % dari kolom sebelumnya</option><option value="indeks">Indeks (kolom pertama = 100)</option></select></div>
+        <div><label class="kecil">Urutkan baris</label><select id="pv-urut">
+          <option value="label">Urutan bawaan</option><option value="turun">Nilai terbesar dulu</option><option value="naik">Nilai terkecil dulu</option><option value="abjad">Abjad</option></select></div>
+        <div><label class="kecil">Subtotal</label><select id="pv-subtotal">
+          <option value="bawah">Di bawah kelompok</option><option value="atas">Di baris kelompok</option><option value="tidak">Tanpa subtotal</option></select></div>
+        <div><label class="kecil">Pewarnaan</label><select id="pv-warna">
+          <option value="">Tidak ada</option><option value="panas">Peta panas</option><option value="batang">Batang data</option></select></div>
+        <div><label class="kecil">N teratas per tingkat</label><input type="number" id="pv-topn" min="0" value="0" title="0 = semua; sisanya digabung ke baris Lainnya"></div>
+        <div><label class="kecil">Desimal</label><select id="pv-digit"><option value="-1">−1</option><option value="0" selected>Bawaan</option><option value="1">+1</option><option value="2">+2</option></select></div>
+      </div>
+      <div class="pv-alat-bawah">
+        <label class="kecil"><input type="checkbox" id="pv-total" checked> Total</label>
+        <label class="kecil"><input type="checkbox" id="pv-kosong"> Tampilkan sel kosong</label>
+        <span class="pv-pisah"></span>
+        <button type="button" class="btn garis kecil" id="pv-buka">Buka semua</button>
+        <button type="button" class="btn garis kecil" id="pv-lipat">Lipat semua</button>
+        <span class="pv-pisah"></span>
+        <button type="button" class="btn garis kecil" id="pv-csv">Unduh CSV</button>
+        <button type="button" class="btn kecil" id="pv-xlsx">Unduh XLSX</button>
+        <span class="kecil abu" id="pv-info" style="margin-left:auto"></span>
+      </div>
+    </div>
+    <div class="kartu pv-tabel-kartu">
+      <h2 id="pv-judul">Pivot</h2>
+      <p class="kecil abu" id="pv-ket" style="margin:-4px 0 8px"></p>
+      <div class="pv-tabel" id="pv-tabel"></div>
+    </div>
+    <div class="kartu">
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px;align-items:center">
+        <h2 style="margin:0">Grafik pivot</h2>
+        <div class="kontrol rapat" style="min-width:520px">
+          <div><label class="kecil">Jenis</label><select id="pv-g-jenis"><option value="bar">Batang</option><option value="tumpuk">Batang bertumpuk</option><option value="line">Garis</option><option value="hbar">Batang mendatar</option><option value="">Sembunyikan</option></select></div>
+          <div><label class="kecil">Tingkat baris</label><select id="pv-g-tingkat"></select></div>
+          <div><label class="kecil">Ukuran</label><select id="pv-g-ukuran"></select></div>
+        </div>
+      </div>
+      <div class="grafik" id="pv-g-wadah" style="height:360px"><canvas id="pv-grafik"></canvas></div>
+      <p class="kecil abu" id="pv-g-ket" style="margin:6px 0 0"></p>
+    </div>
+  </section>
+</div>
+
+<div class="pv-pop" id="pv-pop" hidden>
+  <div class="pv-pop-kepala"><b id="pv-pop-judul"></b><button type="button" class="btn garis kecil" id="pv-pop-tutup">✕</button></div>
+  <input type="search" id="pv-pop-cari" placeholder="Cari…">
+  <div class="pv-pop-alat"><button type="button" class="btn garis kecil" data-aksi="semua">Semua</button><button type="button" class="btn garis kecil" data-aksi="kosong">Kosongkan</button><button type="button" class="btn garis kecil" data-aksi="balik">Balik</button></div>
+  <div class="pv-pop-daftar" id="pv-pop-daftar"></div>
+</div>
+
+<script>
+  window.PV = { data: "{% url 'pivot_data' %}", xlsx: "{% url 'pivot_xlsx' %}", skAwal: {{ sk_awal|default:"null" }}, csrf: "{{ csrf_token }}" };
+</script>
+<script src="{% static 'js/pivot.js' %}"></script>
+{% endblock %}
