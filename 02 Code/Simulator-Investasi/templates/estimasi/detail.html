@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load format_id %}
+{% block judul %}{{ sp.nama }}{% endblock %}
+{% block isi %}
+<h1>{{ sp.nama }}</h1>
+<p class="sub">{{ sp.get_sumber_display }} · b1 = {{ sp.b1|angka:4 }}, b2 = {{ sp.b2|angka:4 }}{% if versi %} · residual TFP dihitung pada versi data #{{ versi.pk }}{% endif %}</p>
+<div class="aksi" style="margin-bottom:12px"><a class="btn garis" href="{% url 'estimasi:sunting' sp.pk %}">Ubah set</a><a class="btn garis" href="{% url 'estimasi:daftar' %}">Kembali</a></div>
+{% if sp.catatan %}<p class="catatan">{{ sp.catatan }}</p>{% endif %}
+{% if sp.hasil.koefisien %}
+<div class="grid g-7-5">
+  <div class="kartu">
+    <h2>Hasil regresi tersimpan</h2>
+    <table class="tabel es-koef">
+      <thead><tr><th>Regresor</th><th class="n">Koefisien</th><th class="n">SE klaster</th><th class="n">t</th><th class="n">p</th><th class="n">95% CI</th></tr></thead>
+      <tbody>{% for c in sp.hasil.koefisien %}<tr><td>{{ c.label }}</td><td class="n"><b>{{ c.b|angka:4 }}</b><sup style="color:var(--merah)">{{ c.bintang }}</sup></td><td class="n">{{ c.se|angka:4 }}</td><td class="n">{{ c.t|angka:2 }}</td><td class="n">{{ c.p|angka:3 }}</td><td class="n">[{{ c.lo|angka:3 }}; {{ c.hi|angka:3 }}]</td></tr>{% endfor %}
+      {% if sp.hasil.uji_crs %}<tr class="grup"><td colspan="6">Uji</td></tr><tr><td class="inden">Uji CRS: b1 + b2 = 1</td><td class="n">{{ sp.hasil.uji_crs.rts|angka:3 }}</td><td class="n">{{ sp.hasil.uji_crs.se|angka:4 }}</td><td class="n">{{ sp.hasil.uji_crs.t|angka:2 }}</td><td class="n">{{ sp.hasil.uji_crs.p|angka:3 }}</td><td class="n">{% if sp.hasil.uji_crs.p < 0.05 %}ditolak{% else %}tidak ditolak{% endif %}</td></tr>{% endif %}
+      {% with s=sp.spesifikasi %}{% if s %}<tr class="grup"><td colspan="6">Spesifikasi</td></tr>
+      <tr><td class="inden">Periode</td><td class="n" colspan="5">{{ s.tahun_awal }}–{{ s.tahun_akhir }}{% if s.kecuali_tahun %}, tanpa {{ s.kecuali_tahun|join:", " }}{% endif %}</td></tr>
+      <tr><td class="inden">Provinsi</td><td class="n" colspan="5">{% if s.provinsi %}{{ s.provinsi|length }} provinsi terpilih{% else %}semua provinsi{% endif %}</td></tr>
+      <tr><td class="inden">Ukuran modal · efek tahun</td><td class="n" colspan="5">{% if s.modal == "stok" %}stok modal PIM (δ = {{ s.delta }}){% else %}PMTB riil (arus){% endif %} · {{ s.efek_tahun|yesno:"dipakai,tidak dipakai" }}</td></tr>{% endif %}{% endwith %}
+      </tbody>
+      <tfoot><tr class="total"><td>R² within · R² total</td><td class="n" colspan="5">{{ sp.hasil.r2_within|angka:3 }} · {{ sp.hasil.r2_total|angka:4 }} · {{ sp.n_obs }} obs, {{ sp.hasil.n_provinsi }} klaster</td></tr></tfoot>
+    </table>
+  </div>
+  <div class="kartu"><h2>Efek tetap tahun d<sub>t</sub></h2><div class="grafik"><canvas id="g-dt"></canvas></div></div>
+</div>
+{{ sp.hasil.efek_tahun|json_script:"d-dt" }}
+{% endif %}
+
+{% if baris %}
+<div class="grid g2">
+  <div class="kartu"><h2>Rata-rata laju TFP {{ awal }}–{{ akhir }} (%/tahun)</h2><div id="peta-ga" class="peta"></div></div>
+  <div class="kartu"><h2>Level TFP relatif (deviasi ln A dari rata-rata provinsi)</h2><div id="peta-dev" class="peta"></div></div>
+</div>
+<div class="kartu">
+  <h2>Dekomposisi pertumbuhan per provinsi</h2>
+  <p class="kecil abu">g<sub>Y</sub> = b1·g<sub>K</sub> + b2·g<sub>L</sub> + g<sub>A</sub>. Laju dalam persen per tahun (selisih log × 100).</p>
+  <div class="gulir">
+  <table class="tabel urut">
+    <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n">g PDRB</th><th class="n">g PMTB</th><th class="n">g TK</th><th class="n">b1·gK</th><th class="n">b2·gL</th><th class="n">g TFP</th><th class="n">Simpangan baku g TFP</th><th class="n">Porsi TFP</th><th class="n">Level relatif</th></tr></thead>
+    <tbody>
+    {% for b in baris %}
+    <tr><td>{{ b.nama }}</td><td>{{ b.pulau }}</td>
+      <td class="n" data-v="{{ b.gY }}">{{ b.gY|angka:2 }}</td><td class="n" data-v="{{ b.gK }}">{{ b.gK|angka:2 }}</td><td class="n" data-v="{{ b.gL }}">{{ b.gL|angka:2 }}</td>
+      <td class="n" data-v="{{ b.kontrib_K }}">{{ b.kontrib_K|angka:2 }}</td><td class="n" data-v="{{ b.kontrib_L }}">{{ b.kontrib_L|angka:2 }}</td>
+      <td class="n" data-v="{{ b.gA }}"><b>{{ b.gA|angka:2 }}</b></td><td class="n" data-v="{{ b.sd }}">{{ b.sd|angka:2 }}</td>
+      <td class="n" data-v="{{ b.share|default_if_none:'' }}">{{ b.share|angka:0 }}%</td><td class="n" data-v="{{ b.dev }}">{{ b.dev|angka:3 }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{{ peta_gA|json_script:"d-ga" }}{{ peta_dev|json_script:"d-dev" }}
+{% else %}<div class="kartu sorot">Belum ada versi data untuk menghitung residual TFP.</div>{% endif %}
+{% endblock %}
+{% block skrip %}
+{% if sp.hasil.efek_tahun %}<script>
+  const DT = JSON.parse(document.getElementById("d-dt").textContent);
+  grafik("g-dt", "bar", DT.map((e) => e.tahun), [{ label: "d_t", data: DT.map((e) => e.d), warna: "#2e6e9e" }], { digit: 4, digitSumbu: 3, legenda: false });
+</script>{% endif %}
+{% if baris %}
+<script>
+  petaChoropleth("peta-ga", JSON.parse(document.getElementById("d-ga").textContent), { label: "g TFP", satuan: "%/th", skema: "div", digit: 2, nama: NAMA_PROV });
+  petaChoropleth("peta-dev", JSON.parse(document.getElementById("d-dev").textContent), { label: "ln A relatif", skema: "div", digit: 2, nama: NAMA_PROV });
+</script>
+{% endif %}{% endblock %}

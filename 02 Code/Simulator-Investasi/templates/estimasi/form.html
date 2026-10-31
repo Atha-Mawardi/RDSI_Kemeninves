@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block judul %}{{ judul }}{% endblock %}
+{% block isi %}
+<h1>{% if obj %}Ubah{% else %}Tambah{% endif %} {{ judul|lower }}</h1>
+<form method="post" class="kartu" style="max-width:720px">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="grid g2">
+  {% for f in form %}
+    <div class="bidang" {% if f.name == "catatan" or f.name == "nama" %}style="grid-column:1/-1"{% endif %}>
+      {% if f.field.widget.input_type == "checkbox" %}<label>{{ f }} {{ f.label }}</label>{% else %}<label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% endif %}
+      {% if f.help_text %}<div class="bantuan">{{ f.help_text }}</div>{% endif %}{{ f.errors }}
+    </div>
+  {% endfor %}
+  </div>
+  <button class="btn">Simpan</button>
+  <a class="btn garis" href="{% url 'estimasi:daftar' %}">Batal</a>
+</form>
+{% endblock %}
