@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static format_id %}
+{% block judul %}IO dan IRIO{% endblock %}
+{% block isi %}
+<div class="pilih-baris" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+  <h1 style="margin:0">Input-output antarwilayah (IRIO)</h1>
+  {% if ada %}
+  <div class="kontrol" style="min-width:300px">
+    <div><label class="kecil">Tahun tabel</label><select id="io-tahun">{% for t in tahun_irio %}<option {% if forloop.last %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+    <div><label class="kecil">Metode pembaruan</label><select id="io-metode">{% for m in metode %}<option value="{{ m }}" {% if m == "RAS" %}selected{% endif %}>{% if m == "CE" %}Cross entropy{% else %}{{ m }}{% endif %}</option>{% endfor %}</select></div>
+  </div>
+  {% endif %}
+</div>
+
+{% if not ada %}
+<div class="kartu sorot">Belum ada tabel IO yang dimuat. Jalankan <code>python manage.py muat_io</code> atau
+  <form method="post" action="{% url 'io:muat_ulang' %}" style="display:inline">{% csrf_token %}<button class="btn kecil">muat sekarang</button></form> (sekitar 30 detik).</div>
+{% else %}
+<div class="tab" data-grup="io">
+  <button data-tab="io-aliran" class="aktif">Peta aliran</button>
+  <button data-tab="io-kait">Keterkaitan sektor</button>
+  <button data-tab="io-peta">Peta pengganda</button>
+  <button data-tab="io-dampak">Dampak skenario</button>
+  <button data-tab="io-tabel">Tabel dimuat</button>
+</div>
+
+<!-- ============ Peta aliran -->
+<div class="panel-tab aktif" id="io-aliran" data-grup="io">
+  <div class="grid g-7-5">
+    <div class="kartu">
+      <div class="kontrol" style="margin-bottom:8px">
+        <div><label class="kecil">Sektor asal</label><select id="al-asal"><option value="">Semua sektor</option>{% for s in sektor %}<option value="{{ s.kode }}">{{ s.kode }} · {{ s.nama }}</option>{% endfor %}</select></div>
+        <div><label class="kecil">Sektor tujuan</label><select id="al-tujuan"><option value="">Semua sektor</option>{% for s in sektor %}<option value="{{ s.kode }}">{{ s.kode }} · {{ s.nama }}</option>{% endfor %}</select></div>
+        <div><label class="kecil">Provinsi fokus</label><select id="al-fokus"><option value="">Semua</option>{% for w in wilayah %}<option value="{{ w.kode }}">{{ w.nama }}</option>{% endfor %}</select></div>
+        <div style="min-width:120px"><label class="kecil">Arah</label><select id="al-arah"><option value="keluar">Keluar dari fokus</option><option value="masuk">Masuk ke fokus</option><option value="dua">Dua arah</option></select></div>
+      </div>
+      <div id="peta-aliran" class="peta" style="height:420px"></div>
+      <div class="kontrol rapat kecil" style="margin-top:8px">
+        <div style="min-width:120px"><label class="kecil">Jumlah busur teratas</label><input type="range" id="al-n" min="5" max="150" value="40"><span id="al-n-v" class="abu"></span></div>
+        <div style="min-width:120px"><label class="kecil">Ambang (T Rp)</label><input type="number" id="al-ambang" value="0" step="any" min="0" style="width:90px"></div>
+        <div style="min-width:120px"><label class="kecil">Warna busur</label><select id="al-warna"><option value="pulau">Pulau asal</option><option value="besar">Gradasi besaran</option><option value="tunggal">Satu warna</option></select></div>
+        <div><label class="kecil">Warna tunggal</label><input type="color" id="al-warna-1" value="#2e6e9e" style="width:100%;height:30px;padding:0;border:0"></div>
+        <div style="min-width:120px"><label class="kecil">Tebal maks</label><input type="range" id="al-tebal" min="2" max="24" value="10"></div>
+        <div style="min-width:120px"><label class="kecil">Lengkung</label><input type="range" id="al-lengkung" min="0" max="60" value="22"></div>
+        <div style="min-width:120px"><label class="kecil">Kejernihan</label><input type="range" id="al-opasitas" min="15" max="100" value="70"></div>
+        <div style="min-width:150px"><label class="kecil">Latar provinsi</label><select id="al-latar"><option value="">Polos</option><option value="neraca_antar">Neraca dagang antarprovinsi</option><option value="ekspor_antar">Ekspor antarprovinsi</option><option value="impor_antar">Impor antarprovinsi</option><option value="bocoran">Bocoran pengganda (%)</option></select></div>
+        <div><label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="al-panah" checked> Panah</label>
+        <label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="al-label"> Label provinsi</label></div>
+      </div>
+    </div>
+    <div class="kartu">
+      <h2 id="al-judul">Aliran terbesar</h2>
+      <div class="ringkas-stat" id="al-stat"></div>
+      <div class="isi-sisa"><div id="al-daftar"></div></div>
+      <h3 style="margin-top:12px">Matriks pulau asal × pulau tujuan (T Rp)</h3>
+      <div id="al-pulau"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Keterkaitan -->
+<div class="panel-tab" id="io-kait" data-grup="io">
+  <div class="kartu" style="padding:10px 16px">
+    <div class="kontrol">
+      <div><label class="kecil">Sumber</label><select id="kt-sumber"><option value="irio">IRIO, agregat nasional</option><option value="prov">IRIO, satu provinsi</option><option value="nasional">IO nasional ({{ tahun_nas|first }}–{{ tahun_nas|last }})</option></select></div>
+      <div><label class="kecil">Provinsi</label><select id="kt-wil" disabled>{% for w in wilayah %}<option value="{{ w.kode }}" {% if w.kode == 31 %}selected{% endif %}>{{ w.nama }}</option>{% endfor %}</select></div>
+      <div class="kecil abu" id="kt-info" style="grid-column:span 2"></div>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="kartu"><h2>Kuadran keterkaitan: ke belakang × ke depan</h2><div class="grafik tinggi"><canvas id="g-kuadran"></canvas></div>
+      <p class="kecil abu">Kanan atas = sektor kunci (menarik dan mendorong sektor lain di atas rata-rata). Ukuran titik = output. Garis putus = rata-rata (1).</p></div>
+    <div class="kartu"><h2>Pengganda per sektor</h2><div class="grafik tinggi"><canvas id="g-pengganda"></canvas></div>
+      <p class="kecil abu" id="kt-catatan-pengganda">Pengganda output = tambahan output seluruh ekonomi per Rp1 permintaan akhir sektor; pengganda NTB = tambahan nilai tambah.</p></div>
+  </div>
+  <div class="grid g2">
+    <div class="kartu">
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Pengganda output menurut tahun</h2>
+        <select id="kt-tren-ukuran" style="width:auto"><option value="output">Pengganda output</option><option value="ntb">Pengganda NTB</option><option value="bl">BL</option><option value="fl">FL</option></select></div>
+      <div class="grafik tinggi"><canvas id="g-tren"></canvas></div>
+      <p class="kecil abu">Klik nama sektor di legenda untuk menyembunyikan. Semua tahun tabel dengan metode terpilih.</p>
+    </div>
+    <div class="kartu">
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Jaringan sektor</h2>
+        <div class="pilih-baris kecil">
+          <div style="min-width:90px"><label class="kecil">Ambang koef. A</label><input type="range" id="jr-ambang" min="1" max="200" value="30"><span id="jr-ambang-v" class="abu"></span></div>
+          <div style="min-width:90px"><label class="kecil">Warna simpul</label><select id="jr-warna" style="width:auto"><option value="kuadran">Kuadran</option><option value="pengganda">Pengganda</option></select></div>
+          <label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="jr-diri"> Sendiri</label>
+        </div></div>
+      <svg id="jaringan" viewBox="0 0 560 420" style="width:100%;height:auto;max-height:440px"></svg>
+      <p class="kecil abu">Busur dari sektor pemasok ke sektor pembeli bila koefisien input A ≥ ambang; tebal ∝ koefisien. Ukuran simpul ∝ output.</p>
+    </div>
+  </div>
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Matriks koefisien</h2>
+      <select id="kt-matriks" style="width:auto"><option value="A">Koefisien input A (per Rp output pembeli)</option><option value="L">Invers Leontief L</option></select></div>
+    <div class="gulir" id="kt-heat" style="max-height:none"></div>
+  </div>
+</div>
+
+<!-- ============ Peta pengganda -->
+<div class="panel-tab" id="io-peta" data-grup="io">
+  <div class="grid g2">
+    <div class="kartu">
+      <div class="kontrol" style="margin-bottom:8px">
+        <div><label class="kecil">Indikator</label><select id="pm-ind">
+          <option value="pengganda_output">Pengganda output</option><option value="pengganda_ntb">Pengganda NTB</option>
+          <option value="bocoran">Limpahan ke provinsi lain (%)</option><option value="kemandirian">Kemandirian (% dampak tinggal)</option>
+          <option value="bl">Keterkaitan ke belakang (BL)</option><option value="fl">Keterkaitan ke depan (FL)</option>
+          <option value="ekspor_antar">Ekspor antara antarprovinsi (T Rp)</option><option value="impor_antar">Impor antara antarprovinsi (T Rp)</option>
+          <option value="neraca_antar">Neraca dagang antara (T Rp)</option><option value="output">Output (T Rp)</option></select></div>
+        <div><label class="kecil">Sektor</label><select id="pm-sek"><option value="">Semua (berbobot output)</option>{% for s in sektor %}<option value="{{ s.kode }}">{{ s.kode }} · {{ s.nama }}</option>{% endfor %}</select></div>
+        <div style="min-width:120px"><label class="kecil">Skema warna</label><select id="pm-skema"><option value="">Otomatis</option><option value="seq">Biru</option><option value="hijau">Hijau</option><option value="merah">Jingga</option><option value="div">Divergen</option><option value="peluang">Merah–hijau</option></select></div>
+      </div>
+      <div id="peta-pengganda" class="peta"></div>
+      <div id="ringkas-pengganda" class="ringkas"></div>
+    </div>
+    <div class="kartu">
+      <h2>Indikator per provinsi</h2>
+      <div class="isi-sisa"><div id="pm-tabel"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Dampak skenario -->
+<div class="panel-tab" id="io-dampak" data-grup="io">
+  <div class="kartu" style="padding:10px 16px">
+    <div class="kontrol">
+      <div><label class="kecil">Skenario</label><select id="dp-sk">{% for s in skenario %}<option value="{{ s.pk }}" {% if sk and s.pk == sk.pk %}selected{% endif %}>{{ s.label }}{% if not s.bawaan %} (kustom){% endif %}</option>{% endfor %}</select></div>
+      <div><label class="kecil">Investasi yang dialirkan</label><select id="dp-sumber"><option value="a2">Investasi tambahan terealisasi</option><option value="a1a2">Investasi dasar + tambahan terealisasi</option><option value="kebutuhan">Kebutuhan di atas investasi dasar</option></select></div>
+      <div style="min-width:120px"><label class="kecil">Tahun</label><select id="dp-th"><option value="">Kumulatif</option></select></div>
+      <div class="kecil abu" style="grid-column:span 3">Investasi provinsi → produk menurut komposisi PMTB provinsi (IO provinsi 2016, tanpa impor luar negeri) → disumber antarprovinsi menurut pangsa dagang IRIO → Δoutput = L·Δf, ΔNTB = v·Δoutput. Statis, harga tabel terpilih.</div>
+    </div>
+  </div>
+  <div class="grid g5" id="dp-kpi"></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="kartu">
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0">Peta dampak</h2>
+        <select id="dp-peta" style="width:auto"><option value="ntb_diterima">ΔNTB diterima (T Rp)</option><option value="pct_ntb">ΔNTB terhadap NTB provinsi (%)</option><option value="limpahan_pct">Limpahan dari investasi provinsi (%)</option><option value="investasi">Investasi dialirkan (T Rp)</option><option value="bersih">Diterima − dipicu (T Rp)</option></select></div>
+      <div id="peta-dampak" class="peta"></div>
+      <div id="ringkas-dampak" class="ringkas"></div>
+    </div>
+    <div class="kartu"><h2>ΔNTB menurut sektor (T Rp)</h2><div class="grafik" style="height:420px"><canvas id="g-dampak-sek"></canvas></div>
+      <h3 style="margin-top:10px">Pulau asal investasi × pulau penerima ΔNTB (T Rp)</h3><div id="dp-pulau"></div></div>
+  </div>
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between"><h2 style="margin:0">Dampak per provinsi</h2><button class="btn kecil garis" id="dp-csv">CSV</button></div>
+    <div class="gulir" id="dp-tabel" style="max-height:640px;margin-top:8px"></div>
+  </div>
+</div>
+
+<!-- ============ Tabel dimuat -->
+<div class="panel-tab" id="io-tabel" data-grup="io">
+  <div class="kartu">
+    <div class="pilih-baris" style="justify-content:space-between"><h2 style="margin:0">Tabel IO tersimpan</h2>
+      <form method="post" action="{% url 'io:muat_ulang' %}" onsubmit="return confirm('Muat ulang semua tabel (sekitar 30 detik)?')">{% csrf_token %}<button class="btn kecil garis">Muat ulang dari folder data</button></form></div>
+    <table class="tabel" style="margin-top:10px">
+      <thead><tr><th>Tabel</th><th class="n">Tahun</th><th>Metode</th><th class="n">Output (T Rp)</th><th class="n">NTB (T Rp)</th><th class="n">Antara antarprovinsi</th><th>Sumber</th><th>Dimuat</th></tr></thead>
+      <tbody>
+      {% regroup tabel by get_jenis_display as grup %}
+      {% for g in grup %}
+        <tr class="grup"><td colspan="8">{{ g.grouper }} <span class="kecil abu" style="font-weight:400">({{ g.list|length }})</span></td></tr>
+        {% for t in g.list %}<tr><td class="inden">{{ t.label }}</td><td class="n">{{ t.tahun }}</td><td>{{ t.metode|default:"–" }}</td>
+          <td class="n">{% if t.ringkasan.output_T %}{{ t.ringkasan.output_T|angka:0 }}{% else %}{{ t.ringkasan.pmtb_T|angka:0 }} (PMTB){% endif %}</td><td class="n">{{ t.ringkasan.va_T|angka:0 }}</td>
+          <td class="n">{% if t.ringkasan.antar_wilayah_pct %}{{ t.ringkasan.antar_wilayah_pct|angka:1 }}%{% else %}–{% endif %}</td>
+          <td class="kecil abu">{{ t.sumber }}</td><td class="kecil">{{ t.dimuat|date:"d M Y H:i" }}</td></tr>{% endfor %}
+      {% endfor %}
+      </tbody>
+    </table>
+    <p class="kecil abu">Satuan tabel juta Rp harga berlaku tahun tabel. IRIO dan IO nasional diperbarui dari tabel dasar 2016/2020 dengan RAS dan cross entropy ke sasaran output dan NTB provinsi; komposisi PMTB dari IO provinsi 2016 (kolom 3030).</p>
+  </div>
+</div>
+{{ sektor|json_script:"d-sektor" }}{{ wilayah|json_script:"d-wilayah" }}{{ pulau|json_script:"d-pulau" }}
+{% endif %}
+{% endblock %}
+{% block skrip %}{% if ada %}
+<script>window.IO_API = { aliran: "{% url 'io:api_aliran' %}", kait: "{% url 'io:api_keterkaitan' %}", tren: "{% url 'io:api_tren' %}", indikator: "{% url 'io:api_indikator' %}", dampak: "{% url 'io:api_dampak' %}" };</script>
+<script src="{% static 'js/io.js' %}"></script>
+{% endif %}{% endblock %}
