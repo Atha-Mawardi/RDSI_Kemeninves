@@ -18,6 +18,15 @@ SECRET_KEY = os.environ.get(
 )
 DEBUG = os.environ.get("SIMULATOR_DEBUG", "1") == "1"
 ALLOWED_HOSTS = os.environ.get("SIMULATOR_HOSTS", "localhost,127.0.0.1").split(",")
+# Nama host publik dari platform hosting (Render, Hugging Face Spaces).
+for _host in filter(None, (os.environ.get("RENDER_EXTERNAL_HOSTNAME"), os.environ.get("SPACE_HOST"))):
+    ALLOWED_HOSTS.append(_host)
+CSRF_TRUSTED_ORIGINS = ["https://" + ("*" + h if h.startswith(".") else h)
+                        for h in ALLOWED_HOSTS if h not in ("*", "localhost", "127.0.0.1")]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = not DEBUG
+# "pengguna:sandi" mengaktifkan kata sandi bersama (HTTP Basic) untuk seluruh situs.
+AKSES = os.environ.get("SIMULATOR_AKSES", "")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -35,6 +44,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "simulator.akses.SandiBersama",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -67,7 +78,7 @@ WSGI_APPLICATION = "simulator.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.environ.get("SIMULATOR_DB", BASE_DIR / "db.sqlite3"),
     }
 }
 
@@ -87,6 +98,10 @@ USE_THOUSAND_SEPARATOR = False
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"

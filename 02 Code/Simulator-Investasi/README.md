@@ -17,7 +17,18 @@ python manage.py runserver           # http://127.0.0.1:8000
 
 `muat_data_awal --ulang` mengosongkan data lalu memuat ulang. `--dataset <berkas.xlsx>` memakai dataset lain. `muat_determinan [--versi <pk>] [--berkas <xlsx>]` mengisi ulang indikator determinan TFP sebuah versi (bawaan versi aktif) dari lembar "Analisis Luaran 2" `01 Data/TFP/processed/Dataset Agregasi Provinsi Penyetaraan Satuan Miliar Float (keamanan).xlsx`. `muat_pangsa_papua [--versi <pk>]` mengisi ulang pangsa enam provinsi Papua sebuah versi dari berkas BKPM/DJPK. Uji: `python manage.py test` (estimator dan statistik t, diagnostik kelengkapan, penyunting grid, pivot, keterkaitan IO, mesin, paket; uji replikasi vintage B dan mesin dilewati bila berkas data repo tidak ada).
 
-Untuk server: set `SIMULATOR_SECRET_KEY`, `SIMULATOR_DEBUG=0`, `SIMULATOR_HOSTS`, lalu `python manage.py collectstatic` dan jalankan `simulator.wsgi` dengan gunicorn di belakang nginx. Peta dan grafik tidak memanggil internet (Leaflet, Chart.js, dan geojson disajikan lokal).
+Untuk server: set `SIMULATOR_SECRET_KEY`, `SIMULATOR_DEBUG=0`, `SIMULATOR_HOSTS`, lalu `python manage.py collectstatic` dan jalankan `simulator.wsgi` dengan gunicorn. `SIMULATOR_AKSES=pengguna:sandi` meminta kata sandi bersama untuk seluruh situs. Peta dan grafik tidak memanggil internet (Leaflet, Chart.js, dan geojson disajikan lokal).
+
+### Situs publik (Render, gratis)
+
+`render.yaml` di akar repositori membangun `Dockerfile` aplikasi ini. Gambar memakai snapshot `deploy/db.sqlite3` dan `deploy/media/` sebagai data situs; perubahan pengguna di situs hilang saat layanan dimulai ulang (layanan gratis tidur setelah 15 menit tanpa kunjungan dan butuh sekitar satu menit untuk bangun). Pemasangan pertama: buka `https://dashboard.render.com/blueprint/new`, masuk dengan GitHub, pilih repositori ini, isi `SIMULATOR_AKSES`, lalu Apply. Setiap push ke `main` yang mengubah folder ini memasang ulang situs.
+
+Memperbarui data situs dari basis data lokal:
+
+```bash
+sqlite3 db.sqlite3 ".backup deploy/db.sqlite3" && sqlite3 deploy/db.sqlite3 "DELETE FROM django_session; VACUUM;"
+rm -rf deploy/media && cp -R media deploy/media
+```
 
 ## Isi aplikasi
 
