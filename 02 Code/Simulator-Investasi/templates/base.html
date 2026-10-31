@@ -1,0 +1,54 @@
+{% load static %}<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block judul %}Beranda{% endblock %} · Simulator Investasi</title>
+  <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+  <script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+  <script>window.GEO_URL = "{% static 'geo/provinsi34.geojson' %}"; window.GEO38_URL = "{% static 'geo/provinsi38.geojson' %}";</script>
+  <script src="{% static 'js/app.js' %}"></script>
+  <script src="{% static 'js/neraca.js' %}"></script>
+</head>
+<body>
+<header class="atas">
+  <a class="merek" href="{% url 'beranda' %}">Simulator Investasi<small>Sasaran pertumbuhan provinsi</small></a>
+  {% with p=request.path %}
+  <nav>
+    <a href="{% url 'beranda' %}" class="{% if p == '/' %}aktif{% endif %}">Beranda</a>
+    <a href="{% url 'simulasi:daftar' %}" class="{% if p == '/skenario/' or '/sunting/' in p or '/baru/' in p or '/asumsi/' in p %}aktif{% endif %}">Skenario</a>
+    <a href="{% url 'simulasi:hasil_aktif' %}" class="{% if di_hasil %}aktif{% endif %}">Hasil</a>
+    <a href="{% url 'simulasi:bandingkan' %}" class="{% if 'bandingkan' in p %}aktif{% endif %}">Perbandingan</a>
+    <a href="{% url 'datapanel:penjelajah' %}" class="{% if '/jelajah/' in p %}aktif{% endif %}">Jelajah</a>
+    <a href="{% url 'io:beranda' %}" class="{% if p|slice:':4' == '/io/' %}aktif{% endif %}">IO-IRIO</a>
+    <a href="{% url 'pivot' %}" class="{% if p|slice:':7' == '/pivot/' %}aktif{% endif %}">Pivot</a>
+    <a href="{% url 'datapanel:daftar_versi' %}" class="{% if '/data/' in p and '/jelajah/' not in p %}aktif{% endif %}">Data</a>
+    <a href="{% url 'estimasi:daftar' %}" class="{% if '/estimasi/' in p %}aktif{% endif %}">Estimasi</a>
+  </nav>
+  {% endwith %}
+  <div class="versi">
+    {% if sk_grup %}
+    <form class="pilih-aktif" method="post" action="{% url 'simulasi:aktif' %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <label for="pilih-skenario-aktif">Skenario aktif</label>
+      <select id="pilih-skenario-aktif" name="pk" onchange="this.form.submit()">
+        {% for judul, daftar in sk_grup %}{% if daftar %}<optgroup label="{{ judul }}">
+          {% for s in daftar %}<option value="{{ s.pk }}" {% if sk_aktif and s.pk == sk_aktif.pk %}selected{% endif %} {% if s.status == "baru" or s.status == "gagal" %}disabled{% endif %}>{{ s.label }}{% if s.status == "usang" %} (usang){% endif %}</option>{% endfor %}
+        </optgroup>{% endif %}{% endfor %}
+      </select>
+    </form>
+    {% endif %}
+    <span class="data-aktif">{% if versi_aktif %}Data <a style="color:#fff" href="{% url 'datapanel:detail_versi' versi_aktif.pk %}">#{{ versi_aktif.pk }} {{ versi_aktif.tahun_awal }}–{{ versi_aktif.tahun_akhir }}</a>{% else %}Belum ada data aktif{% endif %}</span>
+  </div>
+</header>
+<main>
+  {% for m in messages %}<div class="pesan {{ m.tags }}">{{ m }}</div>{% endfor %}
+  {% block isi %}{% endblock %}
+</main>
+{{ nama_provinsi|json_script:"nama-prov" }}
+<script>window.NAMA_PROV = JSON.parse(document.getElementById("nama-prov").textContent);</script>
+{% block skrip %}{% endblock %}
+</body>
+</html>
