@@ -13,8 +13,8 @@ class Command(BaseCommand):
     help = "Isi indikator determinan TFP (sheet Analisis Luaran 2) ke versi data, tanpa mengubah variabel lain."
 
     def add_arguments(self, parser):
-        parser.add_argument("--versi", type=int, help="pk versi data; bawaan = versi aktif")
-        parser.add_argument("--berkas", help=f"workbook tim; bawaan = {BERKAS}")
+        parser.add_argument("--versi", type=int, help="pk versi data; default = versi aktif")
+        parser.add_argument("--berkas", help=f"workbook tim; default = {BERKAS}")
 
     def handle(self, *args, **opts):
         versi = VersiData.objects.filter(pk=opts["versi"]).first() if opts["versi"] else VersiData.aktif()

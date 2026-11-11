@@ -10,7 +10,7 @@ def daftar_berhasil():
 
 
 def ambil(request):
-    """Skenario aktif sesi ini; bawaan BAU (atau skenario berhasil pertama) bila belum dipilih."""
+    """Skenario aktif sesi ini; default BAU (atau skenario berhasil pertama) bila belum dipilih."""
     pk = request.session.get(KUNCI)
     qs = Skenario.objects.filter(hasil__isnull=False).select_related("hasil", "versi_data")
     sk = qs.filter(pk=pk).first() if pk else None
@@ -26,5 +26,5 @@ def tetapkan(request, sk):
 def grup():
     """[(judul, [skenario...]), ...] untuk pemilih bertingkat."""
     semua = list(Skenario.objects.only("pk", "nama", "singkat", "kelompok", "templat", "status").order_by("templat", "nama"))
-    return [("Bawaan", [s for s in semua if s.kelompok == Skenario.Kelompok.BAWAAN]),
+    return [("Default", [s for s in semua if s.kelompok == Skenario.Kelompok.BAWAAN]),
             ("Kustom", [s for s in semua if s.kelompok != Skenario.Kelompok.BAWAAN])]

@@ -25,9 +25,9 @@ class FormKoefisienSektoral(forms.ModelForm):
 
 
 class FormSetDeterminan(forms.ModelForm):
-    """Nama set dan, per indikator, koefisien, galat baku, SD, dan rata-rata."""
+    """Nama set dan, per indikator, koefisien, standard error, SD, dan rata-rata."""
 
-    KOLOM = [("koef", "Koefisien"), ("se", "Galat baku"), ("sd", "Simpangan baku indikator"), ("rata", "Rata-rata asli")]
+    KOLOM = [("koef", "Koefisien"), ("se", "Standard error"), ("sd", "Standard deviation indikator"), ("rata", "Rata-rata asli")]
 
     class Meta:
         model = SetDeterminan

@@ -1,7 +1,7 @@
 """Pivot bebas di peramban atas lima sumber: panel provinsi, panel sektoral, hasil skenario, IO sektor, aliran IRIO.
 
 Server hanya mengirim tabel panjang ringkas: tiap dimensi dikodekan sebagai indeks ke daftar nilainya
-(urutan daftar = urutan tampil bawaan), ukuran sebagai angka. Agregasi, filter, subtotal, dan tampilan
+(urutan daftar = urutan tampil default), ukuran sebagai angka. Agregasi, filter, subtotal, dan tampilan
 dihitung di klien (static/js/pivot.js). Ekspor XLSX dibuat di server dari matriks yang sudah dirender.
 """
 
@@ -171,13 +171,13 @@ def sumber_skenario(request):
         for b in h["baris"]:
             r = dict(zip(h["kolom"], b))
             kode.add(r["kode"])
-            r.update(skenario=s.label, kelompok_sk="Bawaan" if s.bawaan else "Kustom", tahun=int(r["tahun"]))
+            r.update(skenario=s.label, kelompok_sk="Default" if s.bawaan else "Kustom", tahun=int(r["tahun"]))
             rows.append(r)
     ukuran = [{"kunci": k, "label": lbl, "satuan": sat, "grup": g, "agregat": ag, "digit": d}
               for k, (lbl, sat, g, ag, d) in HITUNG.items()]
     return _paket("Hasil skenario · " + ", ".join(s.label for s in daftar),
                   "Tabel hitung: satu baris per skenario × provinsi × tahun proyeksi (miliar Rp riil kecuali disebut).",
-                  [("kelompok_sk", "Kelompok skenario", ["Bawaan", "Kustom"]),
+                  [("kelompok_sk", "Kelompok skenario", ["Default", "Kustom"]),
                    ("skenario", "Skenario", [s.label for s in daftar])] + _dim_wilayah(kode) + [("tahun", "Tahun", None)],
                   ukuran, rows)
 
@@ -222,15 +222,15 @@ def sumber_io_sektor(request):
         {"kunci": "ntb", "label": "Nilai tambah (NTB)", "satuan": "T Rp", "grup": "Neraca", "agregat": "jumlah", "digit": 1},
         {"kunci": "ekspor", "label": "Jual antara ke provinsi lain", "satuan": "T Rp", "grup": "Neraca", "agregat": "jumlah", "digit": 1},
         {"kunci": "impor", "label": "Beli antara dari provinsi lain", "satuan": "T Rp", "grup": "Neraca", "agregat": "jumlah", "digit": 1},
-        {"kunci": "po", "label": "Pengganda output", "satuan": "", "grup": "Pengganda", "agregat": W, "digit": 3},
-        {"kunci": "pn", "label": "Pengganda NTB", "satuan": "", "grup": "Pengganda", "agregat": W, "digit": 3},
-        {"kunci": "limpahan", "label": "Limpahan ke provinsi lain", "satuan": "%", "grup": "Pengganda", "agregat": W, "digit": 1},
+        {"kunci": "po", "label": "Multiplier output", "satuan": "", "grup": "Multiplier", "agregat": W, "digit": 3},
+        {"kunci": "pn", "label": "Multiplier NTB", "satuan": "", "grup": "Multiplier", "agregat": W, "digit": 3},
+        {"kunci": "limpahan", "label": "Limpahan ke provinsi lain", "satuan": "%", "grup": "Multiplier", "agregat": W, "digit": 1},
         {"kunci": "bl", "label": "Keterkaitan ke belakang (BL)", "satuan": "", "grup": "Keterkaitan", "agregat": W, "digit": 3},
         {"kunci": "fl", "label": "Keterkaitan ke depan (FL)", "satuan": "", "grup": "Keterkaitan", "agregat": W, "digit": 3},
     ]
     sektor = [f"{s} {NAMA_SEKTOR[s]}" for s in tb.sek]
     return _paket(f"IO sektor · IRIO {t.tahun} {t.metode}",
-                  "Satu baris per provinsi × sektor; pengganda dan keterkaitan memakai invers Leontief antarwilayah penuh.",
+                  "Satu baris per provinsi × sektor; multiplier dan keterkaitan memakai invers Leontief antarwilayah penuh.",
                   _dim_wilayah(tb.wil) + [("kelompok", "Kelompok sektor", [n for _, n in KELOMPOK]),
                                           ("sektor", "Sektor", sektor)], ukuran, rows)
 
@@ -290,10 +290,10 @@ def pivot(request):
 def data(request):
     f = PENYEDIA.get(request.GET.get("sumber", "panel"))
     if not f:
-        return JsonResponse({"galat": "Sumber tidak dikenal."}, status=400)
+        return JsonResponse({"error": "Sumber tidak dikenal."}, status=400)
     hasil = f(request)
     if hasil is None:
-        return JsonResponse({"galat": "Sumber ini belum punya data (versi data, hasil skenario, atau tabel IO)."}, status=404)
+        return JsonResponse({"error": "Sumber ini belum punya data (versi data, hasil skenario, atau tabel IO)."}, status=404)
     return JsonResponse(hasil)
 
 

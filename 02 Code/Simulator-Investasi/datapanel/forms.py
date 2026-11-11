@@ -44,7 +44,7 @@ class FormUnggah(forms.Form):
 
 
 class FormObservasi(forms.Form):
-    """Sunting satu baris provinsi-tahun. Field dibuat dari kamus variabel."""
+    """Edit satu baris provinsi-tahun. Field dibuat dari kamus variabel."""
 
     def __init__(self, *args, nilai=None, **kwargs):
         super().__init__(*args, **kwargs)

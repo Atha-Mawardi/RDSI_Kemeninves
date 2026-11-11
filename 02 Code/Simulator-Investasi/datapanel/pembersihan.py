@@ -40,7 +40,7 @@ OPSI_BAWAAN = {
 
 @dataclass
 class Temuan:
-    tingkat: str  # info | peringatan | galat
+    tingkat: str  # info | peringatan | error
     langkah: str
     pesan: str
     detail: list = field(default_factory=list)
@@ -67,7 +67,7 @@ class HasilPembersihan:
 
     @property
     def ada_galat(self):
-        return any(t.tingkat == "galat" for t in self.temuan)
+        return any(t.tingkat == "error" for t in self.temuan)
 
     def ringkasan(self):
         wajib_ada = [k for k in V.WAJIB if k in self.df.columns]
@@ -84,7 +84,7 @@ class HasilPembersihan:
             "wajib_hilang": [k for k in V.WAJIB if k not in wajib_ada],
             "lengkap_untuk_simulasi": len(wajib_ada) == len(V.WAJIB),
             "n_peringatan": sum(t.tingkat == "peringatan" for t in self.temuan),
-            "n_galat": sum(t.tingkat == "galat" for t in self.temuan),
+            "n_galat": sum(t.tingkat == "error" for t in self.temuan),
         }
 
 
@@ -305,7 +305,7 @@ class PipelinePembersihan:
                         f"Sheet '{nama_sheet}': {len(baru)} variabel dipetakan, {len(tak_dikenal)} kolom tidak dikenal.")
 
         if not bagian:
-            self._catat("galat", "Petakan kolom",
+            self._catat("error", "Petakan kolom",
                         "Tidak ada sheet yang memuat kolom provinsi, tahun, dan variabel yang dikenali.")
             return HasilPembersihan(pd.DataFrame(), {}, self.temuan, {}, tak_dikenal_total)
 

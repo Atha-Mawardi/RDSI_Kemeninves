@@ -57,7 +57,7 @@ def api_hitung(request):
         versi, kw = _spesifikasi(json.loads(request.body or "{}"))
         h = twfe.estimasi_lengkap(versi.ke_dataframe(), **kw)
     except (ValueError, KeyError, TypeError, np.linalg.LinAlgError) as e:
-        return JsonResponse({"galat": str(e)}, status=400)
+        return JsonResponse({"error": str(e)}, status=400)
     h["versi"] = versi.pk
     return JsonResponse(h)
 
@@ -69,7 +69,7 @@ def simpan(request):
         versi, kw = _spesifikasi(m)
         h = twfe.estimasi_lengkap(versi.ke_dataframe(), **kw)
     except (ValueError, KeyError, TypeError, np.linalg.LinAlgError) as e:
-        return JsonResponse({"galat": str(e)}, status=400)
+        return JsonResponse({"error": str(e)}, status=400)
     sp = kw
     ringkas = (f"Two-way FE{'' if sp['efek_tahun'] else ' (tanpa efek tahun)'}, SE klaster provinsi (HC1). "
                f"{h['n_provinsi']} provinsi × {h['n_tahun']} tahun"
@@ -80,7 +80,7 @@ def simpan(request):
         nama=(m.get("nama") or "").strip() or f"Estimasi {sp['tahun_awal']}–{sp['tahun_akhir']}",
         sumber=SetParameter.Sumber.ESTIMASI, versi_data=versi, crs=sp["crs"], tahun_awal=sp["tahun_awal"],
         tahun_akhir=sp["tahun_akhir"], b1=h["b1"], se_b1=h["se_b1"], b2=h["b2"], se_b2=h["se_b2"], n_obs=h["n_obs"],
-        catatan=ringkas, spesifikasi=h["spesifikasi"], bawaan=bool(m.get("bawaan")),
+        catatan=ringkas, spesifikasi=h["spesifikasi"], bawaan=bool(m.get("default")),
         hasil={k: h[k] for k in ("koefisien", "uji_crs", "efek_tahun", "efek_provinsi", "rmse_provinsi", "r2_within",
                                  "r2_total", "rmse", "n_provinsi", "n_tahun", "df_klaster")})
     if obj.bawaan:
@@ -93,7 +93,7 @@ def simpan(request):
 def hapus(request, pk):
     sp = get_object_or_404(SetParameter, pk=pk)
     if sp.bawaan:
-        messages.error(request, "Set bawaan tidak dapat dihapus; jadikan set lain bawaan dulu.")
+        messages.error(request, "Set default tidak dapat dihapus; jadikan set lain default dulu.")
     elif sp.skenario.exists():
         messages.error(request, "Set dipakai skenario; tidak dapat dihapus.")
     else:
@@ -103,12 +103,12 @@ def hapus(request, pk):
 
 
 @require_POST
-def jadikan_bawaan(request, pk):
+def jadikan_default(request, pk):
     sp = get_object_or_404(SetParameter, pk=pk)
     SetParameter.objects.exclude(pk=sp.pk).update(bawaan=False)
     sp.bawaan = True
     sp.save(update_fields=["bawaan"])
-    messages.success(request, f"{sp.nama} sekarang set bawaan untuk skenario baru.")
+    messages.success(request, f"{sp.nama} sekarang set default untuk skenario baru.")
     return redirect("estimasi:daftar")
 
 
@@ -183,7 +183,7 @@ def sunting_determinan(request, pk=None):
 def hapus_determinan(request, pk):
     sd = get_object_or_404(SetDeterminan, pk=pk)
     if sd.bawaan:
-        messages.error(request, "Set bawaan tidak dapat dihapus; jadikan set lain bawaan dulu.")
+        messages.error(request, "Set default tidak dapat dihapus; jadikan set lain default dulu.")
     elif sd.skenario.exists():
         messages.error(request, "Set dipakai skenario; tidak dapat dihapus.")
     else:
@@ -193,11 +193,11 @@ def hapus_determinan(request, pk):
 
 
 @require_POST
-def bawaan_determinan(request, pk):
+def default_determinan(request, pk):
     sd = get_object_or_404(SetDeterminan, pk=pk)
     SetDeterminan.objects.exclude(pk=sd.pk).update(bawaan=False)
     SetDeterminan.objects.filter(pk=sd.pk).update(bawaan=True)
-    messages.success(request, f"{sd.nama} sekarang set determinan bawaan.")
+    messages.success(request, f"{sd.nama} sekarang set determinan default.")
     return redirect("estimasi:daftar")
 
 

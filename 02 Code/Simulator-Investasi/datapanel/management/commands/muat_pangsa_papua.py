@@ -18,7 +18,7 @@ class Command(BaseCommand):
     help = "Hitung pangsa enam provinsi Papua dari berkas BKPM/DJPK dan simpan ke versi data."
 
     def add_arguments(self, parser):
-        parser.add_argument("--versi", type=int, default=None, help="pk versi data (bawaan: versi aktif).")
+        parser.add_argument("--versi", type=int, default=None, help="pk versi data (default: versi aktif).")
 
     def handle(self, *args, **opts):
         versi = VersiData.objects.filter(pk=opts["versi"]).first() if opts["versi"] else VersiData.aktif()

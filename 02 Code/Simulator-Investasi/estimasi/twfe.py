@@ -77,7 +77,7 @@ def _efek_tetap(u, tahun=True, iterasi=500, tol=1e-12):
 
 def estimasi_lengkap(df, tahun_awal=None, tahun_akhir=None, crs=False, kecuali_tahun=(), provinsi=None,
                      efek_tahun=True, modal="pmtb", delta=0.05):
-    """Two-way FE dengan keluaran lengkap: koefisien, SE klaster, t, p, CI, uji CRS, efek tetap, residual."""
+    """Two-way FE dengan keluaran lengkap: koefisien, SE klaster, t, p, CI, uji CRS, fixed effect, residual."""
     from .statistik import bintang, p_dua_sisi, t_kritis
 
     d = siapkan_log(df, modal, delta)
@@ -105,7 +105,7 @@ def estimasi_lengkap(df, tahun_awal=None, tahun_akhir=None, crs=False, kecuali_t
     G = d.index.get_level_values("kode").nunique()
     T = d.index.get_level_values("tahun").nunique()
     if G < 3:
-        raise ValueError("Butuh minimal 3 provinsi untuk galat baku klaster.")
+        raise ValueError("Butuh minimal 3 provinsi untuk standard error klaster.")
     w = _demean_dua_arah(d, ["y"] + kol_x, tahun=efek_tahun)
     X, Y = w[kol_x].to_numpy(), w["y"].to_numpy()
     b, *_ = np.linalg.lstsq(X, Y, rcond=None)
@@ -177,7 +177,7 @@ def estimasi(df, tahun_awal=None, tahun_akhir=None, crs=False):
 
 
 def residual_tfp(df, b1, b2):
-    """log TFP (level, termasuk efek tetap) dan laju tahunannya per provinsi-tahun."""
+    """log TFP (level, termasuk fixed effect) dan laju tahunannya per provinsi-tahun."""
     d = siapkan_log(df)
     d["lnA"] = d.lnY - b1 * d.lnK - b2 * d.lnL
     per = d.groupby(level="kode")

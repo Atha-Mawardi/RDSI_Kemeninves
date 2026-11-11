@@ -56,7 +56,7 @@ class Skenario(models.Model):
     set_determinan = models.ForeignKey("estimasi.SetDeterminan", null=True, blank=True,
                                        on_delete=models.SET_NULL, related_name="skenario",
                                        verbose_name="koefisien determinan TFP",
-                                       help_text="Kosong = set determinan bawaan.")
+                                       help_text="Kosong = set determinan default.")
 
     tahun_dasar = models.PositiveSmallIntegerField(default=2025)
     tahun_target = models.PositiveSmallIntegerField(default=2029)
@@ -117,7 +117,7 @@ class Skenario(models.Model):
     # {pilar: {"dz" (SD), "jeda", "penuh" (thn), "porsi" (% investasi tambahan), "biaya" (T Rp per +1 SD),
     #          "cakupan", "indikator": {kode: dz}}}; perbaikan di atas tren historis
     determinan = models.JSONField("determinan TFP", default=dict, blank=True)
-    # Paket bawaan: {nama field: nilai} yang diubah pengguna; diwariskan ke paket turunannya saat dibangun ulang
+    # Paket default: {nama field: nilai} yang diubah pengguna; diwariskan ke paket turunannya saat dibangun ulang
     penyesuaian = models.JSONField(default=dict, blank=True)
 
     dibuat = models.DateTimeField(auto_now_add=True)

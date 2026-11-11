@@ -118,7 +118,7 @@ def kumpulkan(versi=None):
     kustom = list(Skenario.objects.filter(kelompok=Skenario.Kelompok.KUSTOM).order_by("pk"))
     semua = paket + kustom
     if not semua:
-        raise ValueError("Belum ada skenario; buat paket bawaan dulu di halaman Skenario.")
+        raise ValueError("Belum ada skenario; buat paket default dulu di halaman Skenario.")
     acuan = paket[0] if paket else semua[0]
     versi = versi or acuan.versi_data
     if not versi.bisa_rinci_papua:

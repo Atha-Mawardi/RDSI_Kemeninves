@@ -17,5 +17,5 @@ urlpatterns = [
     path("<int:pk>/grid/", views.sunting_grid, name="sunting_grid"),
     path("<int:pk>/grid.json", views.grid_json, name="grid_json"),
     path("<int:pk>/<str:aksi>/", views.aksi_versi, name="aksi_versi"),
-    path("<int:pk>/sunting/<int:kode>/<int:tahun>/", views.sunting_observasi, name="sunting_observasi"),
+    path("<int:pk>/edit/<int:kode>/<int:tahun>/", views.sunting_observasi, name="sunting_observasi"),
 ]

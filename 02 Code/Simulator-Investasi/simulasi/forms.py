@@ -13,9 +13,9 @@ CAKUPAN = [("nasional", "Nasional")] + [(f"pulau:{p}", f"Pulau {p}") for p in PU
     [(f"prov:{k}", NAMA_PROVINSI[k]) for k in KODE_PROVINSI_38]
 MAKS_KEJUTAN = 8
 # isian determinan per pilar: (kunci, label, batas bawah, batas atas)
-KOLOM_DETERMINAN = [("dz", "Perubahan (× simpangan baku)", -3, 3), ("jeda", "Jeda sebelum efek (tahun)", 0, 10),
+KOLOM_DETERMINAN = [("dz", "Perubahan (× standard deviation)", -3, 3), ("jeda", "Jeda sebelum efek (tahun)", 0, 10),
                     ("penuh", "Lama menuju efek penuh (tahun)", 1, 10), ("porsi", "Porsi investasi tambahan (%)", 0, 100),
-                    ("biaya", "Biaya naik 1 simpangan baku (triliun Rp)", 0, None)]
+                    ("biaya", "Biaya naik 1 standard deviation (triliun Rp)", 0, None)]
 
 BAGIAN = [
     ("Basis", "Data, parameter, dan horizon",
@@ -94,7 +94,7 @@ class FormSkenario(forms.ModelForm):
         self._siapkan_determinan(inst)
 
     def _siapkan_determinan(self, inst):
-        self.fields["set_determinan"].empty_label = "Set bawaan"
+        self.fields["set_determinan"].empty_label = "Set default"
         dt = inst.determinan or {}
         for p, _ in PILAR:
             d = dt.get(p) or {}

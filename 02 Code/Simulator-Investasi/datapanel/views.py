@@ -265,7 +265,7 @@ def sunting_observasi(request, pk, kode, tahun):
             return redirect("datapanel:detail_versi", pk=pk)
         turunan = _buat_turunan(request, versi, df, catatan, form.cleaned_data["alasan"],
                                 f"{NAMA_PROVINSI[kode]} {tahun}: {len(diubah)} sel diubah.", diubah)
-        messages.success(request, f"Versi turunan #{turunan.pk} dibuat. Aktifkan bila ingin dipakai sebagai bawaan.")
+        messages.success(request, f"Versi turunan #{turunan.pk} dibuat. Aktifkan bila ingin dipakai sebagai default.")
         return redirect("datapanel:detail_versi", pk=turunan.pk)
     return render(request, "datapanel/sunting_observasi.html", {
         "versi": versi, "form": form, "kode": kode, "nama": NAMA_PROVINSI.get(kode), "tahun": tahun})
@@ -277,7 +277,7 @@ def penjelajah(request):
     versi = versi_list.filter(pk=pk).first() if pk else VersiData.aktif()
     if not versi:
         return render(request, "datapanel/penjelajah.html", {"versi_list": versi_list})
-    # checkbox tak tercentang tidak terkirim; input tersembunyi "0" mendahuluinya, bawaan = rinci
+    # checkbox tak tercentang tidak terkirim; input tersembunyi "0" mendahuluinya, default = rinci
     rinci = (request.GET.getlist("rinci") or ["1"])[-1] == "1" and versi.bisa_rinci_papua
     df = tambah_turunan(versi.ke_dataframe_38() if rinci else versi.ke_dataframe())
     pilihan = [(k, V.label(k)) for k in INDIKATOR_PETA if k in df.columns] + \
@@ -346,7 +346,7 @@ def api_indikator(request):
     df = tambah_turunan(versi.ke_dataframe())
     var, tahun = request.GET.get("var", "G_PDRB"), int(request.GET.get("tahun", versi.tahun_akhir))
     if var not in df.columns:
-        return JsonResponse({"galat": "variabel tidak ada"}, status=400)
+        return JsonResponse({"error": "variabel tidak ada"}, status=400)
     sub = df.xs(tahun, level="tahun")[var]
     return JsonResponse({"var": var, "label": V.label(var), "satuan": V.satuan(var), "tahun": tahun,
                          "nilai": {str(int(k)): _bersih(v) for k, v in sub.items()}})
@@ -433,7 +433,7 @@ def sunting_grid(request, pk):
             catatan.setdefault((kode, tahun), {})[var] = f"disunting manual: {alasan}"
             diubah.append(f"{NAMA_PROVINSI[kode]} {tahun} {var}")
     except (ValueError, KeyError, TypeError) as e:
-        return JsonResponse({"galat": str(e)}, status=400)
+        return JsonResponse({"error": str(e)}, status=400)
     df = df.astype(float)
     df.index = pd.MultiIndex.from_tuples([(int(k), int(t)) for k, t in df.index], names=["kode", "tahun"])
     tahun_baru = sorted({int(p["tahun"]) for p in perubahan} - set(range(versi.tahun_awal or 0, (versi.tahun_akhir or 0) + 1)))

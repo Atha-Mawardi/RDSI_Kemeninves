@@ -1,4 +1,4 @@
-"""Analisis IO/IRIO: invers Leontief, keterkaitan, aliran antarwilayah, pengganda, dan dampak investasi skenario.
+"""Analisis IO/IRIO: invers Leontief, keterkaitan, aliran antarwilayah, multiplier, dan dampak investasi skenario.
 
 Notasi: N = R × S baris (wilayah utama, sektor di dalamnya). A = Z / x (kolom), L = (I − A)⁻¹,
 v = NTB / output. Keterkaitan ke belakang (BL) dari jumlah kolom L, ke depan (FL) dari jumlah baris
@@ -54,7 +54,7 @@ def nasional_dari_irio(tb: Tabel):
 
 
 def keterkaitan(Z, x, va):
-    """BL, FL (dinormalkan), pengganda output dan NTB per sektor untuk tabel S × S."""
+    """BL, FL (dinormalkan), multiplier output dan NTB per sektor untuk tabel S × S."""
     aman = np.where(x > 0, x, 1.0)
     A, B = Z / aman[None, :], Z / aman[:, None]
     n = len(x)
@@ -62,7 +62,7 @@ def keterkaitan(Z, x, va):
     v = np.where(x > 0, va / aman, 0.0)
     kol, bar = L.sum(axis=0), G.sum(axis=1)
     return {"bl": (kol / kol.mean()).tolist(), "fl": (bar / bar.mean()).tolist(),
-            "pengganda_output": kol.tolist(), "pengganda_ntb": (v @ L).tolist(),
+            "multiplier_output": kol.tolist(), "multiplier_ntb": (v @ L).tolist(),
             "A": A.tolist(), "L": L.tolist(), "output": (x / 1e6).tolist(), "ntb": (va / 1e6).tolist()}
 
 
@@ -78,8 +78,8 @@ def keterkaitan_wilayah(tb: Tabel, kode):
     xr = tb.x[sl]
     aman = np.where(xr > 0, xr, 1.0)
     return {"bl": (kol / kol_all.mean()).tolist(), "fl": (bar / bar_all.mean()).tolist(),
-            "pengganda_output": kol.tolist(), "pengganda_ntb": (tb.v @ tb.L[:, sl]).tolist(),
-            "bocoran": (1 - lokal / np.where(kol > 0, kol, 1)).tolist(),
+            "multiplier_output": kol.tolist(), "multiplier_ntb": (tb.v @ tb.L[:, sl]).tolist(),
+            "spillover": (1 - lokal / np.where(kol > 0, kol, 1)).tolist(),
             "A": (Zr / aman[None, :]).tolist(), "L": tb.L[sl, sl].tolist(),
             "output": (xr / 1e6).tolist(), "ntb": (tb.va[sl] / 1e6).tolist()}
 
@@ -95,11 +95,11 @@ def aliran(tb: Tabel, sektor_asal=None, sektor_tujuan=None):
 
 
 def indikator_wilayah(tb: Tabel, sektor=None):
-    """Indikator per provinsi untuk peta pengganda; sektor = kode sektor atau None (rata-rata berbobot output)."""
+    """Indikator per provinsi untuk peta multiplier; sektor = kode sektor atau None (rata-rata berbobot output)."""
     kol = tb.L.sum(axis=0)
     ntb = tb.v @ tb.L
     B4 = tb.blok(tb.L)
-    lokal = np.einsum("rsrj->rj", B4).reshape(-1)  # bagian pengganda yang jatuh di wilayah sendiri
+    lokal = np.einsum("rsrj->rj", B4).reshape(-1)  # bagian multiplier yang jatuh di wilayah sendiri
     bocor = 1 - lokal / np.where(kol > 0, kol, 1)
     G_bar = tb.G.sum(axis=1)
     bl, fl = kol / kol.mean(), G_bar / G_bar.mean()
@@ -107,7 +107,7 @@ def indikator_wilayah(tb: Tabel, sektor=None):
     F = aliran(tb)
     keluar, masuk = F.sum(axis=1) - np.diag(F), F.sum(axis=0) - np.diag(F)
     out = {}
-    for nama, v in (("pengganda_output", kol), ("pengganda_ntb", ntb), ("bocoran", bocor * 100),
+    for nama, v in (("multiplier_output", kol), ("multiplier_ntb", ntb), ("spillover", bocor * 100),
                     ("bl", bl), ("fl", fl)):
         m = v.reshape(tb.R, tb.S)
         if sektor:
@@ -116,7 +116,7 @@ def indikator_wilayah(tb: Tabel, sektor=None):
         else:
             nilai = (m * x).sum(axis=1) / np.where(x.sum(axis=1) > 0, x.sum(axis=1), 1)
         out[nama] = {str(k): float(nilai[i]) for i, k in enumerate(tb.wil)}
-    out["kemandirian"] = {k: 100 - v for k, v in out["bocoran"].items()}
+    out["kemandirian"] = {k: 100 - v for k, v in out["spillover"].items()}
     out["ekspor_antar"] = {str(k): float(keluar[i] / 1e6) for i, k in enumerate(tb.wil)}
     out["impor_antar"] = {str(k): float(masuk[i] / 1e6) for i, k in enumerate(tb.wil)}
     out["neraca_antar"] = {str(k): float((keluar[i] - masuk[i]) / 1e6) for i, k in enumerate(tb.wil)}
@@ -201,10 +201,10 @@ def dampak(tb: Tabel, investasi, jembatan):
     tot_inv = inv.sum()
     hasil["ringkasan"] = {
         "investasi": float(tot_inv), "d_output": float(dX.sum() / 1000), "d_ntb": float(dV.sum() / 1000),
-        "pengganda_ntb": float(dV.sum() / 1000 / tot_inv) if tot_inv else None,
-        "pengganda_output": float(dX.sum() / 1000 / tot_inv) if tot_inv else None,
+        "multiplier_ntb": float(dV.sum() / 1000 / tot_inv) if tot_inv else None,
+        "multiplier_output": float(dX.sum() / 1000 / tot_inv) if tot_inv else None,
         "limpahan_pct": float((1 - np.trace(M) / M.sum()) * 100) if M.sum() else None,
-        "bocoran_impor_pct": float((1 - F.sum() / 1000 / tot_inv) * 100) if tot_inv else None,
+        "spillover_impor_pct": float((1 - F.sum() / 1000 / tot_inv) * 100) if tot_inv else None,
         "pct_ntb_nasional": float(dV.sum() / tb.va.sum() * 100),
     }
     return hasil

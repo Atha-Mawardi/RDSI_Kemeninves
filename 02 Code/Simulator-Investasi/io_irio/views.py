@@ -47,7 +47,7 @@ def _ambil(jenis, request):
 
 
 def _galat(pesan, status=404):
-    return JsonResponse({"galat": pesan}, status=status)
+    return JsonResponse({"error": pesan}, status=status)
 
 
 def api_aliran(request):
@@ -82,7 +82,7 @@ def api_keterkaitan(request):
 
 
 def api_tren(request):
-    """Pengganda output per sektor menurut tahun (semua tabel yang dimuat untuk satu metode)."""
+    """Multiplier output per sektor menurut tahun (semua tabel yang dimuat untuk satu metode)."""
     sumber = request.GET.get("sumber", "irio")
     metode = request.GET.get("metode") or "RAS"
     kode = int(request.GET.get("wilayah") or 0)
@@ -97,7 +97,7 @@ def api_tren(request):
         else:
             k = A.keterkaitan(*A.nasional_dari_irio(tb))
         tahun.append(t.tahun)
-        seri.append({"output": k["pengganda_output"], "ntb": k["pengganda_ntb"], "bl": k["bl"], "fl": k["fl"]})
+        seri.append({"output": k["multiplier_output"], "ntb": k["multiplier_ntb"], "bl": k["bl"], "fl": k["fl"]})
     return JsonResponse({"tahun": tahun, "seri": seri})
 
 

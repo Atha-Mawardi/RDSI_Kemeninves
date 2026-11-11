@@ -186,8 +186,8 @@ class TemplatTest(TestCase):
         versi = VersiData.objects.create(nama="uji", status=VersiData.Status.SIAP)
         versi.simpan_dataframe(df, {})
         p = SetParameter.objects.create(nama="uji", b1=0.401899, se_b1=0.042356, b2=0.147184, se_b2=0.107323)
-        sks, galat = templat.buat_semua(versi, p, None)
-        self.assertEqual(galat, [])
+        sks, error = templat.buat_semua(versi, p, None)
+        self.assertEqual(error, [])
         r = {sk.templat: sk.hasil.data["nasional"]["ringkasan"] for sk in sks}
         self.assertTrue(all(sk.bawaan and sk.singkat for sk in sks))
         self.assertAlmostEqual(r["P0"]["g_rata_skenario"], r["P0"]["g_rata_dasar"], places=8)

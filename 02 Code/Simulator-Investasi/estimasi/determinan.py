@@ -1,8 +1,8 @@
 """
 Determinan TFP: log TFP provinsi pada indikator terstandar (z), satu regresi per pilar.
 
-Koefisien = perubahan log TFP bila indikator (setelah transformasi) naik 1 simpangan baku.
-`sd` adalah simpangan baku indikator setelah transformasi pada sampel estimasi 2017-2024
+Koefisien = perubahan log TFP bila indikator (setelah transformasi) naik 1 standard deviation.
+`sd` adalah standard deviation indikator setelah transformasi pada sampel estimasi 2017-2024
 (34 provinsi, N = 272); `rata` rata-rata nilai asli, dipakai untuk menerjemahkan 1 SD ke satuan asli.
 Transformasi: ln = ln(x + 1), -ln = -ln(x + 1), neg = -x, lin = x, sln = tanda(x) ln(|x| + 1),
 lnx = ln(x).

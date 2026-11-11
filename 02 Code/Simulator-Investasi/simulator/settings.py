@@ -2,7 +2,7 @@
 Pengaturan Simulator Investasi dan TFP Provinsi.
 
 Rahasia dan mode debug dibaca dari environment supaya berkas ini aman masuk git.
-Nilai bawaan cocok untuk dipakai di laptop analis.
+Nilai default cocok untuk dipakai di laptop analis.
 """
 
 import os

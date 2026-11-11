@@ -43,7 +43,7 @@ def _koef_determinan(sk: Skenario):
 
 
 def jalankan(sk: Skenario):
-    """Hitung dan simpan hasil. Kembalikan (hasil | None, pesan galat | None)."""
+    """Hitung dan simpan hasil. Kembalikan (hasil | None, pesan error | None)."""
     mulai = time.perf_counter()
     versi = sk.versi_data
     try:

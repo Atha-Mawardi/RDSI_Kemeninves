@@ -15,8 +15,8 @@ class KeterkaitanTest(SimpleTestCase):
         A = Z / x[None, :]
         L = np.linalg.inv(np.eye(2) - A)
         np.testing.assert_allclose(k["L"], L)
-        np.testing.assert_allclose(k["pengganda_output"], L.sum(axis=0))
+        np.testing.assert_allclose(k["multiplier_output"], L.sum(axis=0))
         self.assertAlmostEqual(np.mean(k["bl"]), 1.0)
         self.assertAlmostEqual(np.mean(k["fl"]), 1.0)
         # NTB yang tercipta per unit permintaan akhir = 1 bila semua input antara domestik
-        np.testing.assert_allclose(k["pengganda_ntb"], [1.0, 1.0])
+        np.testing.assert_allclose(k["multiplier_ntb"], [1.0, 1.0])

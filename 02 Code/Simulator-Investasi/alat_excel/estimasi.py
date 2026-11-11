@@ -22,7 +22,7 @@ def lembar_estimasi(wb, ctx):
         G.tulis(ws, r, 1, lb, font=G.T_TEBAL)
         G.tulis(ws, r, 3, v, fill=G.F_ISIAN, align=G.TENGAH, border=G.KOTAK)
         G.nama(wb, nm, "Estimasi", f"$C${r}")
-    G.tulis(ws, 9, 1, "ln PDRB pada ln PMTB dan ln tenaga kerja, efek tetap provinsi dan tahun; galat baku klaster "
+    G.tulis(ws, 9, 1, "ln PDRB pada ln PMTB dan ln tenaga kerja, fixed effect provinsi dan tahun; standard error klaster "
                       "provinsi.", font=G.T_KECIL)
 
     # ---- pembantu (kolom T ke kanan)
@@ -158,9 +158,9 @@ def lembar_estimasi(wb, ctx):
     for nm, c in (("ED_kode", 1), ("ED_pilar", 2), ("ED_koef", 5), ("ED_se", 6)):
         G.nama(wb, nm, "Estimasi", f"${G.kol(c)}${r + 1}:${G.kol(c)}${r1}")
 
-    # ---- jeda bawaan per pilar
+    # ---- jeda default per pilar
     r = r1 + 3
-    G.bagian(ws, r - 1, 1, 12, "Jeda dan masa menuju efek penuh (bawaan per pilar, tahun)")
+    G.bagian(ws, r - 1, 1, 12, "Jeda dan masa menuju efek penuh (default per pilar, tahun)")
     G.header(ws, r, 1, ["Pilar", "Nama", "", "", "Jeda", "Masa penuh"])
     for i, (p, nm) in enumerate(NAMA_PILAR.items()):
         rr = r + 1 + i

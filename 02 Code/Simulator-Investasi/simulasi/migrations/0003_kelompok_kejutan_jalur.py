@@ -13,7 +13,7 @@ NAMA_BARU = {
 
 
 def tandai_paket(apps, schema_editor):
-    """Skenario bernama "Pn · ..." menjadi paket bawaan berkode Pn dengan nama baru."""
+    """Skenario bernama "Pn · ..." menjadi paket default berkode Pn dengan nama baru."""
     Skenario = apps.get_model("simulasi", "Skenario")
     terpakai = set()
     for sk in Skenario.objects.order_by("-diubah"):

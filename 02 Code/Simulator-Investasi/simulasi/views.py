@@ -52,9 +52,9 @@ BARIS_RUANG = [
     ("Komposisi sektor investasi tambahan", [(nama, f"komp_{k}") for k, nama in KELOMPOK]),
 ] + [(f"Jalur per tahun: {label[0].lower()}{label[1:]}", f"jl_{kunci}") for kunci, label in JALUR.items()] + [
     (f"Determinan TFP: {judul}", [(nama, f"dt_{p}_{k}") for p, nama in PILAR], f"dt_{k}")
-    for k, judul in (("dz", "perubahan indikator (× simpangan baku)"), ("jeda", "jeda sebelum efek (tahun)"),
+    for k, judul in (("dz", "perubahan indikator (× standard deviation)"), ("jeda", "jeda sebelum efek (tahun)"),
                      ("penuh", "lama menuju efek penuh (tahun)"), ("porsi", "porsi investasi tambahan (%)"),
-                     ("biaya", "biaya menaikkan 1 simpangan baku (triliun Rp)"))]
+                     ("biaya", "biaya menaikkan 1 standard deviation (triliun Rp)"))]
 
 # Penjelasan kelompok baris kisi (tooltip), per kunci kelompok.
 BANTUAN_RUANG = {
@@ -65,12 +65,12 @@ BANTUAN_RUANG = {
     "jl_faktor_tfp": "Mengalikan laju TFP tahun itu: 1 = sesuai tren historis, 0,5 = separuhnya, 1,2 = 20% lebih cepat.",
     "jl_g_investasi": "Menggantikan laju tren nominal realisasi PMA+PMDN pada tahun yang diisi.",
     "dt_dz": "Seberapa jauh indikator pilar (pendidikan, konektivitas, dan lainnya) naik di atas tren historis. "
-             "Satuannya simpangan baku antarprovinsi: 1 = selisih khas antara satu provinsi dan rata-rata provinsi.",
+             "Satuannya standard deviation antarprovinsi: 1 = selisih khas antara satu provinsi dan rata-rata provinsi.",
     "dt_jeda": "Berapa tahun sampai perbaikan indikator mulai menaikkan TFP. Kosong = asumsi awal pilar.",
     "dt_penuh": "Berapa tahun efek naik bertahap sampai penuh setelah jeda. Kosong = asumsi awal pilar.",
     "dt_porsi": "Bagian investasi tambahan yang dibelanjakan untuk pilar ini. Diisi bersama biaya agar perubahan "
                 "indikator dihitung dari dana.",
-    "dt_biaya": "Dana yang dibutuhkan untuk menaikkan indikator pilar sebesar 1 simpangan baku. Perubahan = porsi × "
+    "dt_biaya": "Dana yang dibutuhkan untuk menaikkan indikator pilar sebesar 1 standard deviation. Perubahan = porsi × "
                 "total investasi tambahan ÷ biaya.",
 }
 
@@ -84,7 +84,7 @@ def _isian_dari(sk):
 
 
 def _kunci_paket(form, sk):
-    """Paket bawaan: nama tetap; investasi tambahan paket kebutuhan dihitung otomatis dari sasaran."""
+    """Paket default: nama tetap; investasi tambahan paket kebutuhan dihitung otomatis dari sasaran."""
     if not sk.bawaan:
         return form
     for f in ("nama", "singkat"):
@@ -98,7 +98,7 @@ def _kunci_paket(form, sk):
 
 
 def _simpan_paket(sk, sebelum, baru):
-    """Perubahan paket bawaan disimpan sebagai penyesuaian paket itu (diwariskan ke paket turunannya)."""
+    """Perubahan paket default disimpan sebagai penyesuaian paket itu (diwariskan ke paket turunannya)."""
     Skenario.objects.filter(pk=sk.pk).update(
         penyesuaian=templat.sesuaikan(sk.templat, sebelum, _isian_dari(baru)), deskripsi=baru.deskripsi,
         versi_data=baru.versi_data, set_parameter=baru.set_parameter, koef_sektoral=baru.koef_sektoral,
@@ -111,7 +111,7 @@ def _bangun_ulang_paket(request, kode_kode, jalankan_):
         if g:
             messages.error(request, f"{s.label}: {g}")
     if hasil:
-        messages.success(request, f"{len(hasil)} paket bawaan diperbarui{' dan dijalankan' if jalankan_ else ''}: "
+        messages.success(request, f"{len(hasil)} paket default diperbarui{' dan dijalankan' if jalankan_ else ''}: "
                                   + ", ".join(s.label for s, _ in hasil) + ".")
     return hasil
 
@@ -208,7 +208,7 @@ def daftar(request):
     paket = [(t, [_label_field(f) for f in sesuai.get(t["kode"], {})]) for t in templat.TEMPLAT]
     return render(request, "simulasi/daftar.html", {
         "kolom": kolom, "baris": _kisi(kolom), "paket": paket,
-        "ada_bawaan": any(sk.bawaan for sk in semua)})
+        "ada_default": any(sk.bawaan for sk in semua)})
 
 
 def _label_field(f):
@@ -252,9 +252,9 @@ def _simpan_ruang(request, semua):
         messages.error(request, g)
     for sk in disimpan:
         if jalankan_:
-            _, galat = layanan.jalankan(sk)
-            if galat:
-                messages.error(request, f"{sk.label}: {galat}")
+            _, error = layanan.jalankan(sk)
+            if error:
+                messages.error(request, f"{sk.label}: {error}")
     if disimpan:
         kustom_baru = [sk.label for sk in disimpan if sk.kelompok == Skenario.Kelompok.KUSTOM]
         messages.success(request, f"{len(disimpan)} skenario disimpan{' dan dijalankan' if jalankan_ else ''}: "
@@ -277,7 +277,7 @@ def _ringkas_determinan(data):
 
 
 def _jadikan_kustom(sk, asal_nama, asal_singkat):
-    """Perubahan pada paket bawaan disimpan sebagai salinan kustom; paket bawaan tetap sebagai acuan."""
+    """Perubahan pada paket default disimpan sebagai salinan kustom; paket default tetap sebagai acuan."""
     sk.pk = None
     sk._state.adding = True
     sk._state.fields_cache = {}
@@ -302,7 +302,7 @@ def pilih_aktif(request):
     if not url_has_allowed_host_and_scheme(lanjut, {request.get_host()}):
         lanjut = "/"
     if hasattr(sk, "hasil") and lanjut.startswith("/skenario/") and lanjut.split("/")[2].isdigit() \
-            and "/sunting" not in lanjut and "/asumsi" not in lanjut:
+            and "/edit" not in lanjut and "/asumsi" not in lanjut:
         return redirect("simulasi:detail", pk=sk.pk)
     return redirect(lanjut)
 
@@ -338,7 +338,7 @@ def ganti_nama(request, pk):
     sk = get_object_or_404(Skenario, pk=pk)
     nama = (request.POST.get("nama") or "").strip()
     if sk.bawaan:
-        messages.error(request, "Paket bawaan tidak diganti namanya; simpan sebagai kustom dulu.")
+        messages.error(request, "Paket default tidak diganti namanya; simpan sebagai kustom dulu.")
     elif nama:
         sk.nama = nama[:120]
         sk.singkat = (request.POST.get("singkat") or "").strip()[:24]
@@ -363,7 +363,7 @@ def unduh_hitung(request, pk):
     return resp
 
 
-def _bawaan_templat():
+def _default_templat():
     versi = VersiData.aktif()
     p = SetParameter.objects.filter(bawaan=True).first()
     if not versi or not p:
@@ -373,13 +373,13 @@ def _bawaan_templat():
 
 @require_POST
 def templat_buat(request, kode):
-    bawaan = _bawaan_templat()
-    if kode not in templat.PER_KODE or not bawaan:
-        messages.error(request, "Paket tidak dikenal atau belum ada versi data aktif / set parameter bawaan.")
+    default = _default_templat()
+    if kode not in templat.PER_KODE or not default:
+        messages.error(request, "Paket tidak dikenal atau belum ada versi data aktif / set parameter default.")
         return redirect("simulasi:daftar")
-    sk, galat = templat.buat(kode, *bawaan, dibuat_oleh=request.user if request.user.is_authenticated else None)
-    if galat:
-        messages.error(request, f"{sk.nama}: {galat}")
+    sk, error = templat.buat(kode, *default, dibuat_oleh=request.user if request.user.is_authenticated else None)
+    if error:
+        messages.error(request, f"{sk.nama}: {error}")
     else:
         messages.success(request, f"{sk.nama} dibuat dan dijalankan. Ubah asumsinya bila perlu.")
     return redirect("simulasi:detail", pk=sk.pk)
@@ -396,18 +396,18 @@ def templat_kembalikan(request, kode):
 
 @require_POST
 def templat_semua(request):
-    bawaan = _bawaan_templat()
-    if not bawaan:
-        messages.error(request, "Belum ada versi data aktif atau set parameter bawaan.")
+    default = _default_templat()
+    if not default:
+        messages.error(request, "Belum ada versi data aktif atau set parameter default.")
         return redirect("simulasi:daftar")
-    sks, galat = templat.buat_semua(*bawaan, dibuat_oleh=request.user if request.user.is_authenticated else None)
-    for g in galat:
+    sks, error = templat.buat_semua(*default, dibuat_oleh=request.user if request.user.is_authenticated else None)
+    for g in error:
         messages.error(request, g)
     messages.success(request, f"{len(sks)} paket skenario dibuat dan dijalankan.")
     return redirect(reverse("simulasi:bandingkan") + "?" + "&".join(f"id={s.pk}" for s in sks))
 
 
-def sunting(request, pk=None):
+def edit(request, pk=None):
     sk = get_object_or_404(Skenario, pk=pk) if pk else None
     sebelum = _isian_dari(sk) if sk else None
     form = FormSkenario(request.POST or None, instance=sk)
@@ -430,9 +430,9 @@ def sunting(request, pk=None):
 
 
 def _jalankan_dan_arahkan(request, sk):
-    hasil, galat = layanan.jalankan(sk)
-    if galat:
-        messages.error(request, f"Simulasi gagal: {galat}")
+    hasil, error = layanan.jalankan(sk)
+    if error:
+        messages.error(request, f"Simulasi gagal: {error}")
     else:
         for p in hasil.data["meta"].get("peringatan", []):
             messages.warning(request, p)
@@ -452,14 +452,14 @@ def duplikat(request, pk):
     sk.nama = sk.nama.replace(" (ubah)", " (salinan)")
     sk.save()
     messages.success(request, "Skenario disalin. Ubah asumsinya lalu jalankan.")
-    return redirect("simulasi:sunting", pk=sk.pk)
+    return redirect("simulasi:edit", pk=sk.pk)
 
 
 @require_POST
 def hapus(request, pk):
     sk = get_object_or_404(Skenario, pk=pk)
     if sk.bawaan:
-        messages.error(request, "Paket bawaan tidak dihapus; perbarui dari daftar paket bila perlu.")
+        messages.error(request, "Paket default tidak dihapus; perbarui dari daftar paket bila perlu.")
         return redirect("simulasi:detail", pk=pk)
     if request.session.get(aktif.KUNCI) == sk.pk:
         request.session.pop(aktif.KUNCI)

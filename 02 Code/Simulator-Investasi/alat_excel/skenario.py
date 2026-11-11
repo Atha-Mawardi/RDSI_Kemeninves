@@ -74,13 +74,13 @@ def baris_asumsi(ctx):
     b += [("_det", "Determinan TFP (perubahan di atas tren, SD)", "", "grup", None, None)]
     for pilar, nama in NAMA_PILAR.items():
         b += [(f"dp_{pilar}", f"{nama}: semua indikator", "SD", "angka", None, G.FMT_P),
-              (f"dj_{pilar}", f"{nama}: jeda", "tahun; kosong = bawaan", "angka", None, "0"),
-              (f"dr_{pilar}", f"{nama}: masa menuju penuh", "tahun (1-6); kosong = bawaan", "angka", None, "0")]
+              (f"dj_{pilar}", f"{nama}: jeda", "tahun; kosong = default", "angka", None, "0"),
+              (f"dr_{pilar}", f"{nama}: masa menuju penuh", "tahun (1-6); kosong = default", "angka", None, "0")]
     for ind in ctx.det:
         b += [(f"di_{ind['kode']}", f"   {ind['label']}", f"SD; kosong = isian pilar ({NAMA_PILAR[ind['pilar']]})",
                "angka", None, G.FMT_P)]
     b += [("_ktp", "Ketidakpastian", "", "grup", None, None),
-          ("skala_se", "Skala galat baku", "×", "angka", None, G.FMT_P),
+          ("skala_se", "Skala standard error", "×", "angka", None, G.FMT_P),
           ("volatilitas_tfp", "Volatilitas TFP tahunan", "× SD residual", "angka", None, G.FMT_P),
           ("catatan", "Catatan", "", "teks", None, None)]
     return b

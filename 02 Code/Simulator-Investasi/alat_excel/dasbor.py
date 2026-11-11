@@ -26,9 +26,9 @@ T_KECIL_HITAM = Font(size=8, color="333333")
 
 
 # ------------------------------------------------------------------ pembantu
-def _pilih(wb, ws, r, c1, c2, nama, bawaan, judul="Skenario"):
+def _pilih(wb, ws, r, c1, c2, nama, default, judul="Skenario"):
     G.tulis(ws, r, c1 - 1, judul, font=G.T_TEBAL, align=G.KANAN)
-    G.gabung(ws, r, c1, c2, bawaan, font=Font(bold=True, size=12, color=G.NAVY), fill=G.F_ISIAN, align=G.KIRI)
+    G.gabung(ws, r, c1, c2, default, font=Font(bold=True, size=12, color=G.NAVY), fill=G.F_ISIAN, align=G.KIRI)
     for c in range(c1, c2 + 1):
         ws.cell(row=r, column=c).border = G.KOTAK
     validasi(ws, "=SK_NAMA", f"{G.kol(c1)}{r}")
@@ -194,8 +194,8 @@ def beranda(wb, ctx, H):
     ws = wb.create_sheet("Beranda")
     G.warna_tab(ws, G.ORANYE)
     G.pita(ws, "Simulator Investasi", f"Ringkasan skenario · data {ctx.versi_label}")
-    bawaan = next((s.nama for s in ctx.slot if s.singkat.startswith("Bertahap")), ctx.slot[0].nama)
-    no = _pilih(wb, ws, 4, 3, 7, "BR_PILIH", bawaan)
+    default = next((s.nama for s in ctx.slot if s.singkat.startswith("Bertahap")), ctx.slot[0].nama)
+    no = _pilih(wb, ws, 4, 3, 7, "BR_PILIH", default)
     G.tulis(ws, 4, 9, "No", font=G.T_KECIL)
     G.tulis(ws, 4, 10, f"={no}", font=G.T_KECIL)
     G.nama(wb, "BR_NO", "Beranda", "$J$4")

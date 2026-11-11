@@ -63,9 +63,9 @@ def koreksi_geser(r, catatan):
         sk = sektor.loc[idx].to_numpy(float)
         if np.isnan(tot).any() or np.isnan(sk).any() or (sk <= 0).any():
             continue
-        galat = np.abs(tot[:, None] / sk[None, :] - 1)
-        tujuan = galat.argmin(axis=1)
-        urut = np.sort(galat, axis=1)
+        error = np.abs(tot[:, None] / sk[None, :] - 1)
+        tujuan = error.argmin(axis=1)
+        urut = np.sort(error, axis=1)
         jelas = (urut[:, 0] < 0.02) & (urut[:, 1] > 3 * urut[:, 0])
         if (tujuan == np.arange(len(semua))).all() and jelas.all():
             continue

@@ -5,7 +5,7 @@ from . import views
 app_name = "simulasi"
 urlpatterns = [
     path("", views.daftar, name="daftar"),
-    path("baru/", views.sunting, name="baru"),
+    path("baru/", views.edit, name="baru"),
     path("bandingkan/", views.bandingkan, name="bandingkan"),
     path("aktif/", views.pilih_aktif, name="aktif"),
     path("hasil/", views.hasil_aktif, name="hasil_aktif"),
@@ -13,7 +13,7 @@ urlpatterns = [
     path("paket/<str:kode>/", views.templat_buat, name="templat_buat"),
     path("paket/<str:kode>/kembalikan/", views.templat_kembalikan, name="templat_kembalikan"),
     path("<int:pk>/", views.detail, name="detail"),
-    path("<int:pk>/sunting/", views.sunting, name="sunting"),
+    path("<int:pk>/edit/", views.edit, name="edit"),
     path("<int:pk>/jalankan/", views.jalankan, name="jalankan"),
     path("<int:pk>/salin/", views.duplikat, name="duplikat"),
     path("<int:pk>/hapus/", views.hapus, name="hapus"),

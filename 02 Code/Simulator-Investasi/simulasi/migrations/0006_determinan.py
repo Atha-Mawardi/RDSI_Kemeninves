@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='skenario',
             name='set_determinan',
-            field=models.ForeignKey(blank=True, help_text='Kosong = set determinan bawaan.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='skenario', to='estimasi.setdeterminan', verbose_name='koefisien determinan TFP'),
+            field=models.ForeignKey(blank=True, help_text='Kosong = set determinan default.', null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='skenario', to='estimasi.setdeterminan', verbose_name='koefisien determinan TFP'),
         ),
     ]

@@ -39,7 +39,7 @@ KET_SKENARIO = {
     "A": ("A. Level dipaksa CRS (pembanding)", True),
     "B": ("B. Growth dinormalisasi CRS (pembanding)", True),
     "C": ("C. Pangsa pendapatan terukur (pembanding)", False),
-    "D": ("D. Alfa baku 1/3 (pembanding)", True),
+    "D": ("D. Standard alpha 1/3 (pembanding)", True),
 }
 KET_SEKTORAL = {
     "M1": "M1: pooled, efek tahun, kendali dlogK dlogL",
@@ -50,10 +50,10 @@ KET_SEKTORAL = {
 
 
 class Command(BaseCommand):
-    help = "Muat provinsi, dataset awal, set parameter vintage, koefisien sektoral, paket bawaan (BAU sampai Bertahap), dan skenario contoh."
+    help = "Muat provinsi, dataset awal, set parameter vintage, koefisien sektoral, paket default (BAU sampai Bertahap), dan skenario contoh."
 
     def add_arguments(self, parser):
-        parser.add_argument("--dataset", default=None, help="Path workbook dataset (bawaan: dataset agregasi tim).")
+        parser.add_argument("--dataset", default=None, help="Path workbook dataset (default: dataset agregasi tim).")
         parser.add_argument("--ulang", action="store_true", help="Hapus isi lama sebelum memuat.")
 
     def handle(self, *args, **opts):
@@ -175,10 +175,10 @@ class Command(BaseCommand):
     def _skenario(self, versi, utama, m2):
         if Skenario.objects.exists():
             return
-        sks, galat = templat.buat_semua(versi, utama, m2)
-        for g in galat:
+        sks, error = templat.buat_semua(versi, utama, m2)
+        for g in error:
             self.stdout.write(self.style.WARNING(g))
-        self.stdout.write(f"{len(sks)} paket skenario bawaan dibuat dan dijalankan.")
+        self.stdout.write(f"{len(sks)} paket skenario default dibuat dan dijalankan.")
         for g in templat.buat_contoh(versi, utama, m2) + templat.buat_rekomendasi():
             self.stdout.write(self.style.WARNING(g))
         self.stdout.write(f"{len(templat.CONTOH) + len(templat.REKOMENDASI)} skenario contoh dibuat.")
