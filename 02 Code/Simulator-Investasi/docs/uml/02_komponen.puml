@@ -32,7 +32,7 @@ package "datapanel" as DP {
 }
 
 package "estimasi" as ES {
-  [views\nmeja kerja, api_hitung,\nsimpan, hapus, bawaan] as ESViews
+  [views\nmeja kerja, api_hitung,\nsimpan, hapus, default] as ESViews
   [statistik\ndistribusi t, p, t kritis] as Statistik
   [models\nSetParameter,\nKoefisienSektoral] as ESModels
   [twfe\nestimasi_lengkap, stok_pim,\nresidual_tfp] as TWFE
@@ -41,7 +41,7 @@ package "estimasi" as ES {
 package "simulasi" as SM {
   [views\nruang skenario, hasil, asumsi,\nbandingkan, paket, kustom] as SMViews
   [aktif\nskenario aktif (sesi)] as Aktif
-  [templat\n8 paket bawaan, isian,\nbuat, buat_semua] as Templat
+  [templat\n8 paket default, isian,\nbuat, buat_semua] as Templat
   [forms\nFormSkenario,\nFormAsumsiProvinsi] as SMForms
   [models\nSkenario, HasilSkenario] as SMModels
   [layanan\nkonfigurasi_dari, jalankan] as Layanan

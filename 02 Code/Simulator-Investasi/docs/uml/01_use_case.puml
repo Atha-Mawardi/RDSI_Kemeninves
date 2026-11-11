@@ -17,7 +17,7 @@ rectangle "Simulator Investasi & TFP" {
     usecase "Bersihkan data otomatis" as UC_Bersih
     usecase "Tinjau laporan pembersihan" as UC_Laporan
     usecase "Konfirmasi / aktifkan /\narsipkan versi" as UC_Versi
-    usecase "Sunting sel / grid\n(versi turunan beralasan)" as UC_Sunting
+    usecase "Edit sel / grid\n(versi turunan beralasan)" as UC_Sunting
     usecase "Periksa kelengkapan\n(17 pemeriksaan, matriks)" as UC_Lengkap
     usecase "Unduh dataset Excel\nberformat" as UC_UnduhData
     usecase "Unduh templat Excel" as UC_Templat
@@ -39,12 +39,12 @@ rectangle "Simulator Investasi & TFP" {
     usecase "Unduh hasil Excel\n+ kalkulator" as UC_Hasil
     usecase "Bandingkan skenario" as UC_Banding
     usecase "Simpan / hapus\nskenario kustom" as UC_Duplikat
-    usecase "Buat paket skenario\nbawaan (BAU … Bertahap)" as UC_Paket
+    usecase "Buat paket skenario\ndefault (BAU … Bertahap)" as UC_Paket
     usecase "Pilih skenario aktif\n(global)" as UC_Aktif
     usecase "Atur kejutan dan\njalur per tahun" as UC_Kejutan
   }
   package "Analisis" {
-    usecase "Analisis IO-IRIO\n(aliran, keterkaitan, pengganda)" as UC_IO
+    usecase "Analisis IO-IRIO\n(aliran, keterkaitan, multiplier)" as UC_IO
     usecase "Dampak investasi\nskenario lewat IRIO" as UC_Dampak
     usecase "Pivot bebas\n+ unduh XLSX" as UC_Pivot
   }

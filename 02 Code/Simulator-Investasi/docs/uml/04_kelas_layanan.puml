@@ -38,7 +38,7 @@ package "datapanel.pembersihan" {
     + ringkasan() : dict
   }
   class Temuan {
-    + tingkat : info | peringatan | galat
+    + tingkat : info | peringatan | error
     + langkah : str
     + pesan : str
     + detail : list
@@ -135,7 +135,7 @@ package "io_irio.analisis" {
   }
   class "analisis" as Analisis <<modul>> {
     + tabel(t : TabelIO) : Tabel  <<lru_cache>>
-    + keterkaitan(Z, x, va) : BL, FL, pengganda
+    + keterkaitan(Z, x, va) : BL, FL, multiplier
     + keterkaitan_wilayah(tb, kode)
     + aliran(tb, asal, tujuan)
     + indikator_wilayah(tb, sektor)
@@ -192,7 +192,7 @@ package "simulasi" {
   class GalatSimulasi <<exception>>
   class "layanan" as Layanan <<modul>> {
     + konfigurasi_dari(sk : Skenario) : Konfigurasi
-    + jalankan(sk : Skenario) : (HasilSkenario, galat)
+    + jalankan(sk : Skenario) : (HasilSkenario, error)
   }
   class "excel_skenario" as ExcelSk <<modul>> {
     + KOLOM_ASUMSI

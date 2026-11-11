@@ -3,9 +3,9 @@
 title State: siklus hidup versi data dan skenario
 
 state "VersiData" as V {
-  [*] --> Draf : unggah / pembaruan\n[tanpa galat]
-  [*] --> Gagal : unggah\n[galat pembersihan]
-  [*] --> Siap : sunting sel\n(versi turunan)
+  [*] --> Draf : unggah / pembaruan\n[tanpa error]
+  [*] --> Gagal : unggah\n[error pembersihan]
+  [*] --> Siap : edit sel\n(versi turunan)
   [*] --> Aktif : muat_data_awal
   Draf --> Siap : konfirmasi
   Draf --> Aktif : aktifkan
@@ -21,7 +21,7 @@ state "VersiData" as V {
   Gagal --> [*] : hapus
 
   Aktif : tepat satu versi aktif
-  Aktif : bawaan untuk skenario baru
+  Aktif : default untuk skenario baru
   Gagal : hanya laporan, tanpa observasi
 }
 

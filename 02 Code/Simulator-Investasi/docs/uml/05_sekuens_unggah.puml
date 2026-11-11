@@ -29,7 +29,7 @@ P -> P : _lonjakan (tandai), _cakupan
 P --> V : HasilPembersihan(df, catatan, temuan)
 deactivate P
 
-alt mode pembaruan dan tanpa galat
+alt mode pembaruan dan tanpa error
   V -> VD : induk.ke_dataframe(dengan_catatan=True)
   VD -> DB : SELECT observasi
   V -> G : gabungkan_pembaruan(induk, baru)
@@ -38,7 +38,7 @@ end
 
 V -> VD : create(status = draf | gagal,\nlaporan, ringkasan, berkas)
 VD -> DB : INSERT versi
-opt tanpa galat
+opt tanpa error
   V -> VD : simpan_dataframe(df, catatan)
   VD -> DB : bulk INSERT observasi\n(1 baris per provinsi-tahun)
 end

@@ -24,7 +24,7 @@ repeat while (Masih ada sheet?) is (ya)
 -> tidak;
 
 if (Ada tabel terbaca?) then (tidak)
-  :Temuan galat: tidak ada data;
+  :Temuan error: tidak ada data;
   stop
 endif
 :Satukan antar-sheet\n(sheet pertama menang per variabel);

@@ -17,7 +17,7 @@ B -> V : GET /skenario/<pk>/asumsi.xlsx
 V -> X : lembar_asumsi(sk, hasil.data)
 X --> V : bytes: kolom kunci abu-abu,\nkolom isian kuning + validasi rentang,\nnilai acuan hasil terakhir
 V --> B : lampiran .xlsx
-U -> XL : sunting sasaran / TFP / TK /\nbobot A2 / komposisi per provinsi
+U -> XL : edit sasaran / TFP / TK /\nbobot A2 / komposisi per provinsi
 XL --> U : berkas tersimpan
 U -> B : unggah berkas
 B -> V : POST /skenario/<pk>/asumsi/unggah/
