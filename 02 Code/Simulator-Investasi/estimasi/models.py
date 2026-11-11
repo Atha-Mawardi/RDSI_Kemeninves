@@ -29,7 +29,7 @@ class SetParameter(models.Model):
     # spesifikasi estimasi (tahun dikecualikan, provinsi, modal, efek tahun) dan keluaran lengkapnya
     spesifikasi = models.JSONField(default=dict, blank=True)
     hasil = models.JSONField(default=dict, blank=True)
-    bawaan = models.BooleanField(default=False)
+    bawaan = models.BooleanField("default", default=False)
     dibuat = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -61,7 +61,7 @@ class KoefisienSektoral(models.Model):
     se_tva = models.FloatField("SE tersier bernilai tambah", default=0)
     n_obs = models.PositiveIntegerField(null=True, blank=True)
     catatan = models.TextField(blank=True)
-    bawaan = models.BooleanField(default=False)
+    bawaan = models.BooleanField("default", default=False)
 
     class Meta:
         ordering = ["-bawaan", "nama"]
@@ -87,7 +87,7 @@ class SetDeterminan(models.Model):
     # [{kode, pilar, label, satuan, transformasi, koef, se, sd, rata}]
     indikator = models.JSONField(default=list)
     catatan = models.TextField(blank=True)
-    bawaan = models.BooleanField(default=False)
+    bawaan = models.BooleanField("default", default=False)
     dibuat = models.DateTimeField(auto_now_add=True)
 
     class Meta:
