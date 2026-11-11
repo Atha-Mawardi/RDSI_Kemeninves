@@ -3,12 +3,12 @@
 {% block judul %}{{ sk.nama }}{% endblock %}
 {% block isi %}
 <h1>{{ sk.nama }} {% if sk.singkat %}<span class="lencana {{ sk.kelompok }}">{{ sk.singkat }}</span> {% endif %}<span class="lencana {{ sk.kelompok }}">{{ sk.get_kelompok_display }}</span> <span class="lencana {{ sk.status }}">{{ sk.get_status_display }}</span>{% if sk_aktif and sk.pk == sk_aktif.pk %} <span class="lencana aktif">● skenario aktif</span>{% endif %}</h1>
-<p class="sub">{{ sk.tahun_dasar }}→{{ sk.tahun_target }} · sasaran {% if data.meta.jalur.sasaran %}bertahap, rata-rata {{ rg.g_rata_sasaran|angka:2 }}{% else %}{{ sk.sasaran|angka:1 }}{% endif %}%/thn ({{ sk.get_mode_sasaran_display|lower }}) · data #{{ sk.versi_data_id }}{% if versi_aktif and sk.versi_data_id != versi_aktif.pk %} <span class="lencana usang" title="Data aktif sekarang #{{ versi_aktif.pk }}. Perbarui paket bawaan atau ubah versi data skenario ini lalu jalankan ulang.">bukan data aktif (#{{ versi_aktif.pk }})</span>{% endif %}</p>
+<p class="sub">{{ sk.tahun_dasar }}→{{ sk.tahun_target }} · sasaran {% if data.meta.jalur.sasaran %}bertahap, rata-rata {{ rg.g_rata_sasaran|angka:2 }}{% else %}{{ sk.sasaran|angka:1 }}{% endif %}%/thn ({{ sk.get_mode_sasaran_display|lower }}) · data #{{ sk.versi_data_id }}{% if versi_aktif and sk.versi_data_id != versi_aktif.pk %} <span class="lencana usang" title="Data aktif sekarang #{{ versi_aktif.pk }}. Perbarui paket default atau ubah versi data skenario ini lalu jalankan ulang.">bukan data aktif (#{{ versi_aktif.pk }})</span>{% endif %}</p>
 {% if sk.deskripsi %}<p class="catatan">{{ sk.deskripsi }}</p>{% endif %}
 
 <div class="aksi" style="margin-bottom:14px">
   <form method="post" action="{% url 'simulasi:jalankan' sk.pk %}">{% csrf_token %}<button class="btn">{% if data %}Jalankan ulang{% else %}Jalankan{% endif %}</button></form>
-  <a class="btn garis" href="{% url 'simulasi:sunting' sk.pk %}">Ubah asumsi</a>
+  <a class="btn garis" href="{% url 'simulasi:edit' sk.pk %}">Ubah asumsi</a>
   <a class="btn garis" href="{% url 'simulasi:asumsi_provinsi' sk.pk %}">Asumsi per provinsi{% if sk.override_provinsi %} ({{ sk.override_provinsi|length }}){% endif %}</a>
   {% if data %}<a class="btn hijau" href="{% url 'simulasi:unduh_hasil' sk.pk %}">Unduh Excel hasil + kalkulator</a>{% endif %}
   {% if data and not sk_aktif or data and sk.pk != sk_aktif.pk %}<form method="post" action="{% url 'simulasi:aktif' %}">{% csrf_token %}<input type="hidden" name="pk" value="{{ sk.pk }}"><input type="hidden" name="next" value="{{ request.path }}"><button class="btn garis">Jadikan aktif</button></form>{% endif %}
@@ -116,11 +116,11 @@
   {% if papua %}
   <div class="kartu">
     <h2>Enam provinsi Papua</h2>
-    <p class="catatan">Papua Barat dan Papua (34 provinsi) dirinci menurut pangsa data rincian
+    <p class="catatan">Papua Barat dan Papua (34 provinsi) dirinci menurut pangsa data
       {% if pangsa_papua.tahun_pdrb %}{{ pangsa_papua.tahun_pdrb|first }}–{{ pangsa_papua.tahun_pdrb|last }}{% endif %}
       (PDRB, PMTB{% if pangsa_papua.tahun_pmtb %} {{ pangsa_papua.tahun_pmtb|first }}–{{ pangsa_papua.tahun_pmtb|last }}{% endif %}, PMA/PMDN per sektor, APBD, penduduk untuk tenaga kerja).
       Sebelum tahun itu pangsa tahun pertama dipakai mundur, sehingga laju historis tiap provinsi baru sama dengan induknya
-      sampai data rincian tersedia; perbedaannya datang dari level (PDRB, PMTB, investasi, APBD, komposisi sektor) dan laju yang teramati sejak pemekaran.
+      sampai data tersedia; perbedaannya datang dari level (PDRB, PMTB, investasi, APBD, komposisi sektor) dan laju yang teramati sejak pemekaran.
       Elastisitas tetap dari estimasi 34 provinsi.</p>
     <div class="gulir">
     <table class="tabel rapat">
@@ -144,7 +144,7 @@
   </div>
   {% endif %}
   <div class="kartu">
-    <h2>Rincian {{ prov|length }} provinsi</h2>
+    <h2>{{ prov|length }} provinsi</h2>
     <p class="kecil abu">Uang dalam miliar Rp kecuali disebut lain. Kebutuhan = PMA+PMDN di atas investasi dasar agar provinsi mencapai sasarannya. Klik judul kolom untuk mengurutkan.</p>
     <div class="gulir" style="max-height:640px">
     <table class="tabel urut" data-kelompok="1">
@@ -187,7 +187,7 @@
         <thead><tr><th>Kelompok</th><th class="n">β (pp TFP)</th><th class="n">Pangsa historis</th><th class="n">Pangsa investasi tambahan</th><th class="n">Bonus TFP (pp/thn)</th></tr></thead>
         <tbody>{% for k in kelompok %}<tr><td>{{ k.nama }}</td><td class="n">{{ k.beta|angka:4 }}{% if k.se %}<div class="kecil abu">({{ k.se|angka:4 }})</div>{% endif %}</td><td class="n">{{ k.pangsa_hist_nas|persen:1 }}</td><td class="n">{{ k.pangsa_a2_nas|persen:1 }}</td><td class="n">{{ k.bonus_pp|angka:3 }}</td></tr>{% endfor %}</tbody>
       </table>
-      <p class="catatan">β dari regresi laju TFP pada pangsa PMA+PMDN kelompok (t−1), efek tetap tahun. Menunjukkan keterdahuluan, bukan kausalitas. Bonus = β × perubahan pangsa terhadap historis.</p>
+      <p class="catatan">β dari regresi laju TFP pada pangsa PMA+PMDN kelompok (t−1), fixed effect tahun. Menunjukkan keterdahuluan, bukan kausalitas. Bonus = β × perubahan pangsa terhadap historis.</p>
       <h2 style="margin-top:16px">Indeks TFP nasional ({{ sk.tahun_dasar }} = 100)</h2>
       <div class="grafik"><canvas id="g-tfp"></canvas></div>
     </div>
@@ -201,7 +201,7 @@
     <div class="kartu">
       <h2>Determinan TFP: efek per pilar</h2>
       <table class="tabel">
-        <thead><tr><th>Pilar</th><th class="n">Perubahan (× simpangan baku)</th><th class="n">Jeda / penuh (tahun)</th>
+        <thead><tr><th>Pilar</th><th class="n">Perubahan (× standard deviation)</th><th class="n">Jeda / penuh (tahun)</th>
           <th class="n"><span class="istilah">Efek penuh<small>% TFP</small></span></th>
           <th class="n"><span class="istilah">Efek {{ sk.tahun_target }}<small>% TFP</small></span></th>
           <th class="n"><span class="istilah">Kontribusi<small>pp/thn</small></span></th>
@@ -314,7 +314,7 @@
         <tr><td>Alokasi investasi tambahan</td><td>{{ sk.get_alokasi_a2_display }}</td></tr>
         <tr><td>Komposisi investasi tambahan</td><td>{% if sk.komposisi_a2 %}{% for k, v in sk.komposisi_a2.items %}{{ k }} {{ v|angka:0 }}{% if not forloop.last %} · {% endif %}{% endfor %}{% else %}historis per provinsi{% endif %}</td></tr>
         <tr><td>Realokasi tenaga kerja</td><td>{{ sk.realokasi_pp|angka:1 }} pp ke {{ sk.get_tujuan_realokasi_display }}</td></tr>
-        <tr><td>Determinan TFP</td><td>{% if determinan %}{% for p in determinan.pilar %}{{ p.nama }} {{ p.dz|angka:2 }} simpangan baku (jeda {{ p.jeda }} tahun){% if not forloop.last %} · {% endif %}{% endfor %}{% else %}–{% endif %}</td></tr>
+        <tr><td>Determinan TFP</td><td>{% if determinan %}{% for p in determinan.pilar %}{{ p.nama }} {{ p.dz|angka:2 }} standard deviation (jeda {{ p.jeda }} tahun){% if not forloop.last %} · {% endif %}{% endfor %}{% else %}–{% endif %}</td></tr>
         <tr><td>Override provinsi</td><td>{{ sk.override_provinsi|length }} provinsi</td></tr>
       </table>
       {% if data.meta.peringatan %}<h3 style="margin-top:12px">Peringatan</h3><ul class="kecil">{% for p in data.meta.peringatan %}<li>{{ p }}</li>{% endfor %}</ul>{% endif %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block judul %}Sunting {{ nama }} {{ tahun }}{% endblock %}
+{% block judul %}Edit {{ nama }} {{ tahun }}{% endblock %}
 {% block isi %}
-<h1>Sunting {{ nama }} {{ tahun }}</h1>
+<h1>Edit {{ nama }} {{ tahun }}</h1>
 <form method="post">
   {% csrf_token %}
   <div class="kartu">

@@ -79,19 +79,19 @@
         <div>
           <h3>Cara kerja</h3>
           <ul class="kecil abu" style="margin:0;padding-left:18px">
-            <li><b>Perubahan</b>: seberapa jauh indikator naik di atas tren historis, dalam simpangan baku antarprovinsi (1 = selisih khas antara satu provinsi dan rata-rata provinsi; artinya dalam satuan asli ada di kolom "1 simpangan baku ≈"). Berlaku untuk semua indikator pilar, kecuali yang diisi sendiri di tabel indikator.</li>
+            <li><b>Perubahan</b>: seberapa jauh indikator naik di atas tren historis, dalam standard deviation antarprovinsi (1 = selisih khas antara satu provinsi dan rata-rata provinsi; artinya dalam satuan asli ada di kolom "1 standard deviation ≈"). Berlaku untuk semua indikator pilar, kecuali yang diisi sendiri di tabel indikator.</li>
             <li><b>Jeda</b> dan <b>lama menuju efek penuh</b>: efek ke TFP mulai setelah jeda, lalu naik bertahap. Kosong = asumsi awal (angka abu-abu).</li>
-            <li><b>Porsi</b> dan <b>biaya naik 1 simpangan baku</b>: bila keduanya diisi, perubahan dihitung dari dana (porsi × total investasi tambahan ÷ biaya). Dana ini bagian dari investasi tambahan, jadi langsung masuk modal pada tahun dibelanjakan, sedangkan efek TFP-nya menyusul.</li>
+            <li><b>Porsi</b> dan <b>biaya naik 1 standard deviation</b>: bila keduanya diisi, perubahan dihitung dari dana (porsi × total investasi tambahan ÷ biaya). Dana ini bagian dari investasi tambahan, jadi langsung masuk modal pada tahun dibelanjakan, sedangkan efek TFP-nya menyusul.</li>
             <li>Efek berlaku pada laju dengan penambahan investasi dan kebutuhan, tidak pada laju tanpa penambahan investasi.</li>
           </ul>
         </div>
       </div>
       <h3 style="margin-top:14px">Per indikator</h3>
-      <p class="kecil abu">Koefisien = perubahan log TFP bila indikator naik 1 simpangan baku. Kolom "1 simpangan baku ≈" menerjemahkannya ke satuan asli di sekitar rata-rata provinsi 2017–2024. Koefisien dapat diubah di halaman Estimasi.</p>
+      <p class="kecil abu">Koefisien = perubahan log TFP bila indikator naik 1 standard deviation. Kolom "1 standard deviation ≈" menerjemahkannya ke satuan asli di sekitar rata-rata provinsi 2017–2024. Koefisien dapat diubah di halaman Estimasi.</p>
       <div class="grid g2" style="align-items:start">
       {% for kolom in form.indikator_kolom %}
       <table class="tabel neraca rapat">
-        <thead><tr><th>Indikator</th><th>Satuan</th><th class="n">Koefisien</th><th class="n">Rata-rata</th><th class="n">1 simpangan baku ≈</th><th>Perubahan (× simpangan baku)</th></tr></thead>
+        <thead><tr><th>Indikator</th><th>Satuan</th><th class="n">Koefisien</th><th class="n">Rata-rata</th><th class="n">1 standard deviation ≈</th><th>Perubahan (× standard deviation)</th></tr></thead>
         <tbody>
         {% for nama, isi in kolom %}
           <tr class="kepala-grup"><td colspan="6">{{ nama }}</td></tr>
@@ -126,9 +126,9 @@
 {% endblock %}
 {% block skrip %}
 <script>
-  // Buka tab pertama yang berisi galat
-  const galat = document.querySelector(".panel-tab .errorlist");
-  if (galat) document.querySelector(`[data-tab="${galat.closest('.panel-tab').id}"]`).click();
+  // Buka tab pertama yang berisi error
+  const error = document.querySelector(".panel-tab .errorlist");
+  if (error) document.querySelector(`[data-tab="${error.closest('.panel-tab').id}"]`).click();
   // Isi bertahap: interpolasi linear dari nilai awal ke akhir pada semua tahun baris itu
   document.querySelectorAll("#tabel-jalur tr[data-kunci]").forEach((tr) => {
     const sel = Array.from(tr.querySelectorAll("td input[name^='jl_']"));

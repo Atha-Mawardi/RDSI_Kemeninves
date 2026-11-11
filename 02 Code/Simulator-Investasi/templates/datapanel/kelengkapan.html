@@ -6,7 +6,7 @@
 <p class="sub">Versi #{{ versi.pk }} · {{ versi.nama }} · {{ versi.tahun_awal }}–{{ versi.tahun_akhir }} · {{ versi.n_baris }} baris provinsi × tahun.</p>
 
 <div class="aksi" style="margin-bottom:14px">
-  <a class="btn" href="{% url 'datapanel:sunting_grid' versi.pk %}">Sunting di grid</a>
+  <a class="btn" href="{% url 'datapanel:sunting_grid' versi.pk %}">Edit di grid</a>
   <a class="btn garis" href="{% url 'datapanel:detail_versi' versi.pk %}">Detail versi</a>
   <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi.pk %}">Unduh Excel</a>
   {% if versi_lain %}<form method="get" onchange="location.href='/data/'+this.v.value+'/kelengkapan/'" style="margin-left:auto">
@@ -15,7 +15,7 @@
 
 <div class="grid g5">
   <div class="kpi baik"><div class="label">Lolos</div><div class="nilai">{{ n_ok }}</div><div class="ket">dari {{ cek|length }} pemeriksaan</div></div>
-  <div class="kpi {% if n_periksa %}buruk{% else %}baik{% endif %}"><div class="label">Perlu diperiksa</div><div class="nilai">{{ n_periksa }}</div><div class="ket">klik baris untuk rincian sel</div></div>
+  <div class="kpi {% if n_periksa %}buruk{% else %}baik{% endif %}"><div class="label">Perlu diperiksa</div><div class="nilai">{{ n_periksa }}</div><div class="ket">klik baris untuk melihat sel</div></div>
   <div class="kpi"><div class="label">Catatan</div><div class="nilai">{{ n_info }}</div><div class="ket">informasi, tidak menghalangi simulasi</div></div>
   <div class="kpi"><div class="label">Sel terisi (semua variabel)</div><div class="nilai">{{ matriks.total_rata|angka:0 }}%</div><div class="ket">{{ matriks.grup|length }} grup variabel · {{ matriks.tahun|length }} tahun</div></div>
   <div class="kpi {% if versi.lengkap_untuk_simulasi %}baik{% else %}buruk{% endif %}"><div class="label">Siap simulasi</div><div class="nilai">{% if versi.lengkap_untuk_simulasi %}Ya{% else %}Tidak{% endif %}</div><div class="ket">{{ matriks.n_wajib }} variabel wajib</div></div>
@@ -39,7 +39,7 @@
         <table class="tabel rapat">
           <thead><tr><th>Provinsi</th><th>Tahun</th><th>Variabel</th><th class="n">Nilai</th><th>Keterangan</th><th></th></tr></thead>
           <tbody>{% for r in c.rincian %}<tr><td>{{ r.prov|default:"–" }}</td><td>{{ r.tahun|default:"–" }}</td><td class="kecil">{{ r.var }}</td><td class="n">{{ r.nilai|angka:1 }}</td><td class="kecil">{{ r.ket }}</td>
-            <td>{% if r.kode and r.tahun %}<a class="kecil" href="{% url 'datapanel:sunting_grid' versi.pk %}#k={{ r.kode }}&t={{ r.tahun }}&v={{ r.var|cut:' ' }}">sunting</a>{% endif %}</td></tr>{% endfor %}</tbody>
+            <td>{% if r.kode and r.tahun %}<a class="kecil" href="{% url 'datapanel:sunting_grid' versi.pk %}#k={{ r.kode }}&t={{ r.tahun }}&v={{ r.var|cut:' ' }}">edit</a>{% endif %}</td></tr>{% endfor %}</tbody>
         </table></div>
         {% if c.n_rinci > c.rincian|length %}<p class="kecil abu">Menampilkan {{ c.rincian|length }} dari {{ c.n_rinci }}.</p>{% endif %}
       </td></tr>
@@ -55,7 +55,7 @@
       <h2 style="margin:0">Per grup variabel × tahun</h2>
       <div class="kecil abu lengkap-legenda"><span class="p100">100%</span><span class="p50">50–99%</span><span class="p1">1–49%</span><span class="p0">kosong</span></div>
     </div>
-    <p class="kecil abu" style="margin-top:0">Persen provinsi berdata. Baris grup = rata-rata variabelnya; klik grup untuk membuka rincian variabel (★ = wajib simulasi).</p>
+    <p class="kecil abu" style="margin-top:0">Persen provinsi berdata. Baris grup = rata-rata variabelnya; klik grup untuk melihat variabelnya (★ = wajib dijalankan simulasi).</p>
     <div class="gulir" style="max-height:640px">
     <table class="tabel lengkap rapat">
       <thead><tr><th>Grup / variabel</th><th class="n">Rata</th>{% for t in matriks.tahun %}<th class="n">{{ t }}</th>{% endfor %}</tr></thead>

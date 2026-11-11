@@ -13,7 +13,7 @@
   <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'aktifkan' %}">{% csrf_token %}<button class="btn">Jadikan versi aktif</button></form>
   {% endif %}
   {% if versi.status != "gagal" %}<a class="btn garis" href="{% url 'datapanel:kelengkapan' versi.pk %}">Kelengkapan &amp; pemeriksaan</a>
-  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi.pk %}">Sunting di grid</a>
+  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi.pk %}">Edit di grid</a>
   <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi.pk %}">Unduh Excel hasil pembersihan</a>{% endif %}
   {% if versi.status != "aktif" %}
   <form method="post" action="{% url 'datapanel:aksi_versi' versi.pk 'arsipkan' %}">{% csrf_token %}<button class="btn garis">Arsipkan</button></form>
@@ -37,9 +37,9 @@
       <tbody>
       {% for t in versi.laporan %}
         <tr>
-          <td><span class="lencana {% if t.tingkat == 'galat' %}gagal{% elif t.tingkat == 'peringatan' %}draf{% else %}siap{% endif %}">{{ t.tingkat }}</span></td>
+          <td><span class="lencana {% if t.tingkat == 'error' or t.tingkat == 'galat' %}gagal{% elif t.tingkat == 'peringatan' %}draf{% else %}siap{% endif %}">{{ t.tingkat }}</span></td>
           <td class="kecil">{{ t.langkah }}</td>
-          <td>{{ t.pesan }}{% if t.detail %}<details class="kecil abu"><summary>{{ t.detail|length }} rincian</summary>{{ t.detail|join:"; " }}</details>{% endif %}</td>
+          <td>{{ t.pesan }}{% if t.detail %}<details class="kecil abu"><summary>{{ t.detail|length }} detail</summary>{{ t.detail|join:"; " }}</details>{% endif %}</td>
         </tr>
       {% endfor %}
       </tbody>
@@ -64,7 +64,7 @@
   </div>
 </div>
 <div class="kartu">
-  <h2>Rincian enam provinsi Papua</h2>
+  <h2>Enam provinsi Papua</h2>
   {% if pangsa %}
   <table class="tabel rapat">
     <thead><tr><th>Provinsi</th>{% for k in pangsa.kolom %}<th class="n">{{ k }}</th>{% endfor %}</tr></thead>
@@ -77,8 +77,8 @@
   </table>
   {% for c in versi.pangsa_pemekaran.catatan %}<p class="kecil abu">Koreksi data: {{ c }}</p>{% endfor %}
   {% else %}
-  <p class="kecil abu">Belum ada pangsa pemekaran. Unggah data yang memuat baris Papua Barat Daya, Papua Selatan, Papua Tengah,
-    dan Papua Pegunungan, atau jalankan <code>python manage.py muat_pangsa_papua --versi {{ versi.pk }}</code>.</p>
+  <p class="kecil abu">Karena belum mencakup pemekaran, mohon unggah data yang memuat baris Papua Barat Daya, Papua Selatan, Papua Tengah,
+    dan Papua Pegunungan.</p>
   {% endif %}
 </div>
 {% endblock %}

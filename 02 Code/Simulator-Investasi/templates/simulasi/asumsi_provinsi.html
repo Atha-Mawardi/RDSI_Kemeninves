@@ -8,7 +8,7 @@
 <div class="grid g2">
   <div class="kartu">
     <h2>Lewat Excel</h2>
-    <p class="kecil">Unduh lembar asumsi (sudah berisi nilai hasil terakhir sebagai acuan dan validasi data), sunting kolom kuning di Excel, lalu unggah kembali.</p>
+    <p class="kecil">Unduh lembar asumsi (sudah berisi nilai hasil terakhir sebagai acuan dan validasi data), edit kolom kuning di Excel, lalu unggah kembali.</p>
     <div class="aksi">
       <a class="btn garis" href="{% url 'simulasi:unduh_asumsi' sk.pk %}">Unduh lembar asumsi</a>
       <form method="post" enctype="multipart/form-data" action="{% url 'simulasi:unggah_asumsi' sk.pk %}" class="aksi">
@@ -25,7 +25,7 @@
 
 <form method="post" class="kartu">
   {% csrf_token %}
-  {% if form.errors %}<div class="pesan error">Ada isian di luar rentang. {{ form.non_field_errors }}</div>{% endif %}
+  {% if form.errors %}<div class="pesan error">Ada isian di luar rentang yang diperbolehkan. {{ form.non_field_errors }}</div>{% endif %}
   <div class="gulir" style="max-height:70vh">
   <table class="tabel rapat">
     <thead><tr><th>Provinsi</th>{% for k, ket, lo, hi in kolom %}<th title="{{ ket }}">{{ k }}</th>{% endfor %}</tr></thead>

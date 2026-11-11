@@ -14,7 +14,7 @@
       <details class="pv-sk" id="pv-sk">
         <summary id="pv-sk-ringkas">Skenario aktif</summary>
         <div class="pv-sk-isi">
-          <div class="pv-sk-alat"><button type="button" class="btn garis kecil" data-sk="aktif">Aktif</button><button type="button" class="btn garis kecil" data-sk="bawaan">Semua bawaan</button><button type="button" class="btn garis kecil" data-sk="semua">Semua</button></div>
+          <div class="pv-sk-alat"><button type="button" class="btn garis kecil" data-sk="aktif">Aktif</button><button type="button" class="btn garis kecil" data-sk="default">Semua default</button><button type="button" class="btn garis kecil" data-sk="semua">Semua</button></div>
           {% for nama_grup, isi in grup_sk %}{% if isi %}<div class="pv-sk-grup">{{ nama_grup }}</div>
             {% for s in isi %}<label><input type="checkbox" value="{{ s.pk }}" data-grup="{{ nama_grup }}" {% if s.pk == sk_awal %}checked{% endif %} {% if s.status == 'baru' or s.status == 'gagal' %}disabled{% endif %}> {{ s.label }}</label>{% endfor %}{% endif %}{% endfor %}
         </div>
@@ -69,13 +69,13 @@
           <option value="pct_induk">% dari kelompok induk</option><option value="selisih">Selisih dari kolom sebelumnya</option>
           <option value="tumbuh">Perubahan % dari kolom sebelumnya</option><option value="indeks">Indeks (kolom pertama = 100)</option></select></div>
         <div><label class="kecil">Urutkan baris</label><select id="pv-urut">
-          <option value="label">Urutan bawaan</option><option value="turun">Nilai terbesar dulu</option><option value="naik">Nilai terkecil dulu</option><option value="abjad">Abjad</option></select></div>
+          <option value="label">Urutan default</option><option value="turun">Nilai terbesar dulu</option><option value="naik">Nilai terkecil dulu</option><option value="abjad">Abjad</option></select></div>
         <div><label class="kecil">Subtotal</label><select id="pv-subtotal">
           <option value="bawah">Di bawah kelompok</option><option value="atas">Di baris kelompok</option><option value="tidak">Tanpa subtotal</option></select></div>
         <div><label class="kecil">Pewarnaan</label><select id="pv-warna">
           <option value="">Tidak ada</option><option value="panas">Peta panas</option><option value="batang">Batang data</option></select></div>
         <div><label class="kecil">N teratas per tingkat</label><input type="number" id="pv-topn" min="0" value="0" title="0 = semua; sisanya digabung ke baris Lainnya"></div>
-        <div><label class="kecil">Desimal</label><select id="pv-digit"><option value="-1">−1</option><option value="0" selected>Bawaan</option><option value="1">+1</option><option value="2">+2</option></select></div>
+        <div><label class="kecil">Desimal</label><select id="pv-digit"><option value="-1">−1</option><option value="0" selected>Default</option><option value="1">+1</option><option value="2">+2</option></select></div>
       </div>
       <div class="pv-alat-bawah">
         <label class="kecil"><input type="checkbox" id="pv-total" checked> Total</label>

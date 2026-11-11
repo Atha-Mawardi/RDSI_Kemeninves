@@ -4,7 +4,7 @@
 {% block isi %}
 <h1>{{ sp.nama }}</h1>
 <p class="sub">{{ sp.get_sumber_display }} · b1 = {{ sp.b1|angka:4 }}, b2 = {{ sp.b2|angka:4 }}{% if versi %} · residual TFP dihitung pada versi data #{{ versi.pk }}{% endif %}</p>
-<div class="aksi" style="margin-bottom:12px"><a class="btn garis" href="{% url 'estimasi:sunting' sp.pk %}">Ubah set</a><a class="btn garis" href="{% url 'estimasi:daftar' %}">Kembali</a></div>
+<div class="aksi" style="margin-bottom:12px"><a class="btn garis" href="{% url 'estimasi:edit' sp.pk %}">Ubah set</a><a class="btn garis" href="{% url 'estimasi:daftar' %}">Kembali</a></div>
 {% if sp.catatan %}<p class="catatan">{{ sp.catatan }}</p>{% endif %}
 {% if sp.hasil.koefisien %}
 <div class="grid g-7-5">
@@ -22,7 +22,7 @@
       <tfoot><tr class="total"><td>R² within · R² total</td><td class="n" colspan="5">{{ sp.hasil.r2_within|angka:3 }} · {{ sp.hasil.r2_total|angka:4 }} · {{ sp.n_obs }} obs, {{ sp.hasil.n_provinsi }} klaster</td></tr></tfoot>
     </table>
   </div>
-  <div class="kartu"><h2>Efek tetap tahun d<sub>t</sub></h2><div class="grafik"><canvas id="g-dt"></canvas></div></div>
+  <div class="kartu"><h2>Fixed effect tahun d<sub>t</sub></h2><div class="grafik"><canvas id="g-dt"></canvas></div></div>
 </div>
 {{ sp.hasil.efek_tahun|json_script:"d-dt" }}
 {% endif %}
@@ -37,7 +37,7 @@
   <p class="kecil abu">g<sub>Y</sub> = b1·g<sub>K</sub> + b2·g<sub>L</sub> + g<sub>A</sub>. Laju dalam persen per tahun (selisih log × 100).</p>
   <div class="gulir">
   <table class="tabel urut">
-    <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n">g PDRB</th><th class="n">g PMTB</th><th class="n">g TK</th><th class="n">b1·gK</th><th class="n">b2·gL</th><th class="n">g TFP</th><th class="n">Simpangan baku g TFP</th><th class="n">Porsi TFP</th><th class="n">Level relatif</th></tr></thead>
+    <thead><tr><th>Provinsi</th><th>Pulau</th><th class="n">g PDRB</th><th class="n">g PMTB</th><th class="n">g TK</th><th class="n">b1·gK</th><th class="n">b2·gL</th><th class="n">g TFP</th><th class="n">Standard deviation g TFP</th><th class="n">Porsi TFP</th><th class="n">Level relatif</th></tr></thead>
     <tbody>
     {% for b in baris %}
     <tr><td>{{ b.nama }}</td><td>{{ b.pulau }}</td>

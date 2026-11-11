@@ -19,7 +19,7 @@
 <div class="tab" data-grup="io">
   <button data-tab="io-aliran" class="aktif">Peta aliran</button>
   <button data-tab="io-kait">Keterkaitan sektor</button>
-  <button data-tab="io-peta">Peta pengganda</button>
+  <button data-tab="io-peta">Peta multiplier</button>
   <button data-tab="io-dampak">Dampak skenario</button>
   <button data-tab="io-tabel">Tabel dimuat</button>
 </div>
@@ -43,7 +43,7 @@
         <div style="min-width:120px"><label class="kecil">Tebal maks</label><input type="range" id="al-tebal" min="2" max="24" value="10"></div>
         <div style="min-width:120px"><label class="kecil">Lengkung</label><input type="range" id="al-lengkung" min="0" max="60" value="22"></div>
         <div style="min-width:120px"><label class="kecil">Kejernihan</label><input type="range" id="al-opasitas" min="15" max="100" value="70"></div>
-        <div style="min-width:150px"><label class="kecil">Latar provinsi</label><select id="al-latar"><option value="">Polos</option><option value="neraca_antar">Neraca dagang antarprovinsi</option><option value="ekspor_antar">Ekspor antarprovinsi</option><option value="impor_antar">Impor antarprovinsi</option><option value="bocoran">Bocoran pengganda (%)</option></select></div>
+        <div style="min-width:150px"><label class="kecil">Latar provinsi</label><select id="al-latar"><option value="">Polos</option><option value="neraca_antar">Neraca dagang antarprovinsi</option><option value="ekspor_antar">Ekspor antarprovinsi</option><option value="impor_antar">Impor antarprovinsi</option><option value="spillover">Spillover multiplier (%)</option></select></div>
         <div><label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="al-panah" checked> Panah</label>
         <label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="al-label"> Label provinsi</label></div>
       </div>
@@ -70,13 +70,13 @@
   <div class="grid g2">
     <div class="kartu"><h2>Kuadran keterkaitan: ke belakang × ke depan</h2><div class="grafik tinggi"><canvas id="g-kuadran"></canvas></div>
       <p class="kecil abu">Kanan atas = sektor kunci (menarik dan mendorong sektor lain di atas rata-rata). Ukuran titik = output. Garis putus = rata-rata (1).</p></div>
-    <div class="kartu"><h2>Pengganda per sektor</h2><div class="grafik tinggi"><canvas id="g-pengganda"></canvas></div>
-      <p class="kecil abu" id="kt-catatan-pengganda">Pengganda output = tambahan output seluruh ekonomi per Rp1 permintaan akhir sektor; pengganda NTB = tambahan nilai tambah.</p></div>
+    <div class="kartu"><h2>Multiplier per sektor</h2><div class="grafik tinggi"><canvas id="g-multiplier"></canvas></div>
+      <p class="kecil abu" id="kt-catatan-multiplier">Multiplier output = tambahan output seluruh ekonomi per Rp1 permintaan akhir sektor; multiplier NTB = tambahan nilai tambah.</p></div>
   </div>
   <div class="grid g2">
     <div class="kartu">
-      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Pengganda output menurut tahun</h2>
-        <select id="kt-tren-ukuran" style="width:auto"><option value="output">Pengganda output</option><option value="ntb">Pengganda NTB</option><option value="bl">BL</option><option value="fl">FL</option></select></div>
+      <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Multiplier output menurut tahun</h2>
+        <select id="kt-tren-ukuran" style="width:auto"><option value="output">Multiplier output</option><option value="ntb">Multiplier NTB</option><option value="bl">BL</option><option value="fl">FL</option></select></div>
       <div class="grafik tinggi"><canvas id="g-tren"></canvas></div>
       <p class="kecil abu">Klik nama sektor di legenda untuk menyembunyikan. Semua tahun tabel dengan metode terpilih.</p>
     </div>
@@ -84,7 +84,7 @@
       <div class="pilih-baris" style="justify-content:space-between;margin-bottom:6px"><h2 style="margin:0">Jaringan sektor</h2>
         <div class="pilih-baris kecil">
           <div style="min-width:90px"><label class="kecil">Ambang koef. A</label><input type="range" id="jr-ambang" min="1" max="200" value="30"><span id="jr-ambang-v" class="abu"></span></div>
-          <div style="min-width:90px"><label class="kecil">Warna simpul</label><select id="jr-warna" style="width:auto"><option value="kuadran">Kuadran</option><option value="pengganda">Pengganda</option></select></div>
+          <div style="min-width:90px"><label class="kecil">Warna simpul</label><select id="jr-warna" style="width:auto"><option value="kuadran">Kuadran</option><option value="multiplier">Multiplier</option></select></div>
           <label class="kecil" style="display:flex;gap:4px;align-items:center;font-weight:400"><input type="checkbox" id="jr-diri"> Sendiri</label>
         </div></div>
       <svg id="jaringan" viewBox="0 0 560 420" style="width:100%;height:auto;max-height:440px"></svg>
@@ -98,22 +98,22 @@
   </div>
 </div>
 
-<!-- ============ Peta pengganda -->
+<!-- ============ Peta multiplier -->
 <div class="panel-tab" id="io-peta" data-grup="io">
   <div class="grid g2">
     <div class="kartu">
       <div class="kontrol" style="margin-bottom:8px">
         <div><label class="kecil">Indikator</label><select id="pm-ind">
-          <option value="pengganda_output">Pengganda output</option><option value="pengganda_ntb">Pengganda NTB</option>
-          <option value="bocoran">Limpahan ke provinsi lain (%)</option><option value="kemandirian">Kemandirian (% dampak tinggal)</option>
+          <option value="multiplier_output">Multiplier output</option><option value="multiplier_ntb">Multiplier NTB</option>
+          <option value="spillover">Limpahan ke provinsi lain (%)</option><option value="kemandirian">Kemandirian (% dampak tinggal)</option>
           <option value="bl">Keterkaitan ke belakang (BL)</option><option value="fl">Keterkaitan ke depan (FL)</option>
           <option value="ekspor_antar">Ekspor antara antarprovinsi (T Rp)</option><option value="impor_antar">Impor antara antarprovinsi (T Rp)</option>
           <option value="neraca_antar">Neraca dagang antara (T Rp)</option><option value="output">Output (T Rp)</option></select></div>
         <div><label class="kecil">Sektor</label><select id="pm-sek"><option value="">Semua (berbobot output)</option>{% for s in sektor %}<option value="{{ s.kode }}">{{ s.kode }} · {{ s.nama }}</option>{% endfor %}</select></div>
         <div style="min-width:120px"><label class="kecil">Skema warna</label><select id="pm-skema"><option value="">Otomatis</option><option value="seq">Biru</option><option value="hijau">Hijau</option><option value="merah">Jingga</option><option value="div">Divergen</option><option value="peluang">Merah–hijau</option></select></div>
       </div>
-      <div id="peta-pengganda" class="peta"></div>
-      <div id="ringkas-pengganda" class="ringkas"></div>
+      <div id="peta-multiplier" class="peta"></div>
+      <div id="ringkas-multiplier" class="ringkas"></div>
     </div>
     <div class="kartu">
       <h2>Indikator per provinsi</h2>

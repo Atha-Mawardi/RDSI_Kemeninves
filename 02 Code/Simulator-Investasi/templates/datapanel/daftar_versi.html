@@ -7,7 +7,7 @@
   <a class="btn" href="{% url 'datapanel:unggah' %}">Unggah / perbarui data</a>
   <a class="btn garis" href="{% url 'datapanel:templat' %}">Unduh templat Excel</a>
   {% if versi_aktif %}<a class="btn garis" href="{% url 'datapanel:kelengkapan' versi_aktif.pk %}">Kelengkapan &amp; pemeriksaan</a>
-  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi_aktif.pk %}">Sunting data aktif di grid</a>
+  <a class="btn garis" href="{% url 'datapanel:sunting_grid' versi_aktif.pk %}">Edit data aktif di grid</a>
   <a class="btn garis" href="{% url 'datapanel:unduh_versi' versi_aktif.pk %}">Unduh versi aktif (Excel)</a>{% endif %}
 </div>
 <div class="grid g4" style="margin-bottom:16px">
@@ -15,7 +15,7 @@
   <div class="kpi"><div class="label">Menunggu konfirmasi</div><div class="nilai">{{ n_draf }}</div><div class="ket">draf hasil unggahan</div></div>
   <div class="kpi"><div class="label">Arsip / gagal validasi</div><div class="nilai">{{ n_arsip }}</div><div class="ket">tidak dipakai skenario baru</div></div>
   <div class="kpi"><div class="label">Data aktif</div><div class="nilai">{% if versi_aktif %}{{ versi_aktif.tahun_awal }}–{{ versi_aktif.tahun_akhir }}{% else %}–{% endif %}</div>
-    <div class="ket">{% if lengkap %}{{ lengkap.n_prov }} provinsi · {{ lengkap.n_var }} variabel{% if versi_aktif.bisa_rinci_papua %} · rincian Papua tersedia{% endif %}{% else %}belum ada versi aktif{% endif %}</div></div>
+    <div class="ket">{% if lengkap %}{{ lengkap.n_prov }} provinsi · {{ lengkap.n_var }} variabel{% if versi_aktif.bisa_rinci_papua %} · Data Papua tersedia{% endif %}{% else %}belum ada versi aktif{% endif %}</div></div>
 </div>
 <div class="kartu">
 <table class="tabel">

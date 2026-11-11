@@ -18,7 +18,7 @@
   {% with p=request.path %}
   <nav>
     <a href="{% url 'beranda' %}" class="{% if p == '/' %}aktif{% endif %}">Beranda</a>
-    <a href="{% url 'simulasi:daftar' %}" class="{% if p == '/skenario/' or '/sunting/' in p or '/baru/' in p or '/asumsi/' in p %}aktif{% endif %}">Skenario</a>
+    <a href="{% url 'simulasi:daftar' %}" class="{% if p == '/skenario/' or '/edit/' in p or '/baru/' in p or '/asumsi/' in p %}aktif{% endif %}">Skenario</a>
     <a href="{% url 'simulasi:hasil_aktif' %}" class="{% if di_hasil %}aktif{% endif %}">Hasil</a>
     <a href="{% url 'simulasi:bandingkan' %}" class="{% if 'bandingkan' in p %}aktif{% endif %}">Perbandingan</a>
     <a href="{% url 'datapanel:penjelajah' %}" class="{% if '/jelajah/' in p %}aktif{% endif %}">Jelajah</a>

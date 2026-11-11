@@ -19,18 +19,18 @@
     <div class="es-cepat"><button type="button" class="btn garis kecil" data-prov="semua">Semua</button><button type="button" class="btn garis kecil" data-prov="luar-jawa">Luar Jawa</button><button type="button" class="btn garis kecil" data-prov="balik">Balik</button></div>
 
     <div class="es-judul"><label class="kecil">Model</label></div>
-    <label class="es-cek"><input type="checkbox" id="es-efek-tahun" checked> Efek tetap tahun (d<sub>t</sub>)</label>
-    <label class="es-cek"><input type="checkbox" id="es-crs"> Paksa skala hasil konstan (b1 + b2 = 1)</label>
+    <label class="es-cek"><input type="checkbox" id="es-efek-tahun" checked> Fixed effect tahun (d<sub>t</sub>)</label>
+    <label class="es-cek"><input type="checkbox" id="es-crs"> b1 + b2 = 1</label>
     <div class="kontrol rapat" style="margin-top:6px">
       <div><label class="kecil">Ukuran modal K</label><select id="es-modal"><option value="pmtb">PMTB riil (arus)</option><option value="stok">Stok kapital (PIM)</option></select></div>
       <div><label class="kecil">Depresiasi δ</label><input type="number" id="es-delta" value="0.05" step="0.01" min="0" max="0.5" disabled></div>
     </div>
 
     <div class="es-simpan">
-      <label class="kecil">Simpan pratinjau sebagai set</label>
+      <label class="kecil">Simpan pratinjau</label>
       <input type="text" id="es-nama" placeholder="Nama set, mis. TWFE 2017–2024 tanpa 2020">
-      <label class="es-cek"><input type="checkbox" id="es-bawaan"> Jadikan bawaan untuk skenario baru</label>
-      <button type="button" class="btn" id="es-simpan" style="width:100%">Simpan set parameter</button>
+      <label class="es-cek"><input type="checkbox" id="es-default"> Buat skenario baru</label>
+      <button type="button" class="btn" id="es-simpan" style="width:100%">Simpan parameter</button>
     </div>
   </aside>
 
@@ -43,18 +43,18 @@
         <p class="kecil abu" id="es-catatan" style="margin:8px 0 0"></p>
       </div>
       <div class="kartu">
-        <h2>Efek tetap tahun d<sub>t</sub> (relatif tahun pertama)</h2>
+        <h2>Fixed effect tahun d<sub>t</sub> (relatif tahun pertama)</h2>
         <div class="grafik"><canvas id="es-g-tahun"></canvas></div>
         <p class="kecil abu" style="margin:6px 0 0">Komponen bersama semua provinsi setelah modal dan tenaga kerja dikendalikan: guncangan makro (mis. 2020) dan kemajuan teknologi umum. Garis = jumlah observasi per tahun.</p>
       </div>
     </div>
     <div class="grid g-7-5">
       <div class="kartu">
-        <h2>Efek tetap provinsi a<sub>i</sub> (deviasi dari rata-rata)</h2>
+        <h2>Fixed effect provinsi a<sub>i</sub> (deviasi dari rata-rata)</h2>
         <div id="es-peta" class="peta" style="height:300px"></div>
       </div>
       <div class="kartu">
-        <h2>Residual terhadap nilai suaian</h2>
+        <h2>Fit Value (Residual)</h2>
         <div class="grafik" style="height:300px"><canvas id="es-g-resid"></canvas></div>
       </div>
     </div>
@@ -74,7 +74,7 @@
       <tr class="es-pratinjau" id="es-baris-pratinjau"><td><b>Pratinjau (belum disimpan)</b></td><td>Estimasi</td><td class="n" data-k="b1">–</td><td class="n" data-k="b2">–</td><td class="n" data-k="rts">–</td><td class="n" data-k="n">–</td><td class="kecil" data-k="spek"></td><td></td></tr>
       {% for p in parameter %}
       <tr>
-        <td><a href="{% url 'estimasi:detail' p.pk %}">{{ p.nama }}</a>{% if p.bawaan %} <span class="lencana aktif">bawaan</span>{% endif %}</td>
+        <td><a href="{% url 'estimasi:detail' p.pk %}">{{ p.nama }}</a>{% if p.bawaan %} <span class="lencana aktif">default</span>{% endif %}</td>
         <td>{{ p.get_sumber_display }}</td>
         <td class="n">{{ p.b1|angka:4 }}{% if p.se_b1 %}<div class="kecil abu">({{ p.se_b1|angka:4 }})</div>{% endif %}</td>
         <td class="n">{{ p.b2|angka:4 }}{% if p.se_b2 %}<div class="kecil abu">({{ p.se_b2|angka:4 }})</div>{% endif %}</td>
@@ -82,8 +82,8 @@
         <td class="n">{{ p.n_obs|default:"–" }}</td>
         <td class="kecil">{{ p.tahun_awal|default:"" }}{% if p.tahun_akhir %}–{{ p.tahun_akhir }}{% endif %}{% if p.spesifikasi.kecuali_tahun %} · tanpa {{ p.spesifikasi.kecuali_tahun|join:", " }}{% endif %}{% if p.spesifikasi.provinsi %} · {{ p.spesifikasi.provinsi|length }} provinsi{% endif %}{% if p.spesifikasi.modal == "stok" %} · stok PIM{% endif %}{% if p.crs %} · CRS{% endif %}</td>
         <td class="aksi-sel">
-          <a class="btn kecil garis" href="{% url 'estimasi:sunting' p.pk %}">Ubah</a>
-          {% if not p.bawaan %}<form method="post" action="{% url 'estimasi:bawaan' p.pk %}">{% csrf_token %}<button class="btn kecil garis">Bawaan</button></form>
+          <a class="btn kecil garis" href="{% url 'estimasi:edit' p.pk %}">Ubah</a>
+          {% if not p.bawaan %}<form method="post" action="{% url 'estimasi:default' p.pk %}">{% csrf_token %}<button class="btn kecil garis">Default</button></form>
           <form method="post" action="{% url 'estimasi:hapus' p.pk %}" onsubmit="return confirm('Hapus set ini?')">{% csrf_token %}<button class="btn kecil garis">Hapus</button></form>{% endif %}
         </td>
       </tr>
@@ -95,7 +95,6 @@
       <div class="grafik" style="height:100%;min-height:260px"><canvas id="es-g-banding"></canvas></div>
     </div>
   </div>
-  <p class="catatan">Garis horizontal di grafik = selang kepercayaan 95% (galat baku klaster provinsi). K berupa PMTB arus kecuali dipilih stok PIM, sehingga b1 cenderung batas bawah. Set "vintage" disalin dari keluaran analisis TFP yang dibekukan; estimasi ulang pada data terbaru bisa berbeda karena revisi PDRB/PMTB.</p>
 </div>
 
 <div class="grid g-7-5">
@@ -107,7 +106,7 @@
       <tbody>
       {% for k in sektoral %}
       <tr>
-        <td title="{{ k.catatan }}">{{ k.nama }}{% if k.bawaan %} <span class="lencana aktif">bawaan</span>{% endif %}</td>
+        <td title="{{ k.catatan }}">{{ k.nama }}{% if k.bawaan %} <span class="lencana aktif">default</span>{% endif %}</td>
         <td class="n">{{ k.primer|angka:4 }}<div class="kecil abu">({{ k.se_primer|angka:4 }})</div></td>
         <td class="n">{{ k.sekunder|angka:4 }}<div class="kecil abu">({{ k.se_sekunder|angka:4 }})</div></td>
         <td class="n">{{ k.tva|angka:4 }}<div class="kecil abu">({{ k.se_tva|angka:4 }})</div></td>
@@ -126,18 +125,18 @@
 </div>
 <div class="kartu">
     <div class="aksi" style="justify-content:space-between"><h2 style="margin:0">Koefisien determinan TFP</h2><a class="btn kecil garis" href="{% url 'estimasi:tambah_determinan' %}">+ Salin dan ubah</a></div>
-    <p class="kecil abu">Perubahan log TFP bila indikator naik 1 simpangan baku antarprovinsi. Kolom pilar = jumlah koefisien indikator di pilar itu, yaitu efek bila semua indikator pilar naik 1 simpangan baku.</p>
+    <p class="kecil abu">Perubahan log TFP bila indikator naik 1 standard deviation antarprovinsi. Kolom pilar = jumlah koefisien indikator di pilar itu, yaitu efek bila semua indikator pilar naik 1 standard deviation.</p>
     <div class="gulir">
     <table class="tabel">
       <thead><tr><th>Nama</th>{% for _, nama in pilar %}<th class="n">{{ nama }}</th>{% endfor %}<th></th></tr></thead>
       <tbody>
       {% for s, jumlah in determinan %}
       <tr>
-        <td title="{{ s.catatan }}">{{ s.nama }}{% if s.bawaan %} <span class="lencana aktif">bawaan</span>{% endif %}</td>
+        <td title="{{ s.catatan }}">{{ s.nama }}{% if s.bawaan %} <span class="lencana aktif">default</span>{% endif %}</td>
         {% for v in jumlah %}<td class="n">{{ v|angka:3 }}</td>{% endfor %}
         <td class="aksi-sel">
           <a class="btn kecil garis" href="{% url 'estimasi:sunting_determinan' s.pk %}">Ubah</a>
-          {% if not s.bawaan %}<form method="post" action="{% url 'estimasi:bawaan_determinan' s.pk %}">{% csrf_token %}<button class="btn kecil garis">Bawaan</button></form>
+          {% if not s.bawaan %}<form method="post" action="{% url 'estimasi:default_determinan' s.pk %}">{% csrf_token %}<button class="btn kecil garis">Default</button></form>
           <form method="post" action="{% url 'estimasi:hapus_determinan' s.pk %}" onsubmit="return confirm('Hapus set ini?')">{% csrf_token %}<button class="btn kecil garis">Hapus</button></form>{% endif %}
         </td>
       </tr>
@@ -145,7 +144,7 @@
       </tbody>
     </table>
     </div>
-    <h2 style="margin-top:14px">Koefisien per indikator (set bawaan)</h2>
+    <h2 style="margin-top:14px">Koefisien per indikator (set default)</h2>
     <div class="grafik" style="height:300px"><canvas id="g-determinan"></canvas></div>
     <p class="catatan">Dipakai di tab Determinan pada skenario: perubahan indikator di atas tren historis menggeser level TFP setelah jeda. Satu regresi per pilar, 34 provinsi 2017–2024.</p>
 </div>

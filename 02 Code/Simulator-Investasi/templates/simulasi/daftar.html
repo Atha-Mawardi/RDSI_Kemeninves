@@ -6,7 +6,7 @@
   <h1 style="margin:0">Ruang skenario</h1>
   <div class="aksi">
     <a class="btn" href="{% url 'simulasi:baru' %}">+ Skenario baru</a>
-    <form method="post" action="{% url 'simulasi:templat_semua' %}" onsubmit="return confirm('Bangun ulang semua paket bawaan dengan data aktif dan parameter bawaan?')">{% csrf_token %}<button class="btn garis">{% if ada_bawaan %}Perbarui{% else %}Buat{% endif %} paket bawaan</button></form>
+    <form method="post" action="{% url 'simulasi:templat_semua' %}" onsubmit="return confirm('Bangun ulang semua paket default dengan data aktif dan parameter default?')">{% csrf_token %}<button class="btn garis">{% if ada_default %}Perbarui{% else %}Buat{% endif %} paket default</button></form>
   </div>
 </div>
 
@@ -55,7 +55,7 @@
           <button class="btn kecil garis" formaction="{% url 'simulasi:aktif' %}" name="pk" value="{{ sk.pk }}">Jadikan aktif</button>{% endif %}
           <button class="btn kecil" formaction="{% url 'simulasi:jalankan' sk.pk %}">Jalankan</button>
           <button class="btn kecil garis simpan-kustom" formaction="{% url 'simulasi:simpan_kustom' sk.pk %}" data-nama="{{ sk.nama }}">Simpan sbg kustom</button>
-          <a class="btn kecil garis" href="{% url 'simulasi:sunting' sk.pk %}">Shock &amp; lengkap</a>
+          <a class="btn kecil garis" href="{% url 'simulasi:edit' sk.pk %}">Shock &amp; lengkap</a>
           {% if not sk.bawaan %}<button class="btn kecil merah" formaction="{% url 'simulasi:hapus' sk.pk %}" onclick="return confirm('Hapus {{ sk.nama|escapejs }}?')">Hapus</button>{% endif %}
         </td>{% endfor %}
       </tr>
@@ -70,7 +70,7 @@
 </form>
 
 <div class="kartu" style="margin-top:16px">
-  <h2>Paket bawaan</h2>
+  <h2>Paket default</h2>
   <p class="kecil abu">Tangga kebijakan dari business as usual ke kebutuhan penuh 8%. Tiap paket mewarisi asumsi paket dasarnya lalu menambah satu kelompok kebijakan, sehingga selisih antarpaket terbaca sebagai efek kebijakan itu. Asumsi paket dapat diubah langsung di kisi; perubahan ikut diwariskan ke paket turunannya.</p>
   <table class="tabel">
     <thead><tr><th>Singkat</th><th>Paket</th><th>Basis</th><th>Isi</th><th>Disesuaikan</th><th></th></tr></thead>

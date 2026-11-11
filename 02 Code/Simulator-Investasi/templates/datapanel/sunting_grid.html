@@ -1,7 +1,7 @@
 {% extends "base.html" %}{% load static %}
-{% block judul %}Sunting grid · {{ versi.nama }}{% endblock %}
+{% block judul %}Edit grid · {{ versi.nama }}{% endblock %}
 {% block isi %}
-<h1>Sunting data di grid <span class="lencana {{ versi.status }}">{{ versi.get_status_display }}</span></h1>
+<h1>Edit data di grid <span class="lencana {{ versi.status }}">{{ versi.get_status_display }}</span></h1>
 <p class="sub">Versi #{{ versi.pk }} · {{ versi.nama }}</p>
 
 <div class="aksi" style="margin-bottom:14px">
